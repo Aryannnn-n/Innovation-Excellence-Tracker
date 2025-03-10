@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <h2>Welcome, <%= user.name %> (Admin)</h2>
+    <a href="/logout">Logout</a>
+
+    <h3>All Innovations</h3>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Submitted By</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        <% innovations.forEach(innovation=> { %>
+            <tr>
+                <td>
+                    <%= innovation.title %>
+                </td>
+                <td>
+                    <%= innovation.description %>
+                </td>
+                <td>
+                    <%= innovation.submittedBy %>
+                </td>
+                <td>
+                    <%= innovation.status %>
+                </td>
+                <td>
+                    <form action="/edit-innovation/<%= innovation._id %>" method="GET" style="display:inline;">
+                        <button type="submit">Edit</button>
+                    </form>
+                    <form action="/delete-innovation/<%= innovation._id %>" method="POST" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <% }); %>
+    </table>
+</body>
+
+</html>
