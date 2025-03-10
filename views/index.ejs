@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Innovation Tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body
+    class="bg-gray-100 min-h-screen flex flex-col items-center justify-center"
+  >
+    <!-- Navbar -->
+    <nav
+      class="bg-blue-500 text-white w-full py-4 shadow-md flex justify-between px-6"
+    >
+      <h1 class="text-xl font-bold">Innovation Tracker</h1>
+      <div>
+        <% if (user) { %>
+        <a
+          href="/dashboard"
+          class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600 transition"
+          >Dashboard</a
+        >
+        <a
+          href="/logout"
+          class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition"
+          >Logout</a
+        >
+        <% } else { %>
+        <a
+          href="/login"
+          class="px-4 py-2 bg-blue-700 rounded-lg hover:bg-blue-800 transition"
+          >Login</a
+        >
+        <a
+          href="/register"
+          class="px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-600 transition"
+          >Register</a
+        >
+        <% } %>
+      </div>
+    </nav>
+
+    <!-- Welcome Section -->
+    <section class="mt-10 text-center">
+      <h2 class="text-3xl font-bold text-gray-800">
+        Welcome to Innovation Tracker
+      </h2>
+      <p class="text-lg text-gray-600 mt-2">
+        Empowering students to showcase their innovative ideas.
+      </p>
+
+      <% if (!user) { %>
+      <div class="mt-6">
+        <a
+          href="/register"
+          class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition"
+        >
+          Get Started
+        </a>
+      </div>
+      <% } %>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-gray-500">
+      <p>&copy; 2025 Innovation Tracker. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
