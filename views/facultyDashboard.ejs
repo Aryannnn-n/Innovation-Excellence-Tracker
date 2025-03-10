@@ -1,86 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Staff Dashboard - Innovation Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
 
-<head>
-  <title>Staff Dashboard - Innovation Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+  <body class="bg-green-50 min-h-screen">
+    <!-- Floating Navbar -->
+    <nav
+      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white w-[90%] max-w-4xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
+    >
+      <h1 class="text-xl font-bold">Staff Dashboard</h1>
+      <div class="relative flex items-center gap-4">
+        <span class="font-semibold"><%= user.name %> (Faculty)</span>
 
-<body class="bg-green-50 min-h-screen">
-  <!-- Navbar -->
-  <nav class="bg-green-500 text-white w-full py-4 shadow-md flex justify-between px-6">
-    <h1 class="text-xl font-bold">Staff Dashboard</h1>
-    <div>
-      <span class="font-semibold">
-        <%= user.name %> (Faculty)
-      </span>
-      <a href="/logout" class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition">Logout</a>
+        <!-- Logout Button -->
+        <a href="/logout" class="relative group">
+          <i class="fa-solid fa-right-from-bracket text-xl"></i>
+
+          <!-- Hover Tooltip -->
+          <span
+            class="absolute left-1/2 transform -translate-x-1/2 bottom-[-30px] bg-green-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            Logout
+          </span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto p-6 mt-20 bg-white shadow-lg rounded-lg">
+      <h2 class="text-2xl font-bold text-green-600">
+        Welcome, <%= user.name %>!
+      </h2>
+
+      <!-- Submitted Proposals Table -->
+      <h2 class="text-xl font-semibold mt-6">Submitted Proposals</h2>
+      <table class="w-full mt-4 border-collapse border border-gray-300">
+        <thead class="bg-green-200">
+          <tr>
+            <th class="border border-gray-300 p-2">Sr. No.</th>
+            <th class="border border-gray-300 p-2">Title</th>
+            <th class="border border-gray-300 p-2">Student Name</th>
+            <th class="border border-gray-300 p-2">Faculty Mentor</th>
+            <th class="border border-gray-300 p-2">Submission Date</th>
+            <th class="border border-gray-300 p-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (pendingInnovations.length > 0) { %> <%
+          pendingInnovations.forEach((proposal, index) => { %>
+          <tr>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= index + 1 %>
+            </td>
+            <td class="border border-gray-300 p-2"><%= proposal.title %></td>
+            <td class="border border-gray-300 p-2">
+              <%= proposal.studentName %>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <%= proposal.mentorName %>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <%= proposal.submissionDate %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <form action="/approve-proposal" method="POST" class="inline">
+                <input
+                  type="hidden"
+                  name="proposalId"
+                  value="<%= proposal._id %>"
+                />
+                <button
+                  type="submit"
+                  class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition"
+                >
+                  Approve
+                </button>
+              </form>
+              <form action="/reject-proposal" method="POST" class="inline">
+                <input
+                  type="hidden"
+                  name="proposalId"
+                  value="<%= proposal._id %>"
+                />
+                <button
+                  type="submit"
+                  class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                >
+                  Reject
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %> <% } else { %>
+          <tr>
+            <td
+              colspan="6"
+              class="border border-gray-300 p-4 text-center text-gray-500"
+            >
+              No proposals submitted yet.
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
     </div>
-  </nav>
-
-  <!-- Main Content -->
-  <div class="max-w-5xl mx-auto p-6 mt-6 bg-white shadow-lg rounded-lg">
-    <h2 class="text-2xl font-bold text-green-600">
-      Welcome, <%= user.name %>!
-    </h2>
-
-    <!-- Submitted Proposals Table -->
-    <h2 class="text-xl font-semibold mt-6">Submitted Proposals</h2>
-    <table class="w-full mt-4 border-collapse border border-gray-300">
-      <thead class="bg-green-200">
-        <tr>
-          <th class="border border-gray-300 p-2">Sr. No.</th>
-          <th class="border border-gray-300 p-2">Title</th>
-          <th class="border border-gray-300 p-2">Student Name</th>
-          <th class="border border-gray-300 p-2">Faculty Mentor</th>
-          <th class="border border-gray-300 p-2">Submission Date</th>
-          <th class="border border-gray-300 p-2">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (pendingInnovations.length> 0) { %> <% pendingInnovations.forEach((proposal, index)=> { %>
-            <tr>
-              <td class="border border-gray-300 p-2 text-center">
-                <%= index + 1 %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.title %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.studentName %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.mentorName %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.submissionDate %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <form action="/approve-proposal" method="POST" class="inline">
-                  <input type="hidden" name="proposalId" value="<%= proposal._id %>" />
-                  <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition">
-                    Approve
-                  </button>
-                </form>
-                <form action="/reject-proposal" method="POST" class="inline">
-                  <input type="hidden" name="proposalId" value="<%= proposal._id %>" />
-                  <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                    Reject
-                  </button>
-                </form>
-              </td>
-            </tr>
-            <% }); %>
-              <% } else { %>
-                <tr>
-                  <td colspan="6" class="border border-gray-300 p-4 text-center text-gray-500">
-                    No proposals submitted yet.
-                  </td>
-                </tr>
-                <% } %>
-      </tbody>
-    </table>
-  </div>
-</body>
-
+  </body>
 </html>

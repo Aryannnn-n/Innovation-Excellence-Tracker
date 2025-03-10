@@ -1,49 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
 
-<body>
-    <h2>Welcome, <%= user.name %> (Admin)</h2>
-    <a href="/logout">Logout</a>
+  <body class="bg-pink-50 min-h-screen p-6">
+    <!-- Floating Navbar -->
+    <nav
+      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white w-[90%] max-w-4xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
+    >
+      <h1 class="text-xl font-bold">Admin Dashboard</h1>
+      <div>
+        <span class="font-semibold"><%= user.name %> (Admin)</span>
+        <!-- Logout Button with Icon and Hover Label -->
+        <a
+          href="/logout"
+          class="relative group ml-4 px-4 py-2 rounded-lg transition"
+        >
+          <i class="fa-solid fa-right-from-bracket text-xl"></i>
 
-    <h3>All Innovations</h3>
-    <table border="1">
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Submitted By</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        <% innovations.forEach(innovation=> { %>
-            <tr>
-                <td>
-                    <%= innovation.title %>
-                </td>
-                <td>
-                    <%= innovation.description %>
-                </td>
-                <td>
-                    <%= innovation.submittedBy %>
-                </td>
-                <td>
-                    <%= innovation.status %>
-                </td>
-                <td>
-                    <form action="/edit-innovation/<%= innovation._id %>" method="GET" style="display:inline;">
-                        <button type="submit">Edit</button>
-                    </form>
-                    <form action="/delete-innovation/<%= innovation._id %>" method="POST" style="display:inline;">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <% }); %>
-    </table>
-</body>
+          <!-- Hover Label -->
+          <span
+            class="absolute left-1/2 transform -translate-x-1/2 bottom-[-30px] bg-pink-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            Logout
+          </span>
+        </a>
+      </div>
+    </nav>
 
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-20">
+      <h2 class="text-2xl font-bold text-pink-600">
+        Welcome, <%= user.name %> (Admin)
+      </h2>
+
+      <h3 class="text-xl font-semibold mt-6">All Innovations</h3>
+
+      <table class="w-full mt-4 border border-gray-300 rounded-lg">
+        <thead class="bg-pink-200">
+          <tr>
+            <th class="border border-gray-300 p-2">Title</th>
+            <th class="border border-gray-300 p-2">Description</th>
+            <th class="border border-gray-300 p-2">Submitted By</th>
+            <th class="border border-gray-300 p-2">Status</th>
+            <th class="border border-gray-300 p-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (innovations.length > 0) { %> <%
+          innovations.forEach(function(innovation) { %>
+          <tr class="even:bg-pink-100 odd:bg-white">
+            <td class="border border-gray-300 p-2"><%= innovation.title %></td>
+            <td class="border border-gray-300 p-2">
+              <%= innovation.description %>
+            </td>
+            <td class="border border-gray-300 p-2">
+              <%= innovation.submittedBy %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <% if (innovation.status === 'Accepted') { %>
+              <span class="text-green-600 font-semibold">Accepted</span>
+              <% } else { %>
+              <span class="text-yellow-600 font-semibold">Pending</span>
+              <% } %>
+            </td>
+            <td class="border border-gray-300 p-2 flex gap-2">
+              <form
+                action="/edit-innovation/<%= innovation._id %>"
+                method="GET"
+              >
+                <button
+                  type="submit"
+                  class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                >
+                  Edit
+                </button>
+              </form>
+              <form
+                action="/delete-innovation/<%= innovation._id %>"
+                method="POST"
+              >
+                <button
+                  type="submit"
+                  class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %> <% } else { %>
+          <tr>
+            <td
+              colspan="5"
+              class="border border-gray-300 p-4 text-center text-gray-500"
+            >
+              No innovations submitted yet.
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </body>
 </html>
