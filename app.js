@@ -54,8 +54,7 @@ const InnovationSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 const Innovation = mongoose.model("Innovation", InnovationSchema);
 
-app.get("/", (req, res) => {
-  res.render("index", { user: req.session.user });
+
 app.get('/', async (req, res) => {
   // let innovations = await await Innovation.find();
   // console.log(innovations); 
