@@ -1,0 +1,36 @@
+{
+  "bar_graph": {
+    "title": "Research Papers Per Department",
+    "x_axis": "Department",
+    "y_axis": "Research Papers Published",
+    "data": [
+      {"department": "Computer Science", "papers": 120},
+      {"department": "Mechanical Engineering", "papers": 85},
+      {"department": "Electrical Engineering", "papers": 75},
+      {"department": "Civil Engineering", "papers": 60},
+      {"department": "Biotechnology", "papers": 50}
+    ]
+  },
+  "pie_chart": {
+    "title": "Innovation Type Distribution",
+    "data": [
+      {"category": "Patents", "percentage": 25},
+      {"category": "Research Papers", "percentage": 35},
+      {"category": "Startups", "percentage": 15},
+      {"category": "Prototypes", "percentage": 20},
+      {"category": "Others", "percentage": 5}
+    ]
+  },
+  "line_graph": {
+    "title": "Trends Over Time",
+    "x_axis": "Year",
+    "y_axis": "Count",
+    "data": [
+      {"year": 2020, "research_papers": 50, "patents": 5, "startups": 3},
+      {"year": 2021, "research_papers": 65, "patents": 10, "startups": 5},
+      {"year": 2022, "research_papers": 80, "patents": 12, "startups": 8},
+      {"year": 2023, "research_papers": 100, "patents": 18, "startups": 12},
+      {"year": 2024, "research_papers": 120, "patents": 25, "startups": 20}
+    ]
+  }
+}
