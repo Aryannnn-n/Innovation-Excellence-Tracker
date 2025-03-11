@@ -34,6 +34,7 @@ const InnovationSchema = new Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
+  studentName: { type: String, required: true }, // ✅ Fix this line
 });
 
 const Innovation = mongoose.model('Innovation', InnovationSchema);

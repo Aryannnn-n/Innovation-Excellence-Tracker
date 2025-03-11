@@ -23,8 +23,21 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // multer setup
+// const multer = require('multer');
+// const upload = multer({ dest: 'uploads/' });
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    // Use the original name of the file
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 app.use(
   session({
@@ -33,6 +46,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+app.use('/uploads', express.static('uploads'));
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -90,37 +105,52 @@ app.post('/login', async (req, res) => {
   res.redirect('/dashboard');
 });
 
+// dashboard after login
 app.get('/dashboard', async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
 
   const user = req.session.user;
 
-  // Student Dashboard: Can add innovations & view all students' entries
-  if (user.role === 'student') {
-    const innovations = await Innovation.find(); // Show all submissions
-    return res.render('dashboard', { user, innovations });
+  try {
+    if (user.role === 'student') {
+      // Show all innovation submissions to students
+      const innovations = await Innovation.find();
+      return res.render('dashboard', { user, innovations });
+    }
+
+    if (user.role === 'faculty') {
+      // Fetch all proposals and categorize them
+      const allProposals = await Innovation.find();
+      const pendingProposals = allProposals.filter(
+        (p) => p.status === 'pending'
+      );
+      const approvedProposals = allProposals.filter(
+        (p) => p.status === 'approved'
+      );
+      const rejectedProposals = allProposals.filter(
+        (p) => p.status === 'rejected'
+      );
+
+      return res.render('facultyDashboard', {
+        user,
+        pendingProposals,
+        approvedProposals,
+        rejectedProposals,
+      });
+    }
+
+    if (user.role === 'admin') {
+      // Admin sees all proposals and can manage them
+      const innovations = await Innovation.find();
+      return res.render('dashboard_admin', { user, innovations });
+    }
+
+    // If user role is unknown, redirect to login
+    res.redirect('/login');
+  } catch (error) {
+    console.error('Error loading dashboard:', error);
+    res.status(500).send('Internal Server Error');
   }
-
-  // Faculty Dashboard: Can accept or reject student data
-  if (user.role === 'faculty') {
-    const pendingInnovations = await Innovation.find({ status: 'pending' }); // Show only pending submissions
-    return res.render('facultyDashboard', { user, pendingInnovations });
-  }
-
-  // Admin Dashboard: Can edit, delete, and manage all data
-  if (user.role === 'admin') {
-    const innovations = await Innovation.find(); // Show all submissions
-    return res.render('dashboard_admin', { user, innovations });
-  }
-
-  // Default case (if role is not recognized)
-  res.redirect('/login');
-});
-
-app.get('/dashboard', async (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
-  const innovations = await Innovation.find();
-  res.render('dashboard', { user: req.session.user, innovations });
 });
 
 app.get('/logout', (req, res) => {
@@ -131,39 +161,98 @@ app.get('/logout', (req, res) => {
 
 // Student Adding New Proposal
 app.post('/innovation/new', upload.single('proposalFile'), async (req, res) => {
-  if (!req.session.user || req.session.user.role === 'student') {
-    return res.redirect('/dashboard');
-  }
-
-  console.log('📝 Received Form Data:', req.body);
-  console.log('📂 Uploaded File:', req.file);
-
-  // Check for missing required fields
-  if (
-    !req.body.title ||
-    !req.body.category ||
-    !req.body.description ||
-    !req.body.department
-  ) {
-    return res.status(400).send('Missing required fields');
-  }
-
   try {
+    // console.log('📝 Received Form Data:', req.body);
+    // console.log('📂 Uploaded File:', req.file);
+
+    if (!req.session || !req.session.user) {
+      return res.status(401).send('Unauthorized: User not logged in.');
+    }
+
     const innovation = new Innovation({
       title: req.body.title,
-      category: req.body.category, // ✅ This should match the dropdown name
+      category: req.body.category,
       description: req.body.description,
+      keyFeatures: req.body.keyFeatures,
       department: req.body.department,
+      collaborators: req.body.collaborators
+        ? req.body.collaborators.split(',')
+        : [],
+      mentors: req.body.mentors ? req.body.mentors.split(',') : [],
+      info: req.body.info,
       proposalFile: req.file ? req.file.filename : null,
-      createdBy: req.session.user._id,
+      studentName: req.body.studentName,
     });
-    
+
     await innovation.save();
-    console.log('✅ Innovation saved successfully');
+    // console.log('✅ Innovation saved successfully!');
     res.redirect('/dashboard');
   } catch (error) {
-    console.error('❌ Error saving innovation:', error);
-    res.status(500).send('Internal Server Error');
+    // console.error('❌ Error saving innovation:', error);
+    res.status(500).send('Error saving innovation.');
+  }
+});
+
+// Teacher approving or rejecting proposal
+app.post('/approve-proposal', async (req, res) => {
+  try {
+    const { proposalId } = req.body;
+
+    const updatedProposal = await Innovation.findByIdAndUpdate(
+      proposalId,
+      { status: 'approved' },
+      { new: true } // Returns the updated document
+    );
+
+    if (!updatedProposal) {
+      return res.status(404).json({ message: 'Proposal not found' });
+    }
+
+    res.redirect('/dashboard');
+  } catch (error) {
+    console.error('Error approving proposal:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Reject Proposal Route
+app.post('/reject-proposal', async (req, res) => {
+  try {
+    const { proposalId } = req.body;
+
+    const updatedProposal = await Innovation.findByIdAndUpdate(
+      proposalId,
+      { status: 'rejected' },
+      { new: true }
+    );
+
+    if (!updatedProposal) {
+      return res.status(404).json({ message: 'Proposal not found' });
+    }
+
+    res.redirect('/dashboard');
+  } catch (error) {
+    console.error('Error rejecting proposal:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// DELETE Innovation Route
+app.post('/delete-innovation/:id', async (req, res) => {
+  try {
+    const innovationId = req.params.id;
+
+    // Find the innovation and delete it
+    const deletedInnovation = await Innovation.findByIdAndDelete(innovationId);
+
+    if (!deletedInnovation) {
+      return res.status(404).send('Innovation not found');
+    }
+
+    res.redirect('/dashboard'); // Redirect back to the admin panel
+  } catch (error) {
+    console.error('Error deleting innovation:', error);
+    res.status(500).send('Server Error');
   }
 });
 
