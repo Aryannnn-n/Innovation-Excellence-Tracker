@@ -292,5 +292,11 @@ app.post('/delete-hackathon/:id', async (req, res) => {
   }
 });
 
+// faculty view form
+app.get('/faculty/viewform/:id', async (req, res) => {
+  let _id = req.params.id;
+  let adminUser = await Innovation.findOne({ _id });
+  res.render('viewForm', { adminUser });
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
