@@ -257,7 +257,7 @@ app.post('/delete-innovation/:id', async (req, res) => {
   }
 });
 
-// Hackthon
+// Hackathon
 app.post('/post-hackathon', async (req, res) => {
   try {
     const { title, date, description, registrationLink } = req.body;
@@ -277,6 +277,18 @@ app.post('/post-hackathon', async (req, res) => {
   } catch (error) {
     console.error('Error posting hackathon:', error);
     res.status(500).send('Server Error');
+  }
+});
+
+// Hacktathon delete admin
+app.post('/delete-hackathon/:id', async (req, res) => {
+  try {
+    const hackathonId = req.params.id;
+    await Hackathon.findByIdAndDelete(hackathonId);
+    res.redirect('/dashboard'); // Adjust the redirect path if necessary
+  } catch (error) {
+    console.error('Error deleting hackathon:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 

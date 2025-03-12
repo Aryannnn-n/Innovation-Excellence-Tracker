@@ -84,12 +84,6 @@
 
               <!-- Edit & Delete Buttons -->
               <td class="border border-gray-300 p-2 flex gap-2 justify-center">
-                <form action="/edit-innovation/<%= innovation._id %>" method="GET">
-                  <button type="submit"
-                    class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                    Edit
-                  </button>
-                </form>
                 <form action="/delete-innovation/<%= innovation._id %>" method="POST">
                   <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
                     Delete
@@ -142,7 +136,7 @@
             <th class="border border-gray-300 p-2">Title</th>
             <th class="border border-gray-300 p-2">Date</th>
             <th class="border border-gray-300 p-2">Description</th>
-            <th class="border border-gray-300 p-2">Registration</th>
+            <th class="border border-gray-300 p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -158,8 +152,13 @@
                 <td class="border border-gray-300 p-2">
                   <%= hackathon.description %>
                 </td>
-                <td class="border border-gray-300 p-2">
-                  <a href="<%= hackathon.registrationLink %>" class="text-blue-600 underline" target="_blank">Apply</a>
+                <td class="border border-gray-300 p-2 text-center">
+                  <form action="/delete-hackathon/<%= hackathon._id %>" method="POST">
+                    <button type="submit"
+                      class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                      Delete
+                    </button>
+                  </form>
                 </td>
               </tr>
               <% }) %>
