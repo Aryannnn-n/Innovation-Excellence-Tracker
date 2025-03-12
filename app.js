@@ -11,6 +11,7 @@ const path = require('path');
 // database file setup
 const Innovation = require('./models/innovation');
 const User = require('./models/user');
+const Hackathon = require('./models/hackathon');
 
 const session = require('express-session');
 
@@ -55,9 +56,8 @@ mongoose
   .catch((err) => console.error('❌ MongoDB Connection Error:', err));
 
 app.get('/', async (req, res) => {
-  // let innovations = await await Innovation.find();
-  // console.log(innovations);
-  res.render('index', { user: req.session.user });
+  const hackathons = await Hackathon.find(); // Fetch from DB
+  res.render('index', { user: req.session.user, hackathons });
 });
 
 app.get('/register', (req, res) => {
@@ -142,7 +142,8 @@ app.get('/dashboard', async (req, res) => {
     if (user.role === 'admin') {
       // Admin sees all proposals and can manage them
       const innovations = await Innovation.find();
-      return res.render('dashboard_admin', { user, innovations });
+      const hackathons = await Hackathon.find(); // Fetch all hackathons
+      return res.render('dashboard_admin', { user, innovations, hackathons });
     }
 
     // If user role is unknown, redirect to login
@@ -252,6 +253,29 @@ app.post('/delete-innovation/:id', async (req, res) => {
     res.redirect('/dashboard'); // Redirect back to the admin panel
   } catch (error) {
     console.error('Error deleting innovation:', error);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Hackthon
+app.post('/post-hackathon', async (req, res) => {
+  try {
+    const { title, date, description, registrationLink } = req.body;
+
+    // Create a new hackathon entry
+    const newHackathon = new Hackathon({
+      title,
+      date,
+      description,
+      registrationLink,
+    });
+
+    await newHackathon.save(); // Save to MongoDB
+
+    // Redirect to admin dashboard with success message
+    res.redirect('/dashboard');
+  } catch (error) {
+    console.error('Error posting hackathon:', error);
     res.status(500).send('Server Error');
   }
 });

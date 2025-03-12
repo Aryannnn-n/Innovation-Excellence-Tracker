@@ -1,132 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Innovation Tracking</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
 
-  <body class="bg-gray-100 flex flex-col min-h-screen">
-    <!-- Navbar -->
-    <nav
-      class="bg-blue-500 text-white w-full py-4 shadow-md flex justify-between px-6 fixed top-0 left-0"
-    >
-      <h1 class="text-xl font-bold">Innovation Tracker</h1>
-      <div>
-        <% if (user) { %>
-        <a
-          href="/dashboard"
-          class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600 transition"
-          >Dashboard</a
-        >
-        <a
-          href="/logout"
-          class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition"
-          >Logout</a
-        >
+<head>
+  <title>Innovation Tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen">
+  <!-- Navbar -->
+  <nav class="bg-blue-500 text-white w-full py-4 shadow-md flex justify-between px-6 fixed top-0 left-0">
+    <h1 class="text-xl font-bold">Innovation Tracker</h1>
+    <div>
+      <% if (user) { %>
+        <a href="/dashboard" class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600 transition">Dashboard</a>
+        <a href="/logout" class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition">Logout</a>
         <% } else { %>
-        <a
-          href="/login"
-          class="px-4 py-2 bg-blue-700 rounded-lg hover:bg-blue-800 transition"
-          >Login</a
-        >
-        <a
-          href="/register"
-          class="px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-600 transition"
-          >Register</a
-        >
-        <% } %>
-      </div>
-    </nav>
+          <a href="/login" class="px-4 py-2 bg-blue-700 rounded-lg hover:bg-blue-800 transition">Login</a>
+          <a href="/register" class="px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-600 transition">Register</a>
+          <% } %>
+    </div>
+  </nav>
 
-    <!-- Main Section -->
-    <main class="flex flex-1 items-center justify-between px-10 mt-20">
-      <!-- Left: Text Content -->
-      <div class="w-1/2">
-        <h2 class="text-3xl font-bold text-gray-800">
-          Welcome to Innovation Tracker
-        </h2>
-        <p class="text-lg text-gray-600 mt-2">
-          Empowering students to showcase their innovative ideas.
-        </p>
+  <!-- Main Section -->
+  <main class="flex flex-1 items-center justify-between px-10 mt-20">
+    <!-- Left: Text Content -->
+    <div class="w-1/2">
+      <h2 class="text-3xl font-bold text-gray-800">
+        Welcome to Innovation Tracker
+      </h2>
+      <p class="text-lg text-gray-600 mt-2">
+        Empowering students to showcase their innovative ideas.
+      </p>
 
-        <% if (!user) { %>
+      <% if (!user) { %>
         <div class="mt-6">
-          <a
-            href="/register"
-            class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition"
-          >
+          <a href="/register"
+            class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition">
             Get Started
           </a>
         </div>
         <% } %>
-      </div>
+    </div>
 
-      <!-- Right: Image -->
-      <div class="hidden md:block w-1/2">
-        <img
-          src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
-          alt="Innovation Tracker"
-          class="w-full h-auto rounded-lg shadow-lg"
-        />
-      </div>
-    </main>
+    <!-- Right: Image -->
+    <div class="hidden md:block w-1/2">
+      <img
+        src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
+        alt="Innovation Tracker" class="w-full h-auto rounded-lg shadow-lg" />
+    </div>
+  </main>
 
-    <!-- Cards Section -->
-    <section class="container mx-auto px-6 py-12">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">
-        Available Opportunities
-      </h2>
+  <!-- Cards Section -->
+  <section class="container mx-auto px-6 py-12">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Available Hackathons</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Demo Card 1 -->
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-semibold">Hackathon 2025</h3>
-          <p class="text-gray-500 text-sm">Date: March 25, 2025</p>
-          <p class="text-gray-700 mt-2">
-            Participate in the upcoming Innovation Hackathon and showcase your
-            skills!
-          </p>
-          <button
-            class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-          >
-            Apply
-          </button>
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% if (hackathons.length> 0) { %>
+        <% hackathons.forEach(hackathon=> { %>
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-xl font-semibold">
+              <%= hackathon.title %>
+            </h3>
+            <p class="text-gray-500 text-sm">Date: <%= hackathon.date %>
+            </p>
+            <p class="text-gray-700 mt-2">
+              <%= hackathon.description %>
+            </p>
+            <a href="<%= hackathon.registrationLink %>" target="_blank">
+              <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                Apply
+              </button>
+            </a>
+          </div>
+          <% }) %>
+            <% } else { %>
+              <p class="text-gray-500">No hackathons available at the moment.</p>
+              <% } %>
+    </div>
+  </section>
 
-        <!-- Demo Card 2 -->
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-semibold">Patent Filing Workshop</h3>
-          <p class="text-gray-500 text-sm">Date: April 10, 2025</p>
-          <p class="text-gray-700 mt-2">
-            Learn how to file a patent for your innovation in this exclusive
-            workshop.
-          </p>
-          <button
-            class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-          >
-            Apply
-          </button>
-        </div>
 
-        <!-- Demo Card 3 -->
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-xl font-semibold">Startup Incubation Program</h3>
-          <p class="text-gray-500 text-sm">Date: May 5, 2025</p>
-          <p class="text-gray-700 mt-2">
-            Get mentorship and funding support for your startup idea.
-          </p>
-          <button
-            class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-          >
-            Apply
-          </button>
-        </div>
-      </div>
-    </section>
+  <!-- Footer -->
+  <footer class="w-full bg-gray-800 text-white text-center py-3 mt-auto">
+    &copy; 2025 Innovation Tracker. All rights reserved.
+  </footer>
+</body>
 
-    <!-- Footer -->
-    <footer class="w-full bg-gray-800 text-white text-center py-3 mt-auto">
-      &copy; 2025 Innovation Tracker. All rights reserved.
-    </footer>
-  </body>
 </html>
