@@ -71,8 +71,6 @@
             </td>
             <td class="border border-gray-300 p-2">
               <%= proposal.Collaborators %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
               <form action="/approve-proposal" method="POST" class="inline">
                 <input
                   type="hidden"
@@ -104,8 +102,11 @@
                 target="_blank"
                 class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
               >
-                View Proposal
+                View file
               </a>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+               <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
             </td>
           </tr>
           <% }); %> <% } else { %>
@@ -148,10 +149,10 @@
               <%= proposal.studentName %>
             </td>
             <td class="border border-gray-300 p-2">
-              <%= proposal.mentorName %>
+              <%= proposal.mentors %>
             </td>
             <td class="border border-gray-300 p-2">
-              <%= proposal.submissionDate %>
+              <%= proposal.date instanceof Date ? proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
             </td>
             <td class="border border-gray-300 p-2 text-center">
               <a
@@ -159,7 +160,7 @@
                 target="_blank"
                 class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
               >
-                View Proposal
+                View Report
               </a>
             </td>
           </tr>
@@ -213,7 +214,7 @@
                 target="_blank"
                 class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
               >
-                View Proposal
+                View Report
               </a>
             </td>
           </tr>
