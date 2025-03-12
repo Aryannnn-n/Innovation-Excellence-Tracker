@@ -12,11 +12,11 @@
   <body class="bg-green-50 min-h-screen">
     <!-- Floating Navbar -->
     <nav
-      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
+      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
     >
       <h1 class="text-xl font-bold">Faculty Dashboard</h1>
       <div class="relative flex items-center gap-4">
-        <span class="font-semibold"> <%= user.name %> (Faculty) </span>
+        <!-- <span class="font-semibold"> <%= user.name %> </span> -->
 
         <!-- Logout Button -->
         <a href="/logout" class="relative group flex items-center gap-2">
@@ -41,7 +41,7 @@
         Pending Proposals
       </h2>
       <table class="w-full mt-4 border-collapse border border-gray-300">
-        <thead class="bg-yellow-200">
+        <thead class="bg-yellow-300">
           <tr>
             <th class="border border-gray-300 p-2">Sr. No.</th>
             <th class="border border-gray-300 p-2">Title</th>
@@ -55,21 +55,22 @@
         <tbody>
           <% if (pendingProposals.length> 0) { %> <%
           pendingProposals.forEach((proposal, index)=> { %>
-          <tr>
+          <tr class="bg-yellow-50">
             <td class="border border-gray-300 p-2 text-center">
               <%= index + 1 %>
             </td>
             <td class="border border-gray-300 p-2"><%= proposal.title %></td>
-            <td class="border border-gray-300 p-2">
+            <td class="border border-gray-300 p-2 text-center">
               <%= proposal.studentName %>
             </td>
-            <td class="border border-gray-300 p-2">
-              <%= proposal.mentorName %>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.mentors %>
             </td>
-            <td class="border border-gray-300 p-2">
-              <%= proposal.submissionDate %>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.date ? proposal.date.toISOString().slice(0, 10) :
+              "N/A" %>
             </td>
-            <td class="border border-gray-300 p-2">
+            <td class="border border-gray-300 p-2 text-center">
               <%= proposal.Collaborators %>
               <form action="/approve-proposal" method="POST" class="inline">
                 <input
@@ -106,14 +107,14 @@
               </a>
             </td>
             <td class="border border-gray-300 p-2 text-center">
-               <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
+              <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
             </td>
           </tr>
           <% }); %> <% } else { %>
           <tr>
             <td
               colspan="6"
-              class="border border-gray-300 p-4 text-center text-gray-500"
+              class="border border-gray-300 p-4 text-center bg-yellow-50 text-gray-500"
             >
               No pending proposals.
             </td>
@@ -127,32 +128,37 @@
         Approved Proposals
       </h2>
       <table class="w-full mt-4 border-collapse border border-gray-300">
-        <thead class="bg-green-200">
+        <thead class="bg-green-300">
           <tr>
-            <th class="border border-gray-300 p-2">Sr. No.</th>
-            <th class="border border-gray-300 p-2">Title</th>
-            <th class="border border-gray-300 p-2">Student Name</th>
-            <th class="border border-gray-300 p-2">Mentor</th>
-            <th class="border border-gray-300 p-2">Submission Date</th>
-            <th class="border border-gray-300 p-2">File</th>
+            <th class="border border-gray-300 p-2 text-center">Sr. No.</th>
+            <th class="border border-gray-300 p-2 text-center">Title</th>
+            <th class="border border-gray-300 p-2 text-center">Student Name</th>
+            <th class="border border-gray-300 p-2 text-center">Mentor</th>
+            <th class="border border-gray-300 p-2 text-center">
+              Submission Date
+            </th>
+            <th class="border border-gray-300 p-2 text-center">File</th>
           </tr>
         </thead>
         <tbody>
           <% if (approvedProposals.length> 0) { %> <%
           approvedProposals.forEach((proposal, index)=> { %>
-          <tr>
+          <tr class="bg-green-50">
             <td class="border border-gray-300 p-2 text-center">
               <%= index + 1 %>
             </td>
-            <td class="border border-gray-300 p-2"><%= proposal.title %></td>
-            <td class="border border-gray-300 p-2">
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.title %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
               <%= proposal.studentName %>
             </td>
-            <td class="border border-gray-300 p-2">
+            <td class="border border-gray-300 p-2 text-center">
               <%= proposal.mentors %>
             </td>
-            <td class="border border-gray-300 p-2">
-              <%= proposal.date instanceof Date ? proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.date instanceof Date ?
+              proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
             </td>
             <td class="border border-gray-300 p-2 text-center">
               <a
@@ -168,7 +174,7 @@
           <tr>
             <td
               colspan="5"
-              class="border border-gray-300 p-4 text-center text-gray-500"
+              class="border border-gray-300 p-4 text-center bg-green-50 text-gray-500"
             >
               No approved proposals yet.
             </td>
@@ -182,7 +188,7 @@
         Rejected Proposals
       </h2>
       <table class="w-full mt-4 border-collapse border border-gray-300">
-        <thead class="bg-red-200">
+        <thead class="bg-red-300">
           <tr>
             <th class="border border-gray-300 p-2">Sr. No.</th>
             <th class="border border-gray-300 p-2">Title</th>
@@ -195,7 +201,7 @@
         <tbody>
           <% if (rejectedProposals.length> 0) { %> <%
           rejectedProposals.forEach((proposal, index)=> { %>
-          <tr>
+          <tr class="bg-red-50">
             <td class="border border-gray-300 p-2 text-center">
               <%= index + 1 %>
             </td>
@@ -222,7 +228,7 @@
           <tr>
             <td
               colspan="5"
-              class="border border-gray-300 p-4 text-center text-gray-500"
+              class="border border-gray-300 p-4 text-center bg-red-50 text-gray-500"
             >
               No rejected proposals.
             </td>

@@ -19,7 +19,7 @@
     <h1 class="text-xl font-bold">Student Dashboard</h1>
     <div class="flex items-center gap-6">
       <span class="font-semibold">
-        <%= user.name %> (Student)
+        <!-- <%= user.name %>  -->
       </span>
 
       <!-- Logout Button -->
@@ -105,8 +105,8 @@
   <!-- Submitted Proposals Table -->
   <h2 class="text-xl font-semibold mt-6">Your Submitted Innovations</h2>
   <table class="w-full mt-4 border-collapse border border-gray-300">
-    <thead class="bg-blue-200">
-      <tr>
+    <thead class="bg-blue-300">
+      <tr >
         <th class="border border-gray-300 p-2">Title</th>
         <th class="border border-gray-300 p-2">Submission Date</th>
         <th class="border border-gray-300 p-2">Status</th>
@@ -115,7 +115,7 @@
     <tbody>
       <% if (innovations.length> 0) { %> <% innovations.forEach(innovation=>
           { %>
-          <tr>
+          <tr class="bg-blue-50 text-center">
             <td class="border border-gray-300 p-2">
               <%= innovation.title %>
             </td>
@@ -142,6 +142,8 @@
   </table>
 </div>
 <div class="max-w-4xl h-auto flex flex-wrap  mx-auto p-6 bg-white shadow-lg rounded-lg mt-2">
+  <h2 class="text-xl font-semibold mt-6">Here's Analysis</h2>
+
   <div class="w-full flex flex-col items-center">
   <div class="w-2/3 m-2">
     <canvas id="departmentChart"></canvas>

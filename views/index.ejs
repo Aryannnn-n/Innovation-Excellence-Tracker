@@ -1,89 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Innovation Tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
 
-<head>
-  <title>Innovation Tracking</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-100 flex flex-col min-h-screen">
-  <!-- Navbar -->
-  <nav class="bg-blue-500 text-white w-full py-4 shadow-md flex justify-between px-6 fixed top-0 left-0">
-    <h1 class="text-xl font-bold">Innovation Tracker</h1>
-    <div>
-      <% if (user) { %>
-        <a href="/dashboard" class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600 transition">Dashboard</a>
-        <a href="/logout" class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition">Logout</a>
+  <body class="bg-gray-100 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav
+      class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white w-full py-4 shadow-lg flex justify-between items-center px-8 fixed top-0 left-0 z-50"
+    >
+      <h1 class="text-2xl font-bold">🚀 Innovation Tracker</h1>
+      <div>
+        <% if (user) { %>
+        <a
+          href="/dashboard"
+          class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600 transition font-medium shadow-md"
+          >Dashboard</a
+        >
+        <a
+          href="/logout"
+          class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition font-medium shadow-md"
+          >Logout</a
+        >
         <% } else { %>
-          <a href="/login" class="px-4 py-2 bg-blue-700 rounded-lg hover:bg-blue-800 transition">Login</a>
-          <a href="/register" class="px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-600 transition">Register</a>
-          <% } %>
-    </div>
-  </nav>
+        <a
+          href="/login"
+          class="px-4 py-2 bg-blue-700 rounded-lg hover:bg-blue-800 transition font-medium shadow-md"
+          >Login</a
+        >
+        <a
+          href="/register"
+          class="px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-600 transition font-medium shadow-md"
+          >Register</a
+        >
+        <% } %>
+      </div>
+    </nav>
 
-  <!-- Main Section -->
-  <main class="flex flex-1 items-center justify-between px-10 mt-20">
-    <!-- Left: Text Content -->
-    <div class="w-1/2">
-      <h2 class="text-3xl font-bold text-gray-800">
-        Welcome to Innovation Tracker
-      </h2>
-      <p class="text-lg text-gray-600 mt-2">
-        Empowering students to showcase their innovative ideas.
-      </p>
+    <!-- Main Section -->
+    <main class="flex flex-1 items-center justify-between px-10 mt-24">
+      <!-- Left: Text Content -->
+      <div class="w-full md:w-1/2 text-center md:text-left">
+        <h2 class="text-4xl font-bold text-gray-800 leading-tight">
+          Welcome to <span class="text-blue-600">Innovation Tracker</span>
+        </h2>
+        <p class="text-lg text-gray-600 mt-2">
+          Empowering students to showcase their innovative ideas & <br />
+          in exciting hackathons.
+        </p>
 
-      <% if (!user) { %>
+        <% if (!user) { %>
         <div class="mt-6">
-          <a href="/register"
-            class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition">
-            Get Started
+          <a
+            href="/register"
+            class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition shadow-md"
+          >
+            Get Started 🚀
           </a>
         </div>
         <% } %>
-    </div>
+      </div>
 
-    <!-- Right: Image -->
-    <div class="hidden md:block w-1/2">
-      <img
-        src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
-        alt="Innovation Tracker" class="w-full h-auto rounded-lg shadow-lg" />
-    </div>
-  </main>
+      <!-- Right: Image -->
+      <div class="hidden md:block w-1/2">
+        <img
+          src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
+          alt="Innovation Tracker"
+          class="w-full h-auto rounded-xl shadow-xl hover:scale-105 transition duration-300"
+        />
+      </div>
+    </main>
 
-  <!-- Cards Section -->
-  <section class="container mx-auto px-6 py-12">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Available Hackathons</h2>
+    <!-- Cards Section -->
+    <section class="container mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+        🔥 Available Hackathons
+      </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% if (hackathons.length> 0) { %>
-        <% hackathons.forEach(hackathon=> { %>
-          <div class="bg-white p-6 rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold">
-              <%= hackathon.title %>
-            </h3>
-            <p class="text-gray-500 text-sm">Date: <%= hackathon.date %>
-            </p>
-            <p class="text-gray-700 mt-2">
-              <%= hackathon.description %>
-            </p>
-            <a href="<%= hackathon.registrationLink %>" target="_blank">
-              <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
-                Apply
-              </button>
-            </a>
-          </div>
-          <% }) %>
-            <% } else { %>
-              <p class="text-gray-500">No hackathons available at the moment.</p>
-              <% } %>
-    </div>
-  </section>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=> { %>
+        <div
+          class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300"
+        >
+          <h3 class="text-2xl font-semibold text-gray-800">
+            <%= hackathon.title %>
+          </h3>
+          <p class="text-gray-500 text-sm mt-1">
+            📅 Date: <%= hackathon.date ? hackathon.date.toISOString().slice(0,
+            10) : "N/A" %>
+          </p>
+          <p class="text-gray-700 mt-2"><%= hackathon.description %></p>
+          <a href="<%= hackathon.registrationLink %>" target="_blank">
+            <button
+              class="mt-4 bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition font-medium shadow-md"
+            >
+              Apply Now 🚀
+            </button>
+          </a>
+        </div>
+        <% }) %> <% } else { %>
+        <p class="text-gray-500 text-center text-lg">
+          🚫 No hackathons available at the moment.
+        </p>
+        <% } %>
+      </div>
+    </section>
 
-
-  <!-- Footer -->
-  <footer class="w-full bg-gray-800 text-white text-center py-3 mt-auto">
-    &copy; 2025 Innovation Tracker. All rights reserved.
-  </footer>
-</body>
-
+    <!-- Footer -->
+    <footer
+      class="w-full bg-gray-800 text-white text-center py-4 mt-auto text-lg font-medium"
+    >
+      &copy; 2025 Innovation Tracker. All rights reserved.
+    </footer>
+  </body>
 </html>
