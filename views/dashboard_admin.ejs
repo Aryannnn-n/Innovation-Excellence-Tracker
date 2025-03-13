@@ -18,13 +18,14 @@
       referrerpolicy="no-referrer"
     />
   </head>
+  <style></style>
 
-  <body class="bg-orange-50 min-h-screen p-6">
+  <body class="bg-gradient-to-r from-orange-100 to-orange-400 min-h-screen p-6">
     <!-- Floating Navbar -->
     <nav
       class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white w-[100%] max-w-5xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
     >
-      <h1 class="text-xl font-bold">Admin Dashboard</h1>
+      <h1 class="nav-title text-xl font-bold">Admin Dashboard</h1>
       <div>
         <!-- <span class="font-semibold"> <%= user.name %> </span> -->
         <!-- Logout Button -->
@@ -64,7 +65,7 @@
         <tbody>
           <% if (innovations.length> 0) { %> <%
           innovations.forEach(function(innovation) { %>
-          <tr class="even:bg-orange-50 odd:bg-white">
+          <tr class="text-center even:bg-orange-50 odd:bg-white">
             <td class="border border-gray-300 p-2"><%= innovation.title %></td>
             <td class="border border-gray-300 p-2">
               <%= innovation.studentName %>
@@ -173,7 +174,7 @@
 
           <button
             type="submit"
-            class="mt-4 bg-yellow-400 font-bold text-black px-6 py-2 rounded-lg hover:bg-yellow-600 transition"
+            class="mt-4 bg-yellow-400 font-bold text-black px-6 py-2 rounded-lg hover:bg-yellow-500 transition"
           >
             Send News
           </button>
@@ -198,7 +199,10 @@
             { %>
             <tr class="border border-gray-300 bg-yellow-50">
               <td class="border border-gray-300 p-2"><%= hackathon.title %></td>
-              <td class="border border-gray-300 p-2"><%= hackathon.date ? hackathon.date.toISOString().slice(0, 10) : "N/A" %></td>
+              <td class="border border-gray-300 p-2">
+                <%= hackathon.date ? hackathon.date.toISOString().slice(0, 10) :
+                "N/A" %>
+              </td>
               <td class="border border-gray-300 p-2">
                 <%= hackathon.description %>
               </td>
@@ -227,5 +231,37 @@
         </table>
       </div>
     </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      function breakText() {
+        var h1 = document.querySelector(".nav-title");
+        var h1Text = h1.textContent;
+
+        var splittedText = h1Text.split("");
+
+        var clutter = "";
+
+        splittedText.forEach((e) => {
+          clutter += `<span>${e}</span>`; //each element would be in a span tag
+        });
+
+        h1.innerHTML = clutter;
+      }
+      breakText();
+
+      gsap.from("h1 span", {
+        y: 70,
+        opacity: 0,
+        duration: 0.5,
+        delay: 0.5,
+        stagger: 0.15,
+        ease: "power2.out",
+      });
+    </script>
   </body>
 </html>
