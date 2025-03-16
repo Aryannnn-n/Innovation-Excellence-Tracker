@@ -10,6 +10,11 @@ const UserSchema = new mongoose.Schema({
     enum: ['faculty', 'student', 'admin'],
     default: 'student',
   },
+  department: {
+    type: String,
+    enum: ['CSE', 'ECE', 'MECH', 'Civil', 'Biotech'],
+    required: true,
+  },
 });
 
 const User = mongoose.model('User', UserSchema);
