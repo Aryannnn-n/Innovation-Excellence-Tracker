@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Student Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function toggleForm() {
+      document.getElementById("submissionForm").classList.toggle("hidden");
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body class="bg-gradient-to-r from-blue-100 to-blue-400 min-h-screen">
+  <!-- Floating Navbar -->
+  <nav
+    class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-[90%] max-w-4xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center">
+    <h1 class="text-xl font-bold">Student Dashboard</h1>
+    <div class="flex items-center gap-6">
+      <span class="font-semibold">
+        <!-- <%= user.name %>  -->
+      </span>
+
+      <!-- Logout Button -->
+      <a href="/user/logout" class="relative group flex items-center gap-2">
+        <i class="fas fa-sign-out-alt text-xl text-white"></i>
+        <span
+          class="absolute left-1/2 transform -translate-x-1/2 bottom-[-35px] bg-blue-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+          Logout
+        </span>
+      </a>
+    </div>
+
+  </nav>
+  </a>
+  </div>
+
+  </nav>
+
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-20">
+    <h2 class="text-2xl font-bold text-blue-600">
+      Welcome, <%= user.name %>!
+    </h2>
+
+    <!-- Submit Proposal Button -->
+    <button onclick="toggleForm()"
+      class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+      Submit Your Proposal
+    </button>
+
+    <!-- Submission Form -->
+    <form id="submissionForm" action="/student/innovation/new" method="POST" enctype="multipart/form-data"
+      class="hidden mt-6 p-4 bg-gray-100 rounded-lg shadow">
+      <label class="block font-semibold">Title:</label>
+      <input type="text" name="title" required class="w-full px-2 py-1 border rounded" />
+
+      <label class="block font-semibold mt-2">Category:</label>
+      <select name="category" required class="w-full px-2 py-1 border rounded">
+        <option value="" disabled selected>Select a category</option>
+        <option value="Hackathon">Hackathon</option>
+        <option value="Startups">Startups</option>
+        <option value="Projects">Projects</option>
+        <option value="Patents">Patents</option>
+        <option value="Awards">Awards</option>
+        <option value="Research">Research</option>
+      </select>
+
+      <label class="block font-semibold mt-2">Department:</label>
+      <select name="department" required class="w-full px-2 py-1 border rounded">
+        <option value="" disabled selected>Select your department</option>
+        <option value="CSE">Computer Science & Engineering</option>
+        <option value="ECE">Electronics & Communication</option>
+        <option value="Mechanical">Mechanical Engineering</option>
+        <option value="Civil">Civil Engineering</option>
+        <option value="Biotech">Biotechnology</option>
+        <option value="Others">Others</option>
+      </select>
+
+      <label class="block font-semibold mt-2">Description:</label>
+      <textarea name="description" required class="w-full px-2 py-1 border rounded"></textarea>
+
+      <label class="block font-semibold mt-2">Key Features:</label>
+      <textarea name="keyFeatures" required class="w-full px-2 py-1 border rounded"></textarea>
+
+      <label class="block font-semibold mt-2">Upload Supporting Files (PDF):</label>
+      <input type="file" name="proposalFile" accept=".pdf" required class="w-full px-2 py-1 border rounded" />
+
+      <label class="block font-semibold mt-2">Collaborators:</label>
+      <input type="text" name="collaborators" class="w-full px-2 py-1 border rounded" />
+
+      <label class="block font-semibold mt-2">Mentor(s):</label>
+      <input type="text" name="mentors" required class="w-full px-2 py-1 border rounded" />
+
+      <label class="block font-semibold mt-2">Impact & Future Scope:</label>
+      <textarea name="info" required class="w-full px-2 py-1 border rounded"></textarea>
+
+      <input type="hidden" name="studentName" value="<%= user.name %>" />
+      <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+        Submit
+      </button>
+    </form>
+
+    <!-- Submitted Proposals Table -->
+    <h2 class="text-xl font-semibold mt-6">Your Submitted Innovations</h2>
+    <table class="w-full mt-4 border-collapse border border-gray-300">
+      <thead class="bg-blue-300">
+        <tr>
+          <th class="border border-gray-300 p-2">Title</th>
+          <th class="border border-gray-300 p-2">Submission Date</th>
+          <th class="border border-gray-300 p-2">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (innovations.length> 0) { %> <% innovations.forEach(innovation=>
+            { %>
+            <tr class="bg-blue-50 text-center">
+              <td class="border border-gray-300 p-2">
+                <%= innovation.title %>
+              </td>
+              <td class="border border-gray-300 p-2">
+                <%= innovation.date ? innovation.date.toISOString().slice(0, 10) : "N/A" %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <% if (innovation.status==='approved' ) { %>
+                  <span class="text-green-600 font-semibold">Approved</span>
+                  <% } else { %>
+                    <span class="text-yellow-600 font-semibold">Pending</span>
+                    <% } %>
+              </td>
+            </tr>
+            <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="3" class="border border-gray-300 p-4 text-center text-gray-500">
+                    No submissions yet.
+                  </td>
+                </tr>
+                <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="max-w-4xl h-auto flex flex-wrap  mx-auto p-6 bg-white shadow-lg rounded-lg mt-2">
+    <h2 class="text-xl font-semibold mt-6">Here's Analysis</h2>
+
+    <div class="w-full flex flex-col items-center">
+      <div class="w-2/3 m-2">
+        <canvas id="departmentChart"></canvas>
+      </div>
+      <div class="w-2/3 m-2">
+        <canvas id="innovationChart"></canvas>
+      </div>
+      <div class="w-2/3 m-2">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/script.js"></script>
+  </div>
+</body>
+
+</html>
