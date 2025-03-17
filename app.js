@@ -77,7 +77,7 @@ app.get('/', async (req, res) => {
 });
 
 // The student total proposals data
-app.get('/category-count', async (req, res) => {
+app.get('/user/category-count', async (req, res) => {
   try {
     if (!req.session.user) {
       return res.status(400).json({ error: 'User not logged in' });

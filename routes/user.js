@@ -81,7 +81,7 @@ router.get('/dashboard', async (req, res) => {
   try {
     if (user.role === 'student') {
       // Show all innovation submissions to students
-      const innovations = await Innovation.find();
+      const innovations = await Innovation.find({user: req.session.user}); // only logged in user innovations display
       return res.render('dashboards/dashboard', { user, innovations });
     }
 
