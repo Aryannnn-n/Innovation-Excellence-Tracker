@@ -71,10 +71,35 @@ app.use('/faculty', facultyRouter);
 app.use('/admin', adminRouter);
 app.use('/student', studentRouter);
 
-
 app.get('/', async (req, res) => {
   const hackathons = await Hackathon.find(); // Fetch from DB
   res.render('utils/index', { user: req.session.user, hackathons });
+});
+
+// The student total proposals data
+app.get('/category-count', async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(400).json({ error: 'User not logged in' });
+    }
+
+    const userId = new mongoose.Types.ObjectId(req.session.user._id); // ✅ Convert session user ID to ObjectId
+
+    const categoryCount = await Innovation.aggregate([
+      { $match: { user: userId } }, // ✅ Filter innovations by logged-in user
+      {
+        $group: {
+          _id: '$category', // ✅ Group by category
+          count: { $sum: 1 }, // ✅ Count innovations per category
+        },
+      },
+    ]);
+
+    res.json(categoryCount);
+  } catch (error) {
+    console.error('Aggregation Error:', error);
+    res.status(500).json({ error: 'Failed to fetch category counts' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
