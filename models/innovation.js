@@ -35,6 +35,8 @@ const InnovationSchema = new Schema({
     default: 'pending',
   },
   studentName: { type: String, required: true }, // ✅ Fix this line
+  // ✅ Store the user who submitted this innovation
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const Innovation = mongoose.model('Innovation', InnovationSchema);

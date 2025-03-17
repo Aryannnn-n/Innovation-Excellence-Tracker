@@ -15,6 +15,9 @@ const UserSchema = new mongoose.Schema({
     enum: ['CSE', 'ECE', 'MECH', 'Civil', 'Biotech', 'Others'],
     required: true,
   },
+
+  // ✅ Store all innovations submitted by the user
+  innovations: [{ type: Schema.Types.ObjectId, ref: 'Innovation' }],
 });
 
 const User = mongoose.model('User', UserSchema);
