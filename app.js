@@ -102,5 +102,20 @@ app.get('/user/category-count', async (req, res) => {
   }
 });
 
+// Chatbot route
+const chatAiService = require('./services/ai.service');
+
+app.post('/get-res-chat', async (req, res) => {
+  const prompt = req.body.prompt;
+  // console.log(prompt);
+
+  if (!prompt) {
+    return res.status(400).send('Prompt is req');
+  }
+
+  const response = await chatAiService(prompt);
+  res.send(response);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
