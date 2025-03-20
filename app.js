@@ -102,5 +102,56 @@ app.get('/user/category-count', async (req, res) => {
   }
 });
 
+
+
+app.get('/admin/category-count', async (req, res) => {
+  try {
+    const categoryCount = await Innovation.aggregate([
+      { $match: { status:"approved"} }, // ✅ Filter innovations by logged-in user
+      {
+        $group: {
+          _id: '$category', // ✅ Group by category
+          count: { $sum: 1 }, // ✅ Count innovations per category
+        },
+      },
+    ]);
+    const departmentWiseCount = await Innovation.aggregate([
+      {
+        $group: {
+          _id: '$department', // ✅ Group by department
+          totalInnovations: { $sum: 1 }, // ✅ Count total innovations in each department
+        },
+      },
+      { $sort: { _id: 1 } }, // ✅ Sort by department name
+    ]);
+
+    res.json({categoryCount,departmentWiseCount});
+  } catch (error) {
+    console.error('Aggregation Error:', error);
+    res.status(500).json({ error: 'Failed to fetch category counts' });
+  }
+});
+
+// app.get('/department-wise-count', async (req, res) => {
+//   try {
+//     const departmentWiseCount = await Innovation.aggregate([
+//       {
+//         $group: {
+//           _id: '$department', // ✅ Group by department
+//           totalInnovations: { $sum: 1 }, // ✅ Count total innovations in each department
+//         },
+//       },
+//       { $sort: { _id: 1 } }, // ✅ Sort by department name
+//     ]);
+
+//     res.json(departmentWiseCount);
+//   } catch (error) {
+//     console.error('Aggregation Error:', error);
+//     res.status(500).json({ error: 'Failed to fetch department-wise innovation count' });
+//   }
+// });
+
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
