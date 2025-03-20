@@ -108,7 +108,7 @@ router.get('/dashboard', async (req, res) => {
 
     if (user.role === 'admin') {
       // Admin sees all proposals and can manage them
-      const innovations = await Innovation.find();
+      const innovations = await Innovation.find({status:"approved"});
       const hackathons = await Hackathon.find(); // Fetch all hackathons
       return res.render('dashboards/dashboard_admin', {
         user,
