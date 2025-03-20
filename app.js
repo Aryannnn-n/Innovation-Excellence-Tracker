@@ -117,5 +117,20 @@ app.post('/get-res-chat', async (req, res) => {
   res.send(response);
 });
 
+// Rating Route'
+const aiRating = require('./services/aiRating.service');
+
+app.get('/get-rating', async (req, res) => {
+  const prompt = req.query.prompt;
+  // console.log(prompt);
+
+  if (!prompt) {
+    return res.status(400).send('Prompt is req');
+  }
+
+  const response = await aiRating(prompt);
+  res.send(response);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
