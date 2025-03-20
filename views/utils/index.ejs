@@ -1,99 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Innovation Tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
 
-<head>
-  <title>Innovation Tracking</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+  <body class="bg-[#e9e9f4] flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 left-0 w-full rounded-b-3xl z-50 backdrop-blur-md bg-white/10 shadow-md border-b border-white/20"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center py-3"
+      >
+        <!-- Logo -->
+        <h1
+          class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent flex items-center gap-2"
+        >
+          🚀 Innovation Tracker
+        </h1>
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
-  <!-- Navbar -->
-  <nav
-    class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white w-full py-4 shadow-lg flex justify-between items-center px-8 fixed top-0 left-0 z-50">
-    <h1 class="text-2xl font-bold">🚀 Innovation Tracker</h1>
-    <div>
-      <% if (user) { %>
-        <a href="/user/dashboard"
-          class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600 transition font-medium shadow-md">Dashboard</a>
-        <a href="/user/logout"
-          class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition font-medium shadow-md">Logout</a>
-        <% } else { %>
-          <a href="/user/login"
-            class="px-4 py-2 bg-blue-700 rounded-lg hover:bg-blue-800 transition font-medium shadow-md">Login</a>
-          <a href="/user/register"
-            class="px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-600 transition font-medium shadow-md">Register</a>
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-4">
+          <% if (user) { %>
+          <a
+            href="/user/dashboard"
+            class="px-5 py-2 text-white bg-green-500 rounded-full hover:bg-green-600 transition font-medium shadow-md"
+          >
+            <i class="fas fa-home"></i> Dashboard
+          </a>
+          <a
+            href="/user/logout"
+            class="px-5 py-2 text-white bg-red-500 rounded-full hover:bg-red-600 transition font-medium shadow-md"
+          >
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+          <% } else { %>
+          <a
+            href="/user/login"
+            class="px-5 py-2 text-white bg-blue-400 rounded-full hover:bg-blue-500 transition font-medium shadow-md"
+          >
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+          <a
+            href="/user/register"
+            class="px-5 py-2 text-white bg-purple-500 rounded-full hover:bg-purple-600 transition font-medium shadow-md"
+          >
+            <i class="fas fa-user-plus"></i> Register
+          </a>
           <% } %>
-    </div>
-  </nav>
+        </div>
 
-  <!-- Main Section -->
-  <main class="flex flex-1 items-center justify-between px-10 mt-24">
-    <!-- Left: Text Content -->
-    <div class="w-full md:w-1/2 text-center md:text-left">
-      <h2 class="text-4xl font-bold text-gray-800 leading-tight">
-        Welcome to <span class="text-blue-600">Innovation Tracker</span>
-      </h2>
-      <p class="text-lg text-gray-600 mt-2">
-        Empowering students to showcase their innovative ideas & <br />
-        in exciting hackathons.
-      </p>
+        <!-- Mobile Menu Button -->
+        <button onclick="toggleMenu()" class="md:hidden text-white text-2xl">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
 
-      <% if (!user) { %>
+      <!-- Mobile Dropdown Menu -->
+      <div
+        id="mobileMenu"
+        class="hidden flex flex-col items-center md:hidden bg-gray-900 text-white py-3"
+      >
+        <% if (user) { %>
+        <a
+          href="/user/dashboard"
+          class="py-2 w-full text-center hover:bg-gray-800"
+          >Dashboard</a
+        >
+        <a href="/user/logout" class="py-2 w-full text-center hover:bg-gray-800"
+          >Logout</a
+        >
+        <% } else { %>
+        <a href="/user/login" class="py-2 w-full text-center hover:bg-gray-800"
+          >Login</a
+        >
+        <a
+          href="/user/register"
+          class="py-2 w-full text-center hover:bg-gray-800"
+          >Register</a
+        >
+        <% } %>
+      </div>
+    </nav>
+    <!-- Main Section -->
+    <main class="flex flex-1 items-center justify-between px-10 mt-24">
+      <!-- Left: Icon + Text Content -->
+      <div class="w-full md:w-1/2 text-center md:text-left">
+        <!-- Icon Above the Text -->
+        <div
+          class="flex justify-center rounded-full bg-zinc-300 w-[150px] gap-3 p-2 items-center md:justify-start mb-4"
+        >
+          <img
+            src="/images/technical-support.png"
+            alt="Innovation Icon"
+            class="w-12 h-12 cursor-pointer"
+          />
+          <span
+            class="text-2xl font-bold cursor-pointer bg-gradient-to-br from-blue-500 to-purple-600 bg-clip-text text-transparent"
+            >Ask AI</span
+          >
+        </div>
+
+        <h2 class="text-4xl font-bold text-[#372e58] leading-tight">
+          Welcome to
+          <span
+            class="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
+          >
+            Innovation Tracker
+          </span>
+        </h2>
+        <p class="text-lg text-gray-600 mt-2">
+          Empowering students to showcase their innovative ideas & <br />
+          in exciting hackathons.
+        </p>
+
+        <% if (!user) { %>
         <div class="mt-6">
-          <a href="/user/register"
-            class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition shadow-md">
+          <a
+            href="/user/register"
+            class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition shadow-md"
+          >
             Get Started 🚀
           </a>
         </div>
         <% } %>
-    </div>
+      </div>
 
-    <!-- Right: Image -->
-    <div class="hidden md:block w-1/2">
-      <img
-        src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
-        alt="Innovation Tracker" class="w-full h-auto rounded-xl shadow-xl hover:scale-105 transition duration-300" />
-    </div>
-  </main>
+      <!-- Right: Image -->
+      <div class="hidden md:block w-1/2">
+        <img
+          src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
+          alt="Innovation Tracker"
+          class="w-full h-auto rounded-xl shadow-xl hover:scale-[101%] transition duration-300"
+        />
+      </div>
+    </main>
 
-  <!-- Cards Section -->
-  <section class="container mx-auto px-6 py-12">
-    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
-      🔥 Available Hackathons
-    </h2>
+    <!-- Cards Section -->
+    <section class="container mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold text-[#372e58] mb-8 text-center">
+        🔥 Available Hackathons
+      </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=> { %>
-          <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300">
-            <h3 class="text-2xl font-semibold text-gray-800">
-              <%= hackathon.title %>
-            </h3>
-            <p class="text-gray-500 text-sm mt-1">
-              📅 Date: <%= hackathon.date ? hackathon.date.toISOString().slice(0, 10) : "N/A" %>
-            </p>
-            <p class="text-gray-700 mt-2">
-              <%= hackathon.description %>
-            </p>
-            <a href="<%= hackathon.registrationLink %>" target="_blank">
-              <button
-                class="mt-4 bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition font-medium shadow-md">
-                Apply Now 🚀
-              </button>
-            </a>
-          </div>
-          <% }) %>
-            <% } else { %>
-              <p class="text-gray-500 text-center text-lg">
-                🚫 No hackathons available at the moment.
-              </p>
-              <% } %>
-    </div>
-  </section>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=> { %>
+        <div
+          class="bg-[#d5cff5] p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300"
+        >
+          <h3
+            class="text-2xl font-semibold bg-gradient-to-br from-[#32274d] to-[#a88ef9] bg-clip-text text-transparent"
+          >
+            <%= hackathon.title %>
+          </h3>
 
-  <!-- Footer -->
-  <footer class="w-full bg-gray-800 text-white text-center py-4 mt-auto text-lg font-medium">
-    &copy; 2025 Innovation Tracker. All rights reserved.
-  </footer>
-</body>
-
+          <p class="text-gray-500 text-sm mt-1">
+            📅 Date: <%= hackathon.date ? hackathon.date.toISOString().slice(0,
+            10) : "N/A" %>
+          </p>
+          <p class="text-gray-700 mt-2"><%= hackathon.description %></p>
+          <a href="<%= hackathon.registrationLink %>" target="_blank">
+            <button
+              class="mt-4 bg-[#a88ef9] text-[#372e58] px-5 py-2 rounded-lg hover:bg-[#8770c7] hover:text-black transition font-medium shadow-md"
+            >
+              Apply Now 🚀
+            </button>
+          </a>
+        </div>
+        <% }) %> <% } else { %>
+        <p class="text-gray-500 text-center text-lg">
+          🚫 No hackathons available at the moment.
+        </p>
+        <% } %>
+      </div>
+    </section>
+    <section
+      class="h-screen flex flex-col items-center justify-center bg-[#e9e9f4] px-6"
+    >
+      <h2 class="text-4xl font-bold text-[#372e58] mb-4 text-center">
+        🚀 Stay Tuned for More Innovations!
+      </h2>
+      <p class="text-lg text-gray-600 text-center max-w-2xl">
+        We are continuously updating our platform with new hackathons,
+        innovation challenges, and opportunities. Stay connected to explore
+        exciting possibilities!
+      </p>
+      <a
+        href="/upcoming-events"
+        class="mt-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition shadow-md"
+      >
+        Explore Upcoming Events 🚀
+      </a>
+    </section>
+    <!-- Footer -->
+    <footer
+      class="w-full bg-[#4d2493] backdrop-blur-sm rounded-t-3xl text-white text-center py-4 mt-auto text-lg font-medium"
+    >
+      &copy; 2025 Innovation Tracker. All rights reserved.
+    </footer>
+  </body>
 </html>

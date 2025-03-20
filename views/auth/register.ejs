@@ -1,76 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
 
-<head>
-  <title>Register</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+  <body
+    class="h-screen flex items-center justify-center bg-gradient-to-r from-purple-100 to-purple-300"
+  >
+    <div class="w-11/12 max-w-md p-6 bg-white shadow-2xl rounded-2xl md:p-8">
+      <h2 class="text-2xl font-bold text-center text-purple-600 mb-4">
+        Create an Account
+      </h2>
 
-<body class="h-screen flex items-center justify-center bg-gradient-to-r from-green-100 to-green-300">
-  <div class="w-11/12 max-w-md p-6 bg-white shadow-2xl rounded-2xl md:p-8">
-    <h2 class="text-2xl font-bold text-center text-green-600 mb-4">Create an Account</h2>
-
-    <% if (typeof error !=='undefined' && error) { %>
+      <% if (typeof error !=='undefined' && error) { %>
       <p class="text-red-500 text-center mb-4 bg-red-100 p-2 rounded-lg">
         <%= error %>
       </p>
       <% } %>
 
-        <form action="/user/register" method="POST" class="space-y-3">
+      <form action="/user/register" method="POST" class="space-y-3">
+        <div>
+          <label class="block text-gray-700 font-medium">Full Name</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            required
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium">Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-gray-700 font-medium">Full Name</label>
-            <input type="text" name="name" placeholder="Enter your name" required
-              class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm" />
+            <label class="block text-gray-700 font-medium">Role</label>
+            <select
+              name="role"
+              required
+              class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+            >
+              <option value="student">Student</option>
+              <option value="faculty">Faculty</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
 
           <div>
-            <label class="block text-gray-700 font-medium">Email</label>
-            <input type="email" name="email" placeholder="Enter your email" required
-              class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm" />
+            <label class="block text-gray-700 font-medium">Department</label>
+            <select
+              name="department"
+              required
+              class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+            >
+              <option value="" disabled selected>Select</option>
+              <option value="CSE">CS</option>
+              <option value="ECE">ME</option>
+              <option value="MECH">EE</option>
+              <option value="Civil">CE</option>
+              <option value="Biotech">BA</option>
+            </select>
           </div>
+        </div>
 
-          <div>
-            <label class="block text-gray-700 font-medium">Password</label>
-            <input type="password" name="password" placeholder="Enter your password" required
-              class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm" />
-          </div>
+        <button
+          type="submit"
+          class="w-full bg-purple-500 text-white font-semibold py-2 rounded-lg hover:bg-purple-600 transition duration-300 shadow-md mt-2"
+        >
+          Register
+        </button>
+      </form>
 
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-gray-700 font-medium">Role</label>
-              <select name="role" required
-                class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm">
-                <option value="student">Student</option>
-                <option value="faculty">Faculty</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-gray-700 font-medium">Department</label>
-              <select name="department" required
-                class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm">
-                <option value="" disabled selected>Select</option>
-                <option value="CSE">CS</option>
-                <option value="ECE">ME</option>
-                <option value="MECH">EE</option>
-                <option value="Civil">CE</option>
-                <option value="Biotech">BA</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit"
-            class="w-full bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition duration-300 shadow-md mt-2">
-            Register
-          </button>
-        </form>
-
-        <p class="text-center mt-3 text-gray-600">
-          Already have an account?
-          <a href="/user/login" class="text-green-600 font-medium hover:underline">Login</a>
-        </p>
-  </div>
-</body>
-
+      <p class="text-center mt-3 text-gray-600">
+        Already have an account?
+        <a
+          href="/user/login"
+          class="text-purple-600 font-medium hover:underline"
+          >Login</a
+        >
+      </p>
+    </div>
+  </body>
 </html>
