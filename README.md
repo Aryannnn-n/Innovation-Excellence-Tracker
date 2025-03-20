@@ -32,7 +32,7 @@ Hackathon Project for **HackFusion 2025**
 1. **Clone the Repository:**
 
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/Aryannnn-n/Hack.git
    cd Hack
    ```
 
