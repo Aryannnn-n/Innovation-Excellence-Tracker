@@ -35,6 +35,27 @@
       <h2 class="text-2xl font-bold text-green-600">
         Welcome, <%= user.name %>!
       </h2>
+      <div class="flex flex-col">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <!-- Card 1 -->
+          <div class="bg-green-200 p-4 rounded-lg shadow-md">
+            <h3 class="text-lg font-bold text-green-700">Total Proposals</h3>
+            <p class="text-2xl font-semibold text-green-800 mt-2">ey</p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-yellow-200 p-4 rounded-lg shadow-md">
+            <h3 class="text-lg font-bold text-yellow-700">Pending Proposals</h3>
+            <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-red-200 p-4 rounded-lg shadow-md">
+            <h3 class="text-lg font-bold text-red-700">Rejected Proposals</h3>
+            <p class="text-2xl font-semibold text-red-800 mt-2">hey</p>
+          </div>
+        </div>
+      </div>
 
       <!-- Pending Proposals -->
       <h2 class="text-xl font-semibold mt-6 text-yellow-600">

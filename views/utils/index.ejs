@@ -144,24 +144,26 @@
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=> { %>
+        <% if (hackathons.length > 0) { %> <% hackathons.forEach(hackathon => {
+        %>
         <div
-          class="bg-[#d5cff5] p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300"
+          class="bg-[#2b1d4f] p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border border-purple-600"
         >
           <h3
-            class="text-2xl font-semibold bg-gradient-to-br from-[#32274d] to-[#a88ef9] bg-clip-text text-transparent"
+            class="text-2xl font-semibold bg-gradient-to-br from-blue-400 to-purple-400 bg-clip-text text-transparent"
           >
             <%= hackathon.title %>
           </h3>
 
-          <p class="text-gray-500 text-sm mt-1">
+          <p class="text-gray-300 text-sm mt-1">
             📅 Date: <%= hackathon.date ? hackathon.date.toISOString().slice(0,
             10) : "N/A" %>
           </p>
-          <p class="text-gray-700 mt-2"><%= hackathon.description %></p>
+          <p class="text-gray-200 mt-2"><%= hackathon.description %></p>
+
           <a href="<%= hackathon.registrationLink %>" target="_blank">
             <button
-              class="mt-4 bg-[#a88ef9] text-[#372e58] px-5 py-2 rounded-lg hover:bg-[#8770c7] hover:text-black transition font-medium shadow-md"
+              class="mt-4 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white px-5 py-2 rounded-lg hover:opacity-80 transition font-medium shadow-md"
             >
               Apply Now 🚀
             </button>
