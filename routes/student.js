@@ -58,21 +58,29 @@ const upload = multer({ storage: storage });
 //   }
 // );
 
-// ✅ Student Adding New Proposal
+const {
+  extractTextFromPDF,
+  getAIRating,
+} = require('../services/aiRating.service');
+
 router.post(
   '/innovation/new',
   upload.single('proposalFile'),
   async (req, res) => {
     try {
-      // console.log('📝 Received Form Data:', req.body);
-      // console.log('📂 Uploaded File:', req.file);
-
-      // ✅ Check if user is logged in
       if (!req.session || !req.session.user) {
         return res.status(401).send('Unauthorized: User not logged in.');
       }
 
-      const userId = req.session.user._id; // Get logged-in user's ID
+      const userId = req.session.user._id;
+
+      // ✅ Extract text from PDF
+      let rating = null;
+      if (req.file) {
+        const filePath = `uploads/${req.file.filename}`;
+        const pdfText = await extractTextFromPDF(filePath);
+        rating = await getAIRating(pdfText); // Get AI rating
+      }
 
       // ✅ Create Innovation document
       const innovation = new Innovation({
@@ -88,18 +96,18 @@ router.post(
         info: req.body.info,
         proposalFile: req.file?.filename || null,
         studentName: req.body.studentName,
-        user: userId, // ✅ Link innovation to the user
+        user: userId,
+        rating: rating, // ✅ Save the AI rating in the DB
       });
 
-      // ✅ Save the innovation
       const savedInnovation = await innovation.save();
 
-      // ✅ Also update User's innovations array
+      // ✅ Update User's innovations array
       await User.findByIdAndUpdate(userId, {
         $push: { innovations: savedInnovation._id },
       });
 
-      console.log('✅ Innovation saved successfully!');
+      console.log('✅ Innovation saved with rating:', rating);
       res.redirect('/user/dashboard');
     } catch (error) {
       console.error('❌ Error saving innovation:', error);

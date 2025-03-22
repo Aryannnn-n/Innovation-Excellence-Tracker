@@ -5,17 +5,9 @@ const InnovationSchema = new Schema({
   title: { type: String, required: true },
   category: {
     type: String,
-    enum: [
-      'Hackathon',
-      'Startups',
-      'Projects',
-      'Patents',
-      'Awards',
-      'Research',
-    ],
+    enum: ['Hackathon', 'Startups', 'Projects', 'Patents', 'Awards', 'Research'],
     required: true,
   },
-
   description: { type: String, required: true },
   contributors: String,
   department: {
@@ -34,9 +26,11 @@ const InnovationSchema = new Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
-  studentName: { type: String, required: true }, // ✅ Fix this line
-  // ✅ Store the user who submitted this innovation
+  studentName: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+
+  // ✅ Set default rating to 1
+  rating: { type: Number, min: 1, max: 10, default: 1 },  
 });
 
 const Innovation = mongoose.model('Innovation', InnovationSchema);
