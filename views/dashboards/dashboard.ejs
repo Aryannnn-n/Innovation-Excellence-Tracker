@@ -14,7 +14,7 @@
     />
   </head>
 
-  <body class="bg-gradient-to-r from-blue-100 to-blue-400 min-h-screen">
+  <body class="bg-gradient-to-r from-blue-200 to-blue-500 min-h-screen">
     <!-- Floating Navbar -->
     <nav
       class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-full max-w-4xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
@@ -64,40 +64,57 @@
 
     <!-- Main Content Layout -->
     <div
-      class="max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-20 flex gap-6"
+      class="max-w-6xl mx-auto p-6 bg-blue-100 mb-10 shadow-lg rounded-lg mt-20 flex gap-6"
     >
       <!-- Left Section: Proposal Cards -->
-      <div class="w-1/3 space-y-4 bg-gray-900 text-white p-6 rounded-xl shadow-lg">
-  <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-    Your Proposals
-  </h2>
-  <% if (innovations.length > 0) { %> 
-    <% innovations.forEach(innovation => { %>
-      <div class="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700">
-        <h3 class="font-bold text-white">
-          Title: <%= innovation.title %>
-        </h3>
-        <p class="text-sm text-gray-400">
-          Category: <%= innovation.category %> | <%= innovation.date ? innovation.date.toISOString().slice(0, 10) : "N/A" %>
-        </p>
-        <p class="text-sm text-gray-300 mt-2">
-          <strong>Status:</strong>
-          <span class="<%= innovation.status === 'approved' ? 'text-green-500' : 'text-yellow-500' %>">
-            <%= innovation.status === 'approved' ? 'Approved' : 'Pending' %>
-          </span>
-        </p>
-        
-        <a href="/uploads/<%= innovation.proposalFile %>" target="_blank" 
-           class="block mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center rounded-lg shadow-md hover:opacity-80 transition">
-          View Report
-        </a>
-      </div>
-    <% }); %> 
-  <% } else { %>
-    <p class="text-gray-500">No submissions yet.</p>
-  <% } %>
-</div>
+      <div
+        class="w-1/3 space-y-4 bg-gray-900 text-white p-6 rounded-xl shadow-lg"
+      >
+        <h2
+          class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+        >
+          Your Proposals
+        </h2>
+        <% if (innovations.length > 0) { %> <% innovations.forEach(innovation =>
+        { %>
+        <div
+          class="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700"
+        >
+          <h3 class="font-bold text-white">Title: <%= innovation.title %></h3>
+          <p class="text-sm text-gray-400">
+            Category: <%= innovation.category %> | <%= innovation.date ?
+            innovation.date.toISOString().slice(0, 10) : "N/A" %>
+          </p>
+          <p class="text-sm text-gray-300 mt-2">
+            <strong>Status:</strong>
+            <span
+              class="<%= innovation.status === 'approved' ? 'text-green-500' : 'text-yellow-500' %>"
+            >
+              <%= innovation.status === 'approved' ? 'Approved' : 'Pending' %>
+            </span>
+          </p>
 
+          <div class="flex gap-4 mt-4">
+            <a
+              href="/uploads/<%= innovation.proposalFile %>"
+              target="_blank"
+              class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center rounded-lg shadow-md hover:opacity-80 transition flex-1"
+            >
+              View Report
+            </a>
+            <a
+              href="/uploads/<%= innovation._id %> %>"
+              target="_blank"
+              class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center rounded-lg shadow-md hover:opacity-80 transition flex-1"
+            >
+              View Form
+            </a>
+          </div>
+        </div>
+        <% }); %> <% } else { %>
+        <p class="text-gray-500">No submissions yet.</p>
+        <% } %>
+      </div>
 
       <!-- Right Section: Forms & Analysis -->
       <div class="w-2/3">
@@ -106,7 +123,7 @@
         </h2>
         <button
           onclick="toggleForm()"
-          class="mt-4 bg-gradient-to-t from-blue-500 to-blue-200 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+          class="mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
         >
           Submit Your Proposal
         </button>
@@ -219,7 +236,16 @@
         >
           Your Participation Analysis
         </h2>
-        <div class="w-[90%] m-4 flex justify-center">
+        <button
+          onclick="toggleCanvas()"
+          class="mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          Show Analysis
+        </button>
+        <div
+          id="canvasContainer"
+          class="w-[90%] m-4 flex justify-center hidden"
+        >
           <canvas id="StudentChart"></canvas>
         </div>
       </div>
@@ -227,7 +253,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/graphs/studentDashboard.js"></script>
+
     <script>
+      // toggle canvas visibility
+      function toggleCanvas() {
+        document.getElementById("canvasContainer").classList.toggle("hidden");
+      }
       // Simulating New Notification
       let hasNewNotification = true;
       const notificationDot = document.getElementById("notificationDot");

@@ -38,19 +38,28 @@
       <div class="flex flex-col">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           <!-- Card 1 -->
-          <div class="bg-green-200 p-4 rounded-lg shadow-md">
+          <div
+            onclick="toggleApproved()"
+            class="bg-green-200 p-4 rounded-lg shadow-md"
+          >
             <h3 class="text-lg font-bold text-green-700">Total Proposals</h3>
             <p class="text-2xl font-semibold text-green-800 mt-2">ey</p>
           </div>
 
           <!-- Card 2 -->
-          <div class="bg-yellow-200 p-4 rounded-lg shadow-md">
+          <div
+            onclick="togglePending()"
+            class="bg-yellow-200 p-4 rounded-lg shadow-md"
+          >
             <h3 class="text-lg font-bold text-yellow-700">Pending Proposals</h3>
             <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p>
           </div>
 
           <!-- Card 3 -->
-          <div class="bg-red-200 p-4 rounded-lg shadow-md">
+          <div
+            onclick="toggleRejected()"
+            class="bg-red-200 p-4 rounded-lg shadow-md"
+          >
             <h3 class="text-lg font-bold text-red-700">Rejected Proposals</h3>
             <p class="text-2xl font-semibold text-red-800 mt-2">hey</p>
           </div>
@@ -61,7 +70,10 @@
       <h2 class="text-xl font-semibold mt-6 text-yellow-600">
         Pending Proposals
       </h2>
-      <table class="w-full mt-4 border-collapse border border-gray-300">
+      <table
+        id="pendingProposals"
+        class="w-full mt-4 border-collapse border border-gray-300"
+      >
         <thead class="bg-yellow-300">
           <tr>
             <th class="border border-gray-300 p-2">Sr. No.</th>
@@ -159,7 +171,10 @@
       <h2 class="text-xl font-semibold mt-6 text-green-600">
         Approved Proposals
       </h2>
-      <table class="w-full mt-4 border-collapse border border-gray-300">
+      <table
+        id="approvedProposals"
+        class="w-full mt-4 border-collapse border border-gray-300"
+      >
         <thead class="bg-green-300">
           <tr>
             <th class="border border-gray-300 p-2 text-center">Sr. No.</th>
@@ -225,7 +240,10 @@
       <h2 class="text-xl font-semibold mt-6 text-red-600">
         Rejected Proposals
       </h2>
-      <table class="w-full mt-4 border-collapse border border-gray-300">
+      <table
+        id="rejectedProposals"
+        class="w-full mt-4 border-collapse border border-gray-300"
+      >
         <thead class="bg-red-300">
           <tr>
             <th class="border border-gray-300 p-2">Sr. No.</th>
@@ -275,5 +293,39 @@
         </tbody>
       </table>
     </div>
+    <script>
+      function toggleApproved() {
+        const approvedTable = document.getElementById("approvedProposals");
+        const pendingTable = document.getElementById("pendingProposals");
+        const rejectedTable = document.getElementById("rejectedProposals");
+
+        approvedTable.style.display =
+          approvedTable.style.display === "none" ? "table" : "none";
+        pendingTable.style.display = "none";
+        rejectedTable.style.display = "none";
+      }
+
+      function togglePending() {
+        const pendingTable = document.getElementById("pendingProposals");
+        const approvedTable = document.getElementById("approvedProposals");
+        const rejectedTable = document.getElementById("rejectedProposals");
+
+        pendingTable.style.display =
+          pendingTable.style.display === "none" ? "table" : "none";
+        approvedTable.style.display = "none";
+        rejectedTable.style.display = "none";
+      }
+
+      function toggleRejected() {
+        const rejectedTable = document.getElementById("rejectedProposals");
+        const approvedTable = document.getElementById("approvedProposals");
+        const pendingTable = document.getElementById("pendingProposals");
+
+        rejectedTable.style.display =
+          rejectedTable.style.display === "none" ? "table" : "none";
+        approvedTable.style.display = "none";
+        pendingTable.style.display = "none";
+      }
+    </script>
   </body>
 </html>
