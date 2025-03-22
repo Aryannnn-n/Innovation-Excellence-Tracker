@@ -103,18 +103,22 @@ app.get("/user/category-count", async (req, res) => {
 });
 
 // Chatbot route
-const chatAiService = require("./services/ai.service");
+const chatBot = require('./services/ai.service');
 
-app.post("/get-res-chat", async (req, res) => {
-  const prompt = req.body.prompt;
-  // console.log(prompt);
+app.post('/get-res-chat', async (req, res) => {
+  const { prompt } = req.body;
 
   if (!prompt) {
-    return res.status(400).send("Prompt is req");
+    return res.status(400).json({ message: 'Prompt is required' });
   }
 
-  const response = await chatAiService(prompt);
-  res.send(response);
+  try {
+    const response = await chatBot(prompt);
+    res.status(200).json({ message: response });
+  } catch (error) {
+    console.error('Chatbot API Error:', error);
+    res.status(500).json({ message: 'Failed to get chatbot response' });
+  }
 });
 
 // Rating Route'
