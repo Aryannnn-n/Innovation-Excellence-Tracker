@@ -108,4 +108,11 @@ router.post(
   }
 );
 
+// Student view form
+router.get('/uploads/:id', async (req, res) => {
+  let _id = req.params.id;
+  let adminUser = await Innovation.findOne({ _id });
+  res.render('utils/view_form', { adminUser });
+});
+
 module.exports = router;
