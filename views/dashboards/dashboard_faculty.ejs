@@ -1,331 +1,296 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Faculty Dashboard - Innovation Tracker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-  </head>
 
-  <body class="bg-gradient-to-r from-green-100 to-green-300 min-h-screen">
-    <!-- Floating Navbar -->
-    <nav
-      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
-    >
-      <h1 class="text-xl font-bold">Faculty Dashboard</h1>
-      <div class="relative flex items-center gap-4">
-        <!-- <span class="font-semibold"> <%= user.name %> </span> -->
+<head>
+  <title>Faculty Dashboard - Innovation Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<style>
+  #reject-innovation{
+    display: none;
+  }
+</style>
+</head>
 
-        <!-- Logout Button -->
-        <a href="/user/logout" class="relative group flex items-center gap-2">
-          <i class="fas fa-sign-out-alt text-xl text-white"></i>
-          <span
-            class="absolute left-1/2 transform -translate-x-1/2 bottom-[-30px] bg-green-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            Logout
-          </span>
-        </a>
-      </div>
-    </nav>
+<body class="bg-gradient-to-r from-green-100 to-green-300 min-h-screen">
+  <!-- Floating Navbar -->
+  <nav
+    class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center">
+    <h1 class="text-xl font-bold">Faculty Dashboard</h1>
+    <div class="relative flex items-center gap-4">
+      <!-- <span class="font-semibold"> <%= user.name %> </span> -->
 
-    <!-- Main Content -->
-    <div class="max-w-6xl mx-auto p-6 mt-20 bg-white shadow-lg rounded-lg">
-      <h2 class="text-2xl font-bold text-green-600">
-        Welcome, <%= user.name %>!
-      </h2>
-      <div class="flex flex-col">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          <!-- Card 1 -->
-          <div
-            onclick="toggleApproved()"
-            class="bg-green-200 p-4 rounded-lg shadow-md"
-          >
-            <h3 class="text-lg font-bold text-green-700">Total Proposals</h3>
-            <p class="text-2xl font-semibold text-green-800 mt-2">ey</p>
-          </div>
+      <!-- Logout Button -->
+      <a href="/user/logout" class="relative group flex items-center gap-2">
+        <i class="fas fa-sign-out-alt text-xl text-white"></i>
+        <span
+          class="absolute left-1/2 transform -translate-x-1/2 bottom-[-30px] bg-green-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+          Logout
+        </span>
+      </a>
+    </div>
+  </nav>
 
-          <!-- Card 2 -->
-          <div
-            onclick="togglePending()"
-            class="bg-yellow-200 p-4 rounded-lg shadow-md"
-          >
-            <h3 class="text-lg font-bold text-yellow-700">Pending Proposals</h3>
-            <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p>
-          </div>
+  <!-- Main Content -->
+  <div class="max-w-6xl mx-auto p-6 mt-20 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold text-green-600">
+      Welcome, <%= user.name %>!
+    </h2>
+    <div class="flex flex-col">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <!-- Card 1 -->
+        <div onclick="toggleApproved()" class="bg-green-200 p-4 rounded-lg shadow-md">
+          <h3 class="text-lg font-bold text-green-700">Total Proposals</h3>
+          <p class="text-2xl font-semibold text-green-800 mt-2">ey</p>
+        </div>
 
-          <!-- Card 3 -->
-          <div
-            onclick="toggleRejected()"
-            class="bg-red-200 p-4 rounded-lg shadow-md"
-          >
-            <h3 class="text-lg font-bold text-red-700">Rejected Proposals</h3>
-            <p class="text-2xl font-semibold text-red-800 mt-2">hey</p>
-          </div>
+        <!-- Card 2 -->
+        <div onclick="togglePending()" class="bg-yellow-200 p-4 rounded-lg shadow-md">
+          <h3 class="text-lg font-bold text-yellow-700">Pending Proposals</h3>
+          <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div onclick="toggleRejected()" class="bg-red-200 p-4 rounded-lg shadow-md">
+          <h3 class="text-lg font-bold text-red-700">Rejected Proposals</h3>
+          <p class="text-2xl font-semibold text-red-800 mt-2">hey</p>
         </div>
       </div>
-
-      <!-- Pending Proposals -->
-      <h2 class="text-xl font-semibold mt-6 text-yellow-600">
-        Pending Proposals
-      </h2>
-      <table
-        id="pendingProposals"
-        class="w-full mt-4 border-collapse border border-gray-300"
-      >
-        <thead class="bg-yellow-300">
-          <tr>
-            <th class="border border-gray-300 p-2">Sr. No.</th>
-            <th class="border border-gray-300 p-2">Title</th>
-            <th class="border border-gray-300 p-2">Student Name</th>
-            <th class="border border-gray-300 p-2">Mentor</th>
-            <th class="border border-gray-300 p-2">Submission Date</th>
-            <th class="border border-gray-300 p-2">Action</th>
-            <th class="border border-gray-300 p-2">File</th>
-            <th class="border border-gray-300 p-2">Form</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (pendingProposals.length> 0) { %> <%
-          pendingProposals.forEach((proposal, index)=> { %>
-          <tr class="even:bg-yellow-100 odd:bg-yellow-50">
-            <td class="border border-gray-300 p-2 text-center">
-              <%= index + 1 %>
-            </td>
-            <td class="border border-gray-300 p-2"><%= proposal.title %></td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.studentName %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.mentors %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.date ? proposal.date.toISOString().slice(0, 10) :
-              "N/A" %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.Collaborators %>
-              <form
-                action="/faculty/approve-proposal"
-                method="POST"
-                class="inline"
-              >
-                <input
-                  type="hidden"
-                  name="proposalId"
-                  value="<%= proposal._id %>"
-                />
-                <button
-                  class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition"
-                >
-                  Approve
-                </button>
-              </form>
-              <form
-                action="/faculty/reject-proposal"
-                method="POST"
-                class="inline"
-              >
-                <input
-                  type="hidden"
-                  name="proposalId"
-                  value="<%= proposal._id %>"
-                />
-                <button
-                  class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-                >
-                  Reject
-                </button>
-              </form>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <a
-                href="/uploads/<%= proposal.proposalFile %>"
-                target="_blank"
-                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-              >
-                View file
-              </a>
-            </td>
-            <td
-              class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center"
-            >
-              <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
-            </td>
-          </tr>
-          <% }); %> <% } else { %>
-          <tr>
-            <td
-              colspan="6"
-              class="border border-gray-300 p-4 text-center bg-yellow-50 text-gray-500"
-            >
-              No pending proposals.
-            </td>
-          </tr>
-          <% } %>
-        </tbody>
-      </table>
-
-      <!-- Approved Proposals -->
-      <h2 class="text-xl font-semibold mt-6 text-green-600">
-        Approved Proposals
-      </h2>
-      <table
-        id="approvedProposals"
-        class="w-full mt-4 border-collapse border border-gray-300"
-      >
-        <thead class="bg-green-300">
-          <tr>
-            <th class="border border-gray-300 p-2 text-center">Sr. No.</th>
-            <th class="border border-gray-300 p-2 text-center">Title</th>
-            <th class="border border-gray-300 p-2 text-center">Student Name</th>
-            <th class="border border-gray-300 p-2 text-center">Mentor</th>
-            <th class="border border-gray-300 p-2 text-center">
-              Submission Date
-            </th>
-            <th class="border border-gray-300 p-2 text-center">File</th>
-            <th class="border border-gray-300 p-2 text-center">Form</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (approvedProposals.length> 0) { %> <%
-          approvedProposals.forEach((proposal, index)=> { %>
-          <tr class="even:bg-green-100 odd:bg-green-50">
-            <td class="border border-gray-300 p-2 text-center">
-              <%= index + 1 %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.title %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.studentName %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.mentors %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <%= proposal.date instanceof Date ?
-              proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <a
-                href="/uploads/<%= proposal.proposalFile %>"
-                target="_blank"
-                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-              >
-                View Report
-              </a>
-            </td>
-            <td
-              class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center"
-            >
-              <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
-            </td>
-          </tr>
-          <% }); %> <% } else { %>
-          <tr>
-            <td
-              colspan="5"
-              class="border border-gray-300 p-4 text-center bg-green-50 text-gray-500"
-            >
-              No approved proposals yet.
-            </td>
-          </tr>
-          <% } %>
-        </tbody>
-      </table>
-
-      <!-- Rejected Proposals -->
-      <h2 class="text-xl font-semibold mt-6 text-red-600">
-        Rejected Proposals
-      </h2>
-      <table
-        id="rejectedProposals"
-        class="w-full mt-4 border-collapse border border-gray-300"
-      >
-        <thead class="bg-red-300">
-          <tr>
-            <th class="border border-gray-300 p-2">Sr. No.</th>
-            <th class="border border-gray-300 p-2">Title</th>
-            <th class="border border-gray-300 p-2">Student Name</th>
-            <th class="border border-gray-300 p-2">Mentor</th>
-            <th class="border border-gray-300 p-2">Submission Date</th>
-            <th class="border border-gray-300 p-2">File</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (rejectedProposals.length> 0) { %> <%
-          rejectedProposals.forEach((proposal, index)=> { %>
-          <tr class="even:bg-red-50 odd:bg-red-50">
-            <td class="border border-gray-300 p-2 text-center">
-              <%= index + 1 %>
-            </td>
-            <td class="border border-gray-300 p-2"><%= proposal.title %></td>
-            <td class="border border-gray-300 p-2">
-              <%= proposal.studentName %>
-            </td>
-            <td class="border border-gray-300 p-2"><%= proposal.mentors %></td>
-            <td class="border border-gray-300 p-2">
-              <%= proposal.date ? proposal.date.toISOString().slice(0, 10) :
-              "N/A" %>
-            </td>
-            <td class="border border-gray-300 p-2 text-center">
-              <a
-                href="/uploads/<%= proposal.proposalFile %>"
-                target="_blank"
-                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-              >
-                View Report
-              </a>
-            </td>
-          </tr>
-          <% }); %> <% } else { %>
-          <tr>
-            <td
-              colspan="5"
-              class="border border-gray-300 p-4 text-center bg-red-50 text-gray-500"
-            >
-              No rejected proposals.
-            </td>
-          </tr>
-          <% } %>
-        </tbody>
-      </table>
     </div>
-    <script>
-      function toggleApproved() {
-        const approvedTable = document.getElementById("approvedProposals");
-        const pendingTable = document.getElementById("pendingProposals");
-        const rejectedTable = document.getElementById("rejectedProposals");
 
-        approvedTable.style.display =
-          approvedTable.style.display === "none" ? "table" : "none";
-        pendingTable.style.display = "none";
-        rejectedTable.style.display = "none";
-      }
+    <!-- Pending Proposals -->
+    <h2 class="text-xl font-semibold mt-6 text-yellow-600">
+      Pending Proposals
+    </h2>
+    <table id="pendingProposals" class="w-full mt-4 border-collapse border border-gray-300">
+      <thead class="bg-yellow-300">
+        <tr>
+          <th class="border border-gray-300 p-2">Sr. No.</th>
+          <th class="border border-gray-300 p-2">Title</th>
+          <th class="border border-gray-300 p-2">Student Name</th>
+          <th class="border border-gray-300 p-2">Mentor</th>
+          <th class="border border-gray-300 p-2">Submission Date</th>
+          <th class="border border-gray-300 p-2">Action</th>
+          <th class="border border-gray-300 p-2">File</th>
+          <th class="border border-gray-300 p-2">Form</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (pendingProposals.length> 0) { %> <% pendingProposals.forEach((proposal, index)=> { %>
+            <tr class="even:bg-yellow-100 odd:bg-yellow-50">
+              <td class="border border-gray-300 p-2 text-center">
+                <%= index + 1 %>
+              </td>
+              <td class="border border-gray-300 p-2">
+                <%= proposal.title %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.studentName %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.mentors %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.date ? proposal.date.toISOString().slice(0, 10) : "N/A" %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.Collaborators %>
+                  <form action="/faculty/approve-proposal" method="POST" class="inline">
+                    <input type="hidden" name="proposalId" value="<%= proposal._id %>" />
+                    <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition">
+                      Approve
+                    </button>
+                  </form>
+                  <!-- <form action="/faculty/reject-proposal" method="POST" class="inline" id="reject-proposal">
+                    <input type="hidden" name="proposalId" value="<%= proposal._id %>" /> -->
+                    <button id="btn" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                      Reject
+                    </button>
+                  <!-- </form> -->
+                  <!-- //MOFIFED -->
+                  <form action="/faculty/reject-proposal" method="POST" id="reject-innovation">
+                    <input type="hidden" name="proposalId" value="<%= proposal._id %>" />
+                    <textarea name="rejectionReason" placeholder="Enter reason for rejection" required
+                      class="border border-gray-300 p-2 w-full rounded mt-2"></textarea>
 
-      function togglePending() {
-        const pendingTable = document.getElementById("pendingProposals");
-        const approvedTable = document.getElementById("approvedProposals");
-        const rejectedTable = document.getElementById("rejectedProposals");
+                    <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                      Reject
+                    </button>
+                  </form>
 
-        pendingTable.style.display =
-          pendingTable.style.display === "none" ? "table" : "none";
-        approvedTable.style.display = "none";
-        rejectedTable.style.display = "none";
-      }
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <a href="/uploads/<%= proposal.proposalFile %>" target="_blank"
+                  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
+                  View file
+                </a>
+              </td>
+              <td class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center">
+                <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
+              </td>
+            </tr>
+            <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6" class="border border-gray-300 p-4 text-center bg-yellow-50 text-gray-500">
+                    No pending proposals.
+                  </td>
+                </tr>
+                <% } %>
+      </tbody>
+    </table>
 
-      function toggleRejected() {
-        const rejectedTable = document.getElementById("rejectedProposals");
-        const approvedTable = document.getElementById("approvedProposals");
-        const pendingTable = document.getElementById("pendingProposals");
+    <!-- Approved Proposals -->
+    <h2 class="text-xl font-semibold mt-6 text-green-600">
+      Approved Proposals
+    </h2>
+    <table id="approvedProposals" class="w-full mt-4 border-collapse border border-gray-300">
+      <thead class="bg-green-300">
+        <tr>
+          <th class="border border-gray-300 p-2 text-center">Sr. No.</th>
+          <th class="border border-gray-300 p-2 text-center">Title</th>
+          <th class="border border-gray-300 p-2 text-center">Student Name</th>
+          <th class="border border-gray-300 p-2 text-center">Mentor</th>
+          <th class="border border-gray-300 p-2 text-center">
+            Submission Date
+          </th>
+          <th class="border border-gray-300 p-2 text-center">File</th>
+          <th class="border border-gray-300 p-2 text-center">Form</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (approvedProposals.length> 0) { %> <% approvedProposals.forEach((proposal, index)=> { %>
+            <tr class="even:bg-green-100 odd:bg-green-50">
+              <td class="border border-gray-300 p-2 text-center">
+                <%= index + 1 %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.title %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.studentName %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.mentors %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <%= proposal.date instanceof Date ? proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <a href="/uploads/<%= proposal.proposalFile %>" target="_blank"
+                  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
+                  View Report
+                </a>
+              </td>
+              <td class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center">
+                <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
+              </td>
+            </tr>
+            <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="border border-gray-300 p-4 text-center bg-green-50 text-gray-500">
+                    No approved proposals yet.
+                  </td>
+                </tr>
+                <% } %>
+      </tbody>
+    </table>
 
-        rejectedTable.style.display =
-          rejectedTable.style.display === "none" ? "table" : "none";
-        approvedTable.style.display = "none";
-        pendingTable.style.display = "none";
-      }
-    </script>
-  </body>
+    <!-- Rejected Proposals -->
+    <h2 class="text-xl font-semibold mt-6 text-red-600">
+      Rejected Proposals
+    </h2>
+    <table id="rejectedProposals" class="w-full mt-4 border-collapse border border-gray-300">
+      <thead class="bg-red-300">
+        <tr>
+          <th class="border border-gray-300 p-2">Sr. No.</th>
+          <th class="border border-gray-300 p-2">Title</th>
+          <th class="border border-gray-300 p-2">Student Name</th>
+          <th class="border border-gray-300 p-2">Mentor</th>
+          <th class="border border-gray-300 p-2">Submission Date</th>
+          <th class="border border-gray-300 p-2">File</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (rejectedProposals.length> 0) { %> <% rejectedProposals.forEach((proposal, index)=> { %>
+            <tr class="even:bg-red-50 odd:bg-red-50">
+              <td class="border border-gray-300 p-2 text-center">
+                <%= index + 1 %>
+              </td>
+              <td class="border border-gray-300 p-2">
+                <%= proposal.title %>
+              </td>
+              <td class="border border-gray-300 p-2">
+                <%= proposal.studentName %>
+              </td>
+              <td class="border border-gray-300 p-2">
+                <%= proposal.mentors %>
+              </td>
+              <td class="border border-gray-300 p-2">
+                <%= proposal.date ? proposal.date.toISOString().slice(0, 10) : "N/A" %>
+              </td>
+              <td class="border border-gray-300 p-2 text-center">
+                <a href="/uploads/<%= proposal.proposalFile %>" target="_blank"
+                  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
+                  View Report
+                </a>
+              </td>
+            </tr>
+            <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="border border-gray-300 p-4 text-center bg-red-50 text-gray-500">
+                    No rejected proposals.
+                  </td>
+                </tr>
+                <% } %>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    function toggleApproved() {
+      const approvedTable = document.getElementById("approvedProposals");
+      const pendingTable = document.getElementById("pendingProposals");
+      const rejectedTable = document.getElementById("rejectedProposals");
+
+      approvedTable.style.display =
+        approvedTable.style.display === "none" ? "table" : "none";
+      pendingTable.style.display = "none";
+      rejectedTable.style.display = "none";
+    }
+
+    function togglePending() {
+      const pendingTable = document.getElementById("pendingProposals");
+      const approvedTable = document.getElementById("approvedProposals");
+      const rejectedTable = document.getElementById("rejectedProposals");
+
+      pendingTable.style.display =
+        pendingTable.style.display === "none" ? "table" : "none";
+      approvedTable.style.display = "none";
+      rejectedTable.style.display = "none";
+    }
+
+    function toggleRejected() {
+      const rejectedTable = document.getElementById("rejectedProposals");
+      const approvedTable = document.getElementById("approvedProposals");
+      const pendingTable = document.getElementById("pendingProposals");
+
+      rejectedTable.style.display =
+        rejectedTable.style.display === "none" ? "table" : "none";
+      approvedTable.style.display = "none";
+      pendingTable.style.display = "none";
+    }
+  </script>
+  <script>
+    let rejected = document.getElementById("reject-innovation");
+    let btn = document.getElementById("btn");
+    btn.addEventListener("click", (e) => {
+    console.log(rejected)
+       rejected.style.display = "inline"
+    });
+
+  </script>
+</body>
+
 </html>

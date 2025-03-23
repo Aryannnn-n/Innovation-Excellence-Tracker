@@ -6,6 +6,10 @@ const Hackathon = require('../models/hackathon');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+
+const Notification = require("../models/notification")
+
+
 // multer setup
 const multer = require('multer');
 
@@ -81,8 +85,9 @@ router.get('/dashboard', async (req, res) => {
   try {
     if (user.role === 'student') {
       // Show all innovation submissions to students
+      const notifications = await Notification.find({ userId: req.session.user }).sort({ createdAt: -1 });
       const innovations = await Innovation.find({user: req.session.user}); // only logged in user innovations display
-      return res.render('dashboards/dashboard', { user, innovations });
+      return res.render('dashboards/dashboard', { user, innovations,notifications });
     }
 
     if (user.role === 'faculty') {

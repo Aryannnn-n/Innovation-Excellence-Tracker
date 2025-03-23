@@ -3,6 +3,9 @@ const router = express.Router();
 const Innovation = require('../models/innovation');
 const User = require('../models/user');
 
+
+const Notification = require("../models/notification")
+
 // multer setup
 const multer = require('multer');
 
@@ -27,47 +30,91 @@ router.get('/viewform/:id', async (req, res) => {
 
 
 // Reject Proposal Route
-router.post('/reject-proposal', async (req, res) => {
-  try {
-    const { proposalId } = req.body;
+// router.post('/reject-proposal', async (req, res) => {
+//   try {
+//     const { proposalId } = req.body;
 
-    const updatedProposal = await Innovation.findByIdAndUpdate(
-      proposalId,
-      { status: 'rejected' },
-      { new: true }
-    );
+//     const updatedProposal = await Innovation.findByIdAndUpdate(
+//       proposalId,
+//       { status: 'rejected' },
+//       { new: true }
+//     );
 
-    if (!updatedProposal) {
-      return res.status(404).json({ message: 'Proposal not found' });
-    }
+//     if (!updatedProposal) {
+//       return res.status(404).json({ message: 'Proposal not found' });
+//     }
 
-    res.redirect('/user/dashboard');
-  } catch (error) {
-    console.error('Error rejecting proposal:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
+//     res.redirect('/user/dashboard');
+//   } catch (error) {
+//     console.error('Error rejecting proposal:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
 
 // Teacher approving or rejecting proposal
-router.post('/approve-proposal', async (req, res) => {
+// router.post('/approve-proposal', async (req, res) => {
+//   try {
+//     const { proposalId } = req.body;
+
+//     const updatedProposal = await Innovation.findByIdAndUpdate(
+//       proposalId,
+//       { status: 'approved' },
+//       { new: true } // Returns the updated document
+//     );
+
+//     if (!updatedProposal) {
+//       return res.status(404).json({ message: 'Proposal not found' });
+//     }
+
+//     res.redirect('/user/dashboard');
+//   } catch (error) {
+//     console.error('Error approving proposal:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
+
+
+router.post("/approve-proposal", async (req, res) => {
   try {
-    const { proposalId } = req.body;
+      const { proposalId } = req.body;
+      const proposal = await Innovation.findByIdAndUpdate(proposalId, { status: "approved" });
 
-    const updatedProposal = await Innovation.findByIdAndUpdate(
-      proposalId,
-      { status: 'approved' },
-      { new: true } // Returns the updated document
-    );
+      // Create Notification for the Student
+      await Notification.create({
+          userId: proposal.user,
+          message: `Your proposal "${proposal.title}" has been approved!`,
+          type: "approval"
+      });
 
-    if (!updatedProposal) {
-      return res.status(404).json({ message: 'Proposal not found' });
-    }
-
-    res.redirect('/user/dashboard');
+      res.redirect("/user/dashboard");
   } catch (error) {
-    console.error('Error approving proposal:', error);
-    res.status(500).json({ message: 'Internal server error' });
+      console.error("Error approving proposal:", error);
+      res.status(500).send("Internal Server Error");
   }
 });
+
+// Reject Proposal with Reason
+router.post("/reject-proposal", async (req, res) => {
+  try {
+      const { proposalId, rejectionReason } = req.body;
+      const proposal = await Innovation.findByIdAndUpdate(proposalId, {
+          status: "rejected",
+          rejectionReason: rejectionReason
+      });
+
+      // Create Notification for the Student
+      await Notification.create({
+          userId: proposal.user,
+          message: `Your proposal "${proposal.title}" has been rejected. Reason: ${rejectionReason}`,
+          type: "rejection"
+      });
+
+      res.redirect("/user/dashboard");
+  } catch (error) {
+      console.error("Error rejecting proposal:", error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
 
 module.exports = router;
