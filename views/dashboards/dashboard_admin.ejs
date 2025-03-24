@@ -10,13 +10,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
   </head>
   <style></style>
 
@@ -50,7 +43,7 @@
         Welcome, <%= user.name %>
       </h2>
 
-      <h3 class="text-xl font-semibold mt-6">All Submitted Innovations</h3>
+      <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-800 bg-clip-text text-transparent mt-6">All Submitted Innovations</h3>
 
       <table class="w-full mt-4 border border-gray-300 rounded-lg">
         <thead class="bg-orange-300">
@@ -64,10 +57,10 @@
           </tr>
         </thead>
         <tbody>
-          <% if (innovations.length> 0) { %> <%
+          <% if (innovations.length > 0) { %> <%
           innovations.forEach(function(innovation) { %>
           <tr class="text-center even:bg-orange-50 odd:bg-white">
-            <td class="border border-gray-300 p-2"><%= innovation.title %></td>
+            <td class="border border-gray-300 font-semibold p-2"><%= innovation.title %></td>
             <td class="border border-gray-300 p-2">
               <%= innovation.studentName %>
             </td>
@@ -159,126 +152,168 @@
         </tbody>
       </table>
 
-      <!-- Admin Opportunity Posting Section -->
-      <!-- All Hackthons -->
-      <div class="max-w-5xl mx-auto p-6 bg-orange-100 shadow-lg rounded-lg mt-10">
-        <h2 class="text-2xl font-bold text-orange-600">Post a New Events</h2>
-
-        <form action="/admin/post-hackathon" method="POST" class="mt-4">
-          <label class="block text-gray-700 font-semibold">Title:</label>
-          <input
-            type="text"
-            name="title"
-            class="w-full p-2 border rounded-lg mt-1"
-            required
-          />
-
-          <label class="block text-gray-700 font-semibold mt-2">Date:</label>
-          <input
-            type="date"
-            name="date"
-            class="w-full p-2 border rounded-lg mt-1"
-            required
-          />
-
-          <label class="block text-gray-700 font-semibold mt-2"
-            >Description:</label
-          >
-          <textarea
-            name="description"
-            class="w-full p-2 border rounded-lg mt-1"
-            required
-          ></textarea>
-
-          <label class="block text-gray-700 font-semibold mt-2"
-            >Registration Link:</label
-          >
-          <input
-            type="url"
-            name="registrationLink"
-            class="w-full p-2 border rounded-lg mt-1"
-            required
-          />
-
+      <!-- Section with Buttons -->
+      <div class="w-full p-6 bg-orange-200 shadow-lg my-5 rounded-lg">
+        <div class="flex gap-4 mb-4">
           <button
-            type="submit"
-            class="mt-4 bg-yellow-400 font-bold text-black px-6 py-2 rounded-lg hover:bg-yellow-500 transition"
+            onclick="showSection('postHackathon')"
+            class="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold px-4 py-2 rounded-full hover:opacity-90 transition"
           >
-            Send News
+            Post Event News
           </button>
-        </form>
-      </div>
+          <button
+            onclick="showSection('viewHackathon')"
+            class="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold px-4 py-2 rounded-full hover:opacity-90 transition"
+          >
+            View Posts
+          </button>
+        </div>
 
-      <!-- Hackathon Listings -->
-      <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-        <h2 class="text-2xl font-bold text-orange-600">Uploaded Events News</h2>
+        <!-- Hackathon Posting Section -->
+        <div id="postHackathon" class="bg-white p-6 rounded-lg shadow-lg">
+          <h2 class="text-2xl font-bold text-orange-600">Post a New Event</h2>
+          <form action="/admin/post-hackathon" method="POST" class="mt-4">
+            <label class="block text-gray-700 font-semibold">Title:</label>
+            <input
+              type="text"
+              name="title"
+              class="w-full p-2 border rounded-lg mt-1"
+              required
+            />
 
-        <table class="w-full mt-4 border-collapse border border-gray-300">
-          <thead>
-            <tr class="bg-yellow-200">
-              <th class="border border-gray-300 p-2">Title</th>
-              <th class="border border-gray-300 p-2">Date</th>
-              <th class="border border-gray-300 p-2">Description</th>
-              <th class="border border-gray-300 p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=>
-            { %>
-            <tr class="border border-gray-300 bg-yellow-50">
-              <td class="border border-gray-300 p-2"><%= hackathon.title %></td>
-              <td class="border border-gray-300 p-2">
-                <%= hackathon.date ? hackathon.date.toISOString().slice(0, 10) :
-                "N/A" %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= hackathon.description %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <form
-                  action="/admin/delete-hackathon/<%= hackathon._id %>"
-                  method="POST"
-                >
-                  <button
-                    type="submit"
-                    class="px-3 py-1 text-zinc-600 text-white rounded-lg hover:text-red-600 transition"
+            <label class="block text-gray-700 font-semibold mt-2">Date:</label>
+            <input
+              type="date"
+              name="date"
+              class="w-full p-2 border rounded-lg mt-1"
+              required
+            />
+
+            <label class="block text-gray-700 font-semibold mt-2"
+              >Description:</label
+            >
+            <textarea
+              name="description"
+              class="w-full p-2 border rounded-lg mt-1"
+              required
+            ></textarea>
+
+            <label class="block text-gray-700 font-semibold mt-2"
+              >Registration Link:</label
+            >
+            <input
+              type="url"
+              name="registrationLink"
+              class="w-full p-2 border rounded-lg mt-1"
+              required
+            />
+
+            <button
+              type="submit"
+              class="mt-4 bg-yellow-400 font-bold text-black px-6 py-2 rounded-xl hover:bg-yellow-500 transition"
+            >
+              Send News
+            </button>
+          </form>
+        </div>
+
+        <!-- Hackathon Listings Section (Initially Hidden) -->
+        <div
+          id="viewHackathon"
+          class="bg-white p-6 rounded-lg shadow-lg hidden"
+        >
+          <h2 class="text-2xl font-bold text-orange-600">
+            Uploaded Events News
+          </h2>
+
+          <table class="w-full border-collapse mt-4">
+            <thead class="bg-yellow-200">
+              <tr>
+                <th class="border border-gray-300 p-2">Title</th>
+                <th class="border border-gray-300 p-2">Date</th>
+                <th class="border border-gray-300 p-2">Description</th>
+                <th class="border border-gray-300 p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (hackathons.length > 0) { %> <%
+              hackathons.forEach(function(hackathon) { %>
+              <tr class="border border-gray-300 bg-yellow-50">
+                <td class="border border-gray-300 p-2">
+                  <%= hackathon.title %>
+                </td>
+                <td class="border border-gray-300 p-2">
+                  <%= hackathon.date ? hackathon.date.toISOString().slice(0, 10)
+                  : "N/A" %>
+                </td>
+                <td class="border border-gray-300 p-2">
+                  <%= hackathon.description %>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">
+                  <form
+                    action="/admin/delete-hackathon/<%= hackathon._id %>"
+                    method="POST"
                   >
-                    <i class="fa-solid fa-trash-can"></i>
-                  </button>
-                </form>
-              </td>
-            </tr>
-            <% }) %> <% } else { %>
-            <tr>
-              <td colspan="4" class="text-center p-4">
-                No hackathons available
-              </td>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
+                    <button
+                      type="submit"
+                      class="px-3 py-1 text-red-500 hover:text-red-600 transition"
+                    >
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              <% }) %> <% } else { %>
+              <tr>
+                <td colspan="4" class="text-center p-4 text-gray-500">
+                  No hackathons available
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    <div
-      class="max-w-5xl mx-auto p-6 flex flex-wrap mx-auto p-6 bg-white shadow-lg rounded-lg mt-2"
-    >
-      <h2 class="text-2xl text-orange-600 font-bold mt-6">Here's Analysis</h2>
-      <div class="w-full flex justify-center items-center mt-6">
-        <div class="w-full max-w-4xl bg-orange-100 p-6 rounded-lg shadow-md flex flex-col items-center">
-          <div class="w-2/3 mb-6 text-center">
-        <h3 class="text-lg font-semibold mb-2">Participants Chart</h3>
-        <canvas id="parcipantChart"></canvas>
-          </div>
-          <div class="w-2/3 text-center">
-        <h3 class="text-lg font-semibold mb-2">Department Chart</h3>
-        <canvas id="departmentChart"></canvas>
+
+      <!-- JavaScript for Toggle -->
+      <script>
+        function showSection(sectionId) {
+          document.getElementById("postHackathon").classList.add("hidden");
+          document.getElementById("viewHackathon").classList.add("hidden");
+          document.getElementById(sectionId).classList.remove("hidden");
+        }
+      </script>
+
+      <div
+        class="max-w-5xl mx-auto p-6 flex flex-wrap mx-auto p-6 bg-white shadow-lg rounded-lg mt-2"
+      >
+        <h2 class="text-2xl text-orange-600 font-bold mt-6">Here's Analysis</h2>
+        <div class="w-full flex justify-center items-center mt-6">
+          <div
+            class="w-full max-w-4xl bg-orange-100 p-6 rounded-lg shadow-md flex flex-col items-center"
+          >
+            <div class="w-2/3 mb-6 text-center">
+              <h3
+                class="text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-700 bg-clip-text text-transparent mb-2"
+              >
+                Participants Chart
+              </h3>
+              <canvas id="parcipantChart"></canvas>
+            </div>
+            <div class="w-2/3 text-center">
+              <h3
+                class="text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-700 bg-clip-text text-transparent mb-2"
+              >
+                Department Chart
+              </h3>
+              <canvas id="departmentChart"></canvas>
+            </div>
           </div>
         </div>
       </div>
-      </div>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script src="/graphs/adminDashboard.js"></script>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/graphs/adminDashboard.js"></script>
 
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
