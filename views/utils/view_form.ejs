@@ -1,81 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Submission Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
+  </head>
 
-<body class="bg-gradient-to-r from-blue-900 via-purple-900 to-gray-900 text-white flex items-center justify-center min-h-screen p-4">
-    <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl">
-        <h2 class="text-3xl font-extrabold text-center mb-6 text-purple-400">Viewed Form</h2>
+  <body class="bg-blue-200 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-blue-50 p-8 rounded-xl shadow-lg w-full max-w-2xl">
+      <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">
+        Viewed Form
+      </h2>
 
-        <!-- Display Form -->
-        <div class="space-y-6">
-            <div>
-                <label class="block font-semibold text-purple-300">Title:</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.title %>
-                </p>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-purple-300">Category:</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.category %>
-                </p>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-purple-300">Department:</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.department %>
-                </p>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-purple-300">Description:</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.description %>
-                </p>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-purple-300">Key Features:</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.keyFeatures %>
-                </p>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-purple-300">Collaborators:</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.collaborators %>
-                </p>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-purple-300">Mentor(s):</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.mentors %>
-                </p>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-purple-300">Impact & Future Scope:</label>
-                <p class="w-full p-3 mt-1 bg-gray-700 border border-gray-600 rounded">
-                    <%= adminUser.info %>
-                </p>
-            </div>
-
-            <button type="button" onclick="window.history.back()"
-                class="w-full mt-6 bg-purple-500 text-white p-3 rounded-lg hover:bg-purple-600 transition text-lg font-semibold">
-                Done
-            </button>
+      <!-- Display Form -->
+      <div class="space-y-6">
+        <div>
+          <label class="block font-medium text-gray-700">Title:</label>
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.title %>
+          </p>
         </div>
-    </div>
-</body>
 
+        <div>
+          <label class="block font-medium text-gray-700">Category:</label>
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.category %>
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700">Department:</label>
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.department %>
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700">Description:</label>
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.description %>
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700">Key Features:</label>
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.keyFeatures %>
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700">Collaborators:</label>
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.collaborators %>
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700">Mentor(s):</label>
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.mentors %>
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-medium text-gray-700"
+            >Impact & Future Scope:</label
+          >
+          <p
+            class="w-full p-3 mt-1 bg-blue-200 border border-gray-300 rounded-md"
+          >
+            <%= adminUser.info %>
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onclick="window.history.back()"
+          class="w-full mt-6 bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition text-lg font-semibold"
+        >
+          Done
+        </button>
+      </div>
+    </div>
+  </body>
 </html>

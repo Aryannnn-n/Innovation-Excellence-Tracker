@@ -43,58 +43,56 @@
         Welcome, <%= user.name %>
       </h2>
 
-      <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-800 bg-clip-text text-transparent mt-6">All Submitted Innovations</h3>
+      <h3
+        class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-800 bg-clip-text text-transparent mt-6"
+      >
+        All Submitted Innovations
+      </h3>
 
+      <!-- Filter Dropdown -->
+      <div class="flex justify-end mb-4">
+        <label for="categoryFilter" class="mr-2 font-semibold text-blue-800"
+          >Filter by Category:</label
+        >
+        <select
+          id="categoryFilter"
+          class="border border-purple-600 bg-[#2b1d4f] text-gray-300 p-2 rounded"
+        >
+          <option value="all">All</option>
+          <% let categories = [...new Set(innovations.map(innovation =>
+          innovation.category))]; %> <% categories.forEach(category => { %>
+          <option value="<%= category %>"><%= category %></option>
+          <% }); %>
+        </select>
+      </div>
+
+      <!-- Innovations Table -->
       <table class="w-full mt-4 border border-gray-300 rounded-lg">
         <thead class="bg-orange-300">
           <tr>
             <th class="border border-gray-300 p-2">Title</th>
             <th class="border border-gray-300 p-2">Submitted By</th>
             <th class="border border-gray-300 p-2">Category</th>
-            <th class="border border-gray-300 p-2">Status</th>
             <th class="border border-gray-300 p-2">Proposal</th>
             <th class="border border-gray-300 p-2">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="innovationTableBody">
           <% if (innovations.length > 0) { %> <%
           innovations.forEach(function(innovation) { %>
-          <tr class="text-center even:bg-orange-50 odd:bg-white">
-            <td class="border border-gray-300 font-semibold p-2"><%= innovation.title %></td>
+          <tr
+            class="text-center even:bg-orange-50 odd:bg-white"
+            data-category="<%= innovation.category %>"
+          >
+            <td class="border border-gray-300 font-semibold p-2">
+              <%= innovation.title %>
+            </td>
             <td class="border border-gray-300 p-2">
               <%= innovation.studentName %>
             </td>
             <td class="border border-gray-300 p-2">
               <%= innovation.category %>
             </td>
-
-            <!-- Status Column with Colored Labels -->
-            <td class="border border-gray-300 p-2 text-center">
-              <% if (innovation.status==='approved' ) { %>
-              <span
-                class="relative group text-green-500 px-2 py-1 rounded cursor-pointer"
-              >
-                <i class="fa-solid fa-circle-check"></i>
-                <!-- Tooltip -->
-                <span
-                  class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 hidden group-hover:flex bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-md whitespace-nowrap"
-                >
-                  Approved
-                </span>
-              </span>
-
-              <% } else if (innovation.status==='rejected' ) { %>
-              <span class="bg-red-500 text-white px-2 py-1 rounded"
-                >Rejected</span
-              >
-              <% } else { %>
-              <span class="bg-yellow-500 text-white px-2 py-1 rounded"
-                >Pending</span
-              >
-              <% } %>
-            </td>
-
-            <!-- Proposal File View Button -->
             <td class="border border-gray-300 p-2 text-center">
               <% if (innovation.proposalFile) { %>
               <a
@@ -103,21 +101,16 @@
                 class="relative group text-blue-500 px-3 py-1 rounded transition"
               >
                 <i class="fa-brands font-bold fa-wpforms"></i>
-
-                <!-- Tooltip -->
                 <span
                   class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 hidden group-hover:flex bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-md whitespace-nowrap"
                 >
                   View Report
                 </span>
               </a>
-
               <% } else { %>
               <span class="text-gray-500">No file</span>
               <% } %>
             </td>
-
-            <!-- Edit & Delete Buttons -->
             <td class="border border-gray-300 p-2 flex gap-2 justify-center">
               <form
                 action="/admin/delete-innovation/<%= innovation._id %>"
@@ -128,8 +121,6 @@
                   class="relative group px-3 py-1 text-red-500 rounded-lg hover:text-red-600 transition"
                 >
                   <i class="fa-solid fa-eraser"></i>
-
-                  <!-- Tooltip -->
                   <span
                     class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 hidden group-hover:flex bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-md whitespace-nowrap"
                   >
@@ -314,7 +305,24 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/graphs/adminDashboard.js"></script>
+    <!-- JavaScript for Filtering -->
+    <script>
+      document
+        .getElementById("categoryFilter")
+        .addEventListener("change", function () {
+          let selectedCategory = this.value;
+          let rows = document.querySelectorAll("#innovationTableBody tr");
 
+          rows.forEach((row) => {
+            let category = row.getAttribute("data-category");
+            if (selectedCategory === "all" || category === selectedCategory) {
+              row.style.display = "";
+            } else {
+              row.style.display = "none";
+            }
+          });
+        });
+    </script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
       integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="

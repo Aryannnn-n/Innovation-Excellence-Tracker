@@ -41,19 +41,19 @@
         <!-- Card 1 -->
         <div onclick="toggleApproved()" class="bg-green-200 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-bold text-green-700">Total Proposals</h3>
-          <p class="text-2xl font-semibold text-green-800 mt-2">ey</p>
+          <!-- <p class="text-2xl font-semibold text-green-800 mt-2">ey</p> -->
         </div>
 
         <!-- Card 2 -->
         <div onclick="togglePending()" class="bg-yellow-200 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-bold text-yellow-700">Pending Proposals</h3>
-          <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p>
+          <!-- <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p> -->
         </div>
 
         <!-- Card 3 -->
         <div onclick="toggleRejected()" class="bg-red-200 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-bold text-red-700">Rejected Proposals</h3>
-          <p class="text-2xl font-semibold text-red-800 mt-2">hey</p>
+          <!-- <p class="text-2xl font-semibold text-red-800 mt-2">hey</p> -->
         </div>
       </div>
     </div>
@@ -68,7 +68,6 @@
           <th class="border border-gray-300 p-2">Sr. No.</th>
           <th class="border border-gray-300 p-2">Title</th>
           <th class="border border-gray-300 p-2">Student Name</th>
-          <th class="border border-gray-300 p-2">Mentor</th>
           <th class="border border-gray-300 p-2">Submission Date</th>
           <th class="border border-gray-300 p-2">Action</th>
           <th class="border border-gray-300 p-2">File</th>
@@ -77,8 +76,8 @@
       </thead>
       <tbody>
         <% if (pendingProposals.length> 0) { %> <% pendingProposals.forEach((proposal, index)=> { %>
-            <tr class="even:bg-yellow-100 odd:bg-yellow-50">
-              <td class="border border-gray-300 p-2 text-center">
+            <tr class="even:bg-yellow-100 odd:bg-yellow-50 text-center">
+              <td class="border border-gray-300 p-2 ">
                 <%= index + 1 %>
               </td>
               <td class="border border-gray-300 p-2">
@@ -87,9 +86,7 @@
               <td class="border border-gray-300 p-2 text-center">
                 <%= proposal.studentName %>
               </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.mentors %>
-              </td>
+              
               <td class="border border-gray-300 p-2 text-center">
                 <%= proposal.date ? proposal.date.toISOString().slice(0, 10) : "N/A" %>
               </td>
@@ -111,10 +108,10 @@
                   <form action="/faculty/reject-proposal" method="POST" id="reject-innovation">
                     <input type="hidden" name="proposalId" value="<%= proposal._id %>" />
                     <textarea name="rejectionReason" placeholder="Enter reason for rejection" required
-                      class="border border-gray-300 p-2 w-full rounded mt-2"></textarea>
+                      class="border border-gray-300 p-2 w-2/3 rounded mt-2"></textarea><br>
 
-                    <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                      Reject
+                    <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                      Notify
                     </button>
                   </form>
 
@@ -150,7 +147,6 @@
           <th class="border border-gray-300 p-2 text-center">Sr. No.</th>
           <th class="border border-gray-300 p-2 text-center">Title</th>
           <th class="border border-gray-300 p-2 text-center">Student Name</th>
-          <th class="border border-gray-300 p-2 text-center">Mentor</th>
           <th class="border border-gray-300 p-2 text-center">
             Submission Date
           </th>
@@ -170,9 +166,7 @@
               <td class="border border-gray-300 p-2 text-center">
                 <%= proposal.studentName %>
               </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.mentors %>
-              </td>
+              
               <td class="border border-gray-300 p-2 text-center">
                 <%= proposal.date instanceof Date ? proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
               </td>
@@ -207,15 +201,14 @@
           <th class="border border-gray-300 p-2">Sr. No.</th>
           <th class="border border-gray-300 p-2">Title</th>
           <th class="border border-gray-300 p-2">Student Name</th>
-          <th class="border border-gray-300 p-2">Mentor</th>
           <th class="border border-gray-300 p-2">Submission Date</th>
           <th class="border border-gray-300 p-2">File</th>
         </tr>
       </thead>
       <tbody>
         <% if (rejectedProposals.length> 0) { %> <% rejectedProposals.forEach((proposal, index)=> { %>
-            <tr class="even:bg-red-50 odd:bg-red-50">
-              <td class="border border-gray-300 p-2 text-center">
+            <tr class="even:bg-red-50 odd:bg-red-50 text-center">
+              <td class="border border-gray-300 p-2 ">
                 <%= index + 1 %>
               </td>
               <td class="border border-gray-300 p-2">
@@ -224,9 +217,7 @@
               <td class="border border-gray-300 p-2">
                 <%= proposal.studentName %>
               </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.mentors %>
-              </td>
+             
               <td class="border border-gray-300 p-2">
                 <%= proposal.date ? proposal.date.toISOString().slice(0, 10) : "N/A" %>
               </td>
