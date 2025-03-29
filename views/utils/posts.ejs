@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnoEx - Professional Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-10">
+        <div class="flex items-center space-x-4">
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">InnoEx</h1>
+            <input type="text" placeholder="Search" class="border p-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="flex space-x-6 text-gray-600">
+            <a href="#" class="hover:text-blue-600">Home</a>
+            <a href="#" class="hover:text-blue-600">My Dashboard</a>
+            <a href="#" class="hover:text-blue-600">Jobs</a>
+            <a href="#" class="hover:text-blue-600">Notifications</a>
+            <a href="#" class="hover:text-blue-600">Me</a>
+        </div>
+    </nav>
+    
+    <!-- Main Layout -->
+    <div class="flex flex-col lg:flex-row justify-center mt-6 px-6 space-y-4 lg:space-y-0 lg:space-x-6">
+        <!-- Left Sidebar (Profile & Stats) -->
+        <aside class="w-full lg:w-1/4 bg-white p-4 rounded shadow-md">
+            <div class="text-center">
+                <img src="https://via.placeholder.com/100" alt="Profile" class="mx-auto rounded-full">
+                <h3 class="text-lg font-semibold mt-2">Amol Sonawane</h3>
+                <p class="text-gray-600">Aspiring Software Engineer</p>
+                <p class="text-gray-500 text-sm">Mumbai, Maharashtra</p>
+            </div>
+            <div class="mt-4 border-t pt-2 text-gray-600">
+                <p>Profile viewers: <span class="font-bold">4</span></p>
+                <a href="#" class="text-blue-600">View analytics</a>
+            </div>
+        </aside>
+        
+        <!-- Main Feed -->
+        <main class="w-full lg:w-2/4">
+            <div class="bg-white p-4 rounded shadow-md">
+                <div class="flex items-center space-x-4">
+                    <img src="https://via.placeholder.com/50" alt="Profile" class="w-12 h-12 rounded-full">
+                    <input type="text" placeholder="Start a post" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" id="openPostModal">
+                </div>
+                <div class="flex justify-around mt-4 text-gray-600">
+                    <button class="hover:text-blue-600">📷 Photo</button>
+                    <button class="hover:text-blue-600">📹 Video</button>
+                    <button class="hover:text-blue-600">📝 Write article</button>
+                </div>
+            </div>
+            
+            <!-- Posts Section -->
+            <div id="postsContainer" class="space-y-6 mt-4"></div>
+        </main>
+        
+        <!-- Right Sidebar (Trending News) -->
+        <aside class="w-full lg:w-1/4 bg-white p-4 rounded shadow-md">
+            <h3 class="text-lg font-semibold">Trending Now</h3>
+            <ul class="mt-2 text-gray-600">
+                <li class="mb-2">📢 Earthquake hits Myanmar, Thailand</li>
+                <li class="mb-2">📊 IPOs go missing in March</li>
+                <li class="mb-2">🚗 Automakers feel U.S. tariff blues</li>
+                <li class="mb-2">🛍️ Orders dwindle on ONDC</li>
+            </ul>
+        </aside>
+    </div>
+    
+    <!-- Post Modal -->
+    <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden transition-opacity">
+        <div class="bg-white p-6 rounded shadow-md w-96">
+            <h3 class="text-lg font-semibold">Create a post</h3>
+            <textarea id="postText" class="w-full p-2 border rounded mt-2" placeholder="What do you want to talk about?"></textarea>
+            <input type="file" id="postImage" class="mt-2">
+            <div class="flex justify-end mt-4 space-x-2">
+                <button id="closeModal" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                <button id="postButton" class="bg-blue-500 text-white px-4 py-2 rounded">Post</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('openPostModal').addEventListener('click', function() {
+            document.getElementById('postModal').classList.remove('hidden');
+        });
+        
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('postModal').classList.add('hidden');
+        });
+        
+        document.getElementById('postButton').addEventListener('click', function() {
+            const text = document.getElementById('postText').value;
+            const imageInput = document.getElementById('postImage');
+            let imageUrl = '';
+            
+            if (imageInput.files.length > 0) {
+                const file = imageInput.files[0];
+                imageUrl = URL.createObjectURL(file);
+            }
+            
+            const postContainer = document.getElementById('postsContainer');
+            const postDiv = document.createElement('div');
+            postDiv.classList.add('bg-white', 'p-4', 'rounded', 'shadow-md');
+            
+            postDiv.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <img src="https://via.placeholder.com/50" alt="Profile" class="w-12 h-12 rounded-full">
+                    <div>
+                        <h4 class="font-semibold">Amol Sonawane</h4>
+                        <p class="text-sm text-gray-500">Aspiring Software Engineer</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-gray-700">${text}</p>
+                ${imageUrl ? `<img src="${imageUrl}" alt="Post Image" class="mt-4 rounded">` : ''}
+                <div class="mt-4 flex space-x-4 text-gray-500">
+                    <button class="likeBtn hover:text-blue-600">Like</button>
+                    <button class="hover:text-blue-600">Comment</button>
+                    <button class="hover:text-blue-600">Share</button>
+                </div>
+            `;
+            postContainer.prepend(postDiv);
+            document.getElementById('postModal').classList.add('hidden');
+            document.getElementById('postText').value = '';
+            document.getElementById('postImage').value = '';
+        });
+    </script>
+</body>
+</html>
