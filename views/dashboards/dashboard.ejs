@@ -13,11 +13,44 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
-<body class="bg-gradient-to-r from-blue-200 to-blue-500 min-h-screen">
+<body class="bg-blue-100 min-h-screen">
   <!-- Floating Navbar -->
   <nav
-    class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-full max-w-4xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center">
-    <h1 class="text-xl font-bold">Student Dashboard</h1>
+    class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-full max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <img src="/images/technical-support.png" alt="User Image" class="w-10 h-10 rounded-full cursor-pointer"
+          onclick="toggleSlide()" />
+        <!-- Slide-in Panel -->
+        <div id="slidePanel"
+          class="fixed top-0 left-[-55px] h-screen w-2/3 max-w-md bg-white rounded-xl shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
+          <div class="p-6 relative">
+            <button onclick="toggleSlide()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-blue-700">Welcome!</h2>
+            <p class="mt-4 text-gray-600">
+              <span class="text-black font-semibold">ID:</span>
+              <%= user.id %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function toggleSlide() {
+          const slidePanel = document.getElementById("slidePanel");
+          slidePanel.classList.toggle("-translate-x-full");
+          document.body.classList.toggle("overflow-hidden");
+        }
+      </script>
+      <style>
+        body.overflow-hidden {
+          overflow: hidden;
+        }
+      </style>
+      <h1 class="text-xl font-bold">Student Dashboard</h1>
+    </div>
     <div class="flex items-center gap-6">
       <!-- Notification Button -->
       <div class="relative">
@@ -55,18 +88,16 @@
               <p class="text-gray-500">No notifications yet.</p>
               <% } %>
     </div>
-
-
   </div>
 
   <!-- Main Content Layout -->
-  <div class="max-w-6xl mx-auto p-6 bg-blue-100 mb-10 shadow-lg rounded-lg mt-20 flex gap-6">
+  <div class="max-w-6xl mx-auto p-6 bg-blue-50 mb-10 shadow-lg rounded-lg mt-20 flex gap-6">
     <!-- Left Section: Proposal Cards -->
-    <div class="w-1/3 space-y-4 bg-gray-900 text-white p-6 rounded-xl shadow-lg">
+    <div class="w-1/3 space-y-4 bg-gray-900 text-white p-6 rounded-xl shadow-lg overflow-y-auto max-h-screen">
       <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
         Your Proposals
       </h2>
-      <% if (innovations.length> 0) { %> <% innovations.forEach(innovation=> {
+      <% if (innovations.length> 0) { %> <% innovations.slice().reverse().forEach(innovation=> {
           %>
           <div class="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700">
             <h3 class="font-bold text-white">Title: <%= innovation.title %>
@@ -95,7 +126,7 @@
                 class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center rounded-lg shadow-md hover:opacity-80 transition flex-1">
                 View Report
               </a>
-              <a href="/student/uploads/<%= innovation._id %> %>" target="_blank"
+              <a href="/student/uploads/<%= innovation._id %>" target="_blank"
                 class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center rounded-lg shadow-md hover:opacity-80 transition flex-1">
                 View Form
               </a>
@@ -155,8 +186,7 @@
         <input type="file" name="proposalFile" accept=".pdf" required class="w-full px-2 py-1 border rounded" />
 
         <label class="block font-semibold mt-2">Collaborators:</label>
-        <input type="text" name="collaborators" placeholder="Enter collaborator IDs, separated by commas"
-          class="w-full px-2 py-1 border rounded" />
+        <input type="text" name="collaborators" class="w-full px-2 py-1 border rounded" />
 
         <label class="block font-semibold mt-2">Mentor(s):</label>
         <input type="text" name="mentors" required class="w-full px-2 py-1 border rounded" />
