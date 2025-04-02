@@ -137,7 +137,7 @@
         <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=>
             { %>
             <div
-              class="bg-zinc-200 p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border border-purple-600 w-[300px] flex-shrink-0">
+              class="bg-[#f4f2ee] p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border border-purple-600 w-[300px] flex-shrink-0">
               <h3
                 class="text-2xl font-semibold bg-gradient-to-br from-blue-700 to-purple-700 bg-clip-text text-transparent">
                 <%= hackathon.title %>
@@ -187,12 +187,12 @@
       }
     </style>
   </section>
-  <section id="chatbot" class="w-full h-[90vh] flex flex-col items-center px-4 md:px-6 py-6">
+  <section id="chatbot" class="w-full h-[90vh] flex flex-col bg-zinc-100 items-center px-4 md:px-6 py-6">
     <!-- Heading -->
-    <h1 class="text-3xl md:text-4xl font-bold text-[#372e58] mb-6">Ask Your Questions to AI</h1>
+    <h1 class="text-3xl md:text-4xl font-bold text-[#372e58] mb-6">Ask Reports, Formats to AI</h1>
 
     <div id="chatCard"
-      class="w-full max-w-5xl h-auto md:h-[80vh] bg-[#2b1d4f] p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-6">
+      class="w-full max-w-6xl h-auto md:h-[80vh] bg-[#2b1d4f] p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-6">
       <!-- Chat Response (Left Side) -->
       <div id="chatResponse"
         class="w-full md:w-2/3 p-4 border rounded-md bg-gray-100 overflow-auto flex-1 max-h-[70vh]">
@@ -224,7 +224,7 @@
 
   <!-- Footer -->
   <footer
-    class="w-full bg-zinc-200 backdrop-blur-sm rounded-t-3xl text-black text-center py-4 mt-auto text-lg font-medium">
+    class="w-full bg-zinc-200 backdrop-blur-sm text-black text-center py-4 mt-auto text-lg font-medium">
     &copy; 2025 Innovation Tracker. All rights reserved.
   </footer>
 

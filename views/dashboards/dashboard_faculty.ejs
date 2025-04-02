@@ -16,10 +16,67 @@
   <!-- Floating Navbar -->
   <nav
     class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center">
-    <h1 class="text-xl font-bold">Faculty Dashboard</h1>
-    <div class="relative flex items-center gap-4">
-      <!-- <span class="font-semibold"> <%= user.name %> </span> -->
-
+    <div class="flex items-center gap-4">
+      <img
+        src="/images/technical-support.png"
+        alt="User Image"
+        class="w-10 h-10 rounded-full cursor-pointer"
+        onclick="toggleSlide()"
+      />
+      <h1 class="nav-title text-xl font-bold">Faculty Dashboard</h1>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <!-- Slide-in Panel -->
+        <div
+          id="slidePanel"
+          class="fixed top-0 left-[-55px] h-screen w-full max-w-md bg-white rounded-xl shadow-lg transform -translate-x-full transition-transform duration-300 z-50 md:w-2/3 lg:w-1/3"
+        >
+          <div class="p-6 relative">
+            <button
+              onclick="toggleSlide()"
+              class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+            >
+              <i class="fas fa-times text-xl"></i>
+            </button>
+            <div class="flex items-center gap-4">
+              <img
+                src="/images/technical-support.png"
+                alt="User Image"
+                class="w-10 h-10 rounded-full cursor-pointer"
+              />
+              <div>
+                <h2 class="text-lg font-bold text-blue-700">
+                Welcome, <%= user.name %>!
+                </h2>
+                <p class="mt-1 text-gray-600">
+                <span class="text-zinc-500 text-sm font-semibold"
+                  >ID: <%= user._id %></span
+                >
+                </p>
+              </div>
+              </div>
+              <div class="flex flex-col gap-4 mt-4 items-start">
+                  <div class="flex items-center gap-2">
+                  <i class="fas fa-user-circle text-2xl text-blue-500"></i>
+                  <span class="text-sm font-semibold text-gray-700">Profile</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                  <i class="fas fa-cogs text-2xl text-green-500"></i>
+                  <span class="text-sm font-semibold text-gray-700">Settings</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                  <i class="fas fa-chart-line text-2xl text-purple-500"></i>
+                  <span class="text-sm font-semibold text-gray-700">Analytics</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                  <i class="fas fa-envelope text-2xl text-red-500"></i>
+                  <span class="text-sm font-semibold text-gray-700">Messages</span>
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>
       <!-- Logout Button -->
       <a href="/user/logout" class="relative group flex items-center gap-2">
         <i class="fas fa-sign-out-alt text-xl text-white"></i>
@@ -29,7 +86,13 @@
         </span>
       </a>
     </div>
-  </nav>
+  </nav><script>
+      function toggleSlide() {
+      const slidePanel = document.getElementById("slidePanel");
+      slidePanel.classList.toggle("-translate-x-full");
+      document.body.classList.toggle("overflow-hidden");
+      }
+    </script>
 
   <!-- Main Content -->
   <div class="max-w-6xl mx-auto p-6 mt-20 bg-white shadow-lg rounded-lg">
