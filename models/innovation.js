@@ -5,7 +5,14 @@ const InnovationSchema = new Schema({
   title: { type: String, required: true },
   category: {
     type: String,
-    enum: ['Hackathon', 'Startups', 'Projects', 'Patents', 'Awards', 'Research'],
+    enum: [
+      'Hackathon',
+      'Startups',
+      'Projects',
+      'Patents',
+      'Awards',
+      'Research',
+    ],
     required: true,
   },
   description: { type: String, required: true },
@@ -15,7 +22,7 @@ const InnovationSchema = new Schema({
     enum: ['CSE', 'ECE', 'Mechanical', 'Civil', 'Biotech', 'Others'],
     required: true,
   },
-  collaborators: [String],
+  collaborators: [{ type: Schema.Types.ObjectId, ref: 'User' }], // ✅ Store collaborators as ObjectId
   mentors: [String],
   keyFeatures: String,
   info: String,
@@ -28,9 +35,7 @@ const InnovationSchema = new Schema({
   },
   studentName: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-
-  // ✅ Set default rating to 1
-  rating: { type: Number, min: 1, max: 10, default: 1 },  
+  rating: { type: Number, min: 1, max: 10, default: 1 },
 });
 
 const Innovation = mongoose.model('Innovation', InnovationSchema);

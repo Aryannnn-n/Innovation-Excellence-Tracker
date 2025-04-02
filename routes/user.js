@@ -6,9 +6,7 @@ const Hackathon = require('../models/hackathon');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-
-const Notification = require("../models/notification")
-
+const Notification = require('../models/notification');
 
 // multer setup
 const multer = require('multer');
@@ -85,9 +83,20 @@ router.get('/dashboard', async (req, res) => {
   try {
     if (user.role === 'student') {
       // Show all innovation submissions to students
-      const notifications = await Notification.find({ userId: req.session.user }).sort({ createdAt: -1 });
-      const innovations = await Innovation.find({user: req.session.user}); // only logged in user innovations display
-      return res.render('dashboards/dashboard', { user, innovations,notifications });
+      const notifications = await Notification.find({ userId: user._id }).sort({
+        createdAt: -1,
+      });
+
+      // Fetch innovations where the user is either the owner or a collaborator
+      const innovations = await Innovation.find({
+        $or: [{ user: user._id }, { collaborators: user._id }],
+      });
+
+      return res.render('dashboards/dashboard', {
+        user,
+        innovations,
+        notifications,
+      });
     }
 
     if (user.role === 'faculty') {
@@ -113,7 +122,7 @@ router.get('/dashboard', async (req, res) => {
 
     if (user.role === 'admin') {
       // Admin sees all proposals and can manage them
-      const innovations = await Innovation.find({status:"approved"});
+      const innovations = await Innovation.find({ status: 'approved' });
       const hackathons = await Hackathon.find(); // Fetch all hackathons
       return res.render('dashboards/dashboard_admin', {
         user,

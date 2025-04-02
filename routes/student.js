@@ -63,6 +63,7 @@ const {
   getAIRating,
 } = require('../services/aiRating.service');
 
+// ✅ Student Adding New Proposal
 router.post(
   '/innovation/new',
   upload.single('proposalFile'),
@@ -72,15 +73,17 @@ router.post(
         return res.status(401).send('Unauthorized: User not logged in.');
       }
 
-      const userId = req.session.user._id;
+      const userId = req.session.user._id; // Logged-in student
 
-      // ✅ Extract text from PDF
-      let rating = null;
-      if (req.file) {
-        const filePath = `uploads/${req.file.filename}`;
-        const pdfText = await extractTextFromPDF(filePath);
-        rating = await getAIRating(pdfText); // Get AI rating
+      // ✅ Convert collaborators to an array of ObjectIds
+      let { collaborators } = req.body;
+      if (collaborators) {
+        collaborators = collaborators.split(',').map((id) => id.trim());
+      } else {
+        collaborators = [];
       }
+
+      console.log(collaborators); // Logs an array of collaborator IDs
 
       // ✅ Create Innovation document
       const innovation = new Innovation({
@@ -89,25 +92,31 @@ router.post(
         description: req.body.description,
         keyFeatures: req.body.keyFeatures,
         department: req.body.department,
-        collaborators: req.body.collaborators
-          ? req.body.collaborators.split(',')
-          : [],
+        collaborators: collaborators, // ✅ Store as ObjectId references
         mentors: req.body.mentors ? req.body.mentors.split(',') : [],
         info: req.body.info,
         proposalFile: req.file?.filename || null,
         studentName: req.body.studentName,
-        user: userId,
-        rating: rating, // ✅ Save the AI rating in the DB
+        user: userId, // ✅ Link innovation to the submitting user
       });
 
+      // ✅ Save the innovation
       const savedInnovation = await innovation.save();
 
-      // ✅ Update User's innovations array
+      // ✅ Update the submitting student's innovations array
       await User.findByIdAndUpdate(userId, {
         $push: { innovations: savedInnovation._id },
       });
 
-      console.log('✅ Innovation saved with rating:', rating);
+      // ✅ Also update all collaborators' innovations array
+      await User.updateMany(
+        { _id: { $in: collaborators } },
+        { $push: { innovations: savedInnovation._id } }
+      );
+
+      console.log(
+        '✅ Innovation saved successfully and linked to collaborators!'
+      );
       res.redirect('/user/dashboard');
     } catch (error) {
       console.error('❌ Error saving innovation:', error);
