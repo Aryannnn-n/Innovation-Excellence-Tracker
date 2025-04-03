@@ -109,6 +109,153 @@
         Welcome, <%= user.name %>
       </h2>
 
+      <!-- Post Creation Section -->
+      <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold text-blue-700 mb-3">
+          Create an Announcement or Post
+        </h3>
+        <form
+          action="/posts/create"
+          method="POST"
+          enctype="multipart/form-data"
+          class="space-y-4"
+        >
+          <div>
+            <label class="block font-semibold text-gray-700">Title:</label>
+            <input
+              type="text"
+              name="title"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter a title for your announcement or post..."
+            />
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700">Category:</label>
+            <select
+              name="category"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Announcements">Announcements</option>
+              <option value="Events">Events</option>
+              <option value="Best Practices">Best Practices</option>
+              <option value="Technical">Technical</option>
+              <option value="Project Updates">Project Updates</option>
+              <option value="General">General</option>
+              <option value="Questions">Questions</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700">Tags:</label>
+            <input
+              type="text"
+              name="tags"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter tags separated by commas (e.g., hackathon, deadline, workshop)"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Tags help students find your announcements
+            </p>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Visibility:</label
+            >
+            <select
+              name="visibility"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="public">Public (Everyone)</option>
+              <option value="department">Department Only</option>
+              <option value="private">Private (Only You)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Department:</label
+            >
+            <select
+              name="department"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="All">All Departments</option>
+              <option value="CSE">Computer Science & Engineering</option>
+              <option value="ECE">Electronics & Communication</option>
+              <option value="Mechanical">Mechanical Engineering</option>
+              <option value="Civil">Civil Engineering</option>
+              <option value="Biotech">Biotechnology</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Description:</label
+            >
+            <textarea
+              name="description"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows="4"
+              placeholder="Share important information, announcements, or updates with students..."
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Upload Image:</label
+            >
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Add an image to make your announcement more engaging
+            </p>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              name="isAnnouncement"
+              value="true"
+              id="isAnnouncement"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              checked
+            />
+            <label
+              for="isAnnouncement"
+              class="ml-2 block text-sm text-gray-700"
+            >
+              Mark as Announcement
+            </label>
+          </div>
+
+          <input type="hidden" name="authorName" value="<%= user.name %>" />
+          <input
+            type="hidden"
+            name="authorRole"
+            value="<%= user.role || 'Admin' %>"
+          />
+          <input type="hidden" name="authorId" value="<%= user._id %>" />
+
+          <button
+            type="submit"
+            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
+          >
+            <i class="fas fa-paper-plane mr-2"></i> Publish Announcement
+          </button>
+        </form>
+      </div>
+
       <h3
         class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-800 bg-clip-text text-transparent mt-6"
       >

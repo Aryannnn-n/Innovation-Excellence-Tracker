@@ -79,6 +79,12 @@
                     >See Participation Analytics</span
                   >
                 </div>
+                <a href="/posts" class="flex items-center gap-2 cursor-pointer">
+                  <i class="fas fa-newspaper text-2xl text-orange-500"></i>
+                  <span class="text-sm font-semibold text-gray-700"
+                    >View Community Posts</span
+                  >
+                </a>
                 <div class="flex items-center gap-2">
                   <i class="fas fa-envelope text-2xl text-red-500"></i>
                   <span class="text-sm font-semibold text-gray-700"
@@ -118,6 +124,16 @@
             ></span>
           </button>
         </div>
+
+        <!-- Posts Link -->
+        <a href="/posts" class="relative group flex items-center gap-2">
+          <i class="fas fa-newspaper text-xl text-white"></i>
+          <span
+            class="absolute left-1/2 transform -translate-x-1/2 bottom-[-35px] bg-blue-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+          >
+            View Posts
+          </span>
+        </a>
 
         <!-- Logout Button -->
         <a href="/user/logout" class="relative group flex items-center gap-2">
@@ -220,6 +236,153 @@
         <h2 class="text-2xl text-blue-700 font-bold">
           Welcome, <%= user.name %>!
         </h2>
+
+        <!-- Post Creation Section -->
+        <div class="mt-6 bg-white p-4 rounded-lg shadow-md">
+          <h3 class="text-xl font-bold text-blue-700 mb-3">
+            Create a Professional Post
+          </h3>
+          <form
+            action="/posts/create"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-4"
+          >
+            <div>
+              <label class="block font-semibold text-gray-700">Title:</label>
+              <input
+                type="text"
+                name="title"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter a professional title for your post..."
+              />
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700">Category:</label>
+              <select
+                name="category"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="General">General</option>
+                <option value="Technical">Technical</option>
+                <option value="Project Updates">Project Updates</option>
+                <option value="Best Practices">Best Practices</option>
+                <option value="Events">Events</option>
+                <option value="Announcements">Announcements</option>
+                <option value="Questions">Questions</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700">Tags:</label>
+              <input
+                type="text"
+                name="tags"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter tags separated by commas (e.g., innovation, technology, research)"
+              />
+              <p class="text-xs text-gray-500 mt-1">
+                Tags help others find your post
+              </p>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700"
+                >Visibility:</label
+              >
+              <select
+                name="visibility"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="public">Public (Everyone)</option>
+                <option value="department">Department Only</option>
+                <option value="private">Private (Only You)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700"
+                >Department:</label
+              >
+              <select
+                name="department"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="All">All Departments</option>
+                <option value="CSE">Computer Science & Engineering</option>
+                <option value="ECE">Electronics & Communication</option>
+                <option value="Mechanical">Mechanical Engineering</option>
+                <option value="Civil">Civil Engineering</option>
+                <option value="Biotech">Biotechnology</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700"
+                >Description:</label
+              >
+              <textarea
+                name="description"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows="4"
+                placeholder="Share your professional insights, achievements, or updates..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700"
+                >Upload Image:</label
+              >
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p class="text-xs text-gray-500 mt-1">
+                Add a professional image to make your post stand out
+              </p>
+            </div>
+
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                name="isAnnouncement"
+                value="true"
+                id="isAnnouncement"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label
+                for="isAnnouncement"
+                class="ml-2 block text-sm text-gray-700"
+              >
+                Mark as Announcement
+              </label>
+            </div>
+
+            <input type="hidden" name="authorName" value="<%= user.name %>" />
+            <input
+              type="hidden"
+              name="authorRole"
+              value="<%= user.role || 'Student' %>"
+            />
+            <input type="hidden" name="authorId" value="<%= user._id %>" />
+
+            <button
+              type="submit"
+              class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
+            >
+              <i class="fas fa-paper-plane mr-2"></i> Share Post
+            </button>
+          </form>
+        </div>
+
         <button
           onclick="toggleForm()"
           class="mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"

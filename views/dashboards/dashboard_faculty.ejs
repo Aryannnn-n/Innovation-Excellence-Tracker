@@ -1,350 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Faculty Dashboard - Innovation Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      #reject-innovation {
+        display: none;
+      }
+    </style>
+  </head>
 
-<head>
-  <title>Faculty Dashboard - Innovation Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-<style>
-  #reject-innovation{
-    display: none;
-  }
-</style>
-</head>
-
-<body class="bg-gradient-to-r from-green-100 to-green-300 min-h-screen">
-  <!-- Floating Navbar -->
-  <nav
-    class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center">
-    <div class="flex items-center gap-4">
-      <img
-        src="/images/technical-support.png"
-        alt="User Image"
-        class="w-10 h-10 rounded-full cursor-pointer"
-        onclick="toggleSlide()"
-      />
-      <h1 class="nav-title text-xl font-bold">Faculty Dashboard</h1>
-    </div>
-    <div class="flex items-center gap-4">
-      <div class="relative">
-        <!-- Slide-in Panel -->
-        <div
-          id="slidePanel"
-          class="fixed top-0 left-[-55px] h-screen w-full max-w-md bg-white rounded-xl shadow-lg transform -translate-x-full transition-transform duration-300 z-50 md:w-2/3 lg:w-1/3"
-        >
-          <div class="p-6 relative">
-            <button
-              onclick="toggleSlide()"
-              class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
-            >
-              <i class="fas fa-times text-xl"></i>
-            </button>
-            <div class="flex items-center gap-4">
-              <img
-                src="/images/technical-support.png"
-                alt="User Image"
-                class="w-10 h-10 rounded-full cursor-pointer"
-              />
-              <div>
-                <h2 class="text-lg font-bold text-blue-700">
-                Welcome, <%= user.name %>!
-                </h2>
-                <p class="mt-1 text-gray-600">
-                <span class="text-zinc-500 text-sm font-semibold"
-                  >ID: <%= user._id %></span
-                >
-                </p>
-              </div>
+  <body class="bg-gradient-to-r from-green-100 to-green-300 min-h-screen">
+    <!-- Floating Navbar -->
+    <nav
+      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
+    >
+      <div class="flex items-center gap-4">
+        <img
+          src="/images/technical-support.png"
+          alt="User Image"
+          class="w-10 h-10 rounded-full cursor-pointer"
+          onclick="toggleSlide()"
+        />
+        <h1 class="nav-title text-xl font-bold">Faculty Dashboard</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <!-- Slide-in Panel -->
+          <div
+            id="slidePanel"
+            class="fixed top-0 left-[-55px] h-screen w-full max-w-md bg-white rounded-xl shadow-lg transform -translate-x-full transition-transform duration-300 z-50 md:w-2/3 lg:w-1/3"
+          >
+            <div class="p-6 relative">
+              <button
+                onclick="toggleSlide()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+              >
+                <i class="fas fa-times text-xl"></i>
+              </button>
+              <div class="flex items-center gap-4">
+                <img
+                  src="/images/technical-support.png"
+                  alt="User Image"
+                  class="w-10 h-10 rounded-full cursor-pointer"
+                />
+                <div>
+                  <h2 class="text-lg font-bold text-blue-700">
+                    Welcome, <%= user.name %>!
+                  </h2>
+                  <p class="mt-1 text-gray-600">
+                    <span class="text-zinc-500 text-sm font-semibold"
+                      >ID: <%= user._id %></span
+                    >
+                  </p>
+                </div>
               </div>
               <div class="flex flex-col gap-4 mt-4 items-start">
-                  <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2">
                   <i class="fas fa-user-circle text-2xl text-blue-500"></i>
-                  <span class="text-sm font-semibold text-gray-700">Profile</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                  <i class="fas fa-cogs text-2xl text-green-500"></i>
-                  <span class="text-sm font-semibold text-gray-700">Settings</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                  <i class="fas fa-chart-line text-2xl text-purple-500"></i>
-                  <span class="text-sm font-semibold text-gray-700">Analytics</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                  <i class="fas fa-envelope text-2xl text-red-500"></i>
-                  <span class="text-sm font-semibold text-gray-700">Messages</span>
-                  </div>
+                  <span class="text-sm font-semibold text-gray-700"
+                    >Profile</span
+                  >
                 </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-cogs text-2xl text-green-500"></i>
+                  <span class="text-sm font-semibold text-gray-700"
+                    >Settings</span
+                  >
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-chart-line text-2xl text-purple-500"></i>
+                  <span class="text-sm font-semibold text-gray-700"
+                    >Analytics</span
+                  >
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-envelope text-2xl text-red-500"></i>
+                  <span class="text-sm font-semibold text-gray-700"
+                    >Messages</span
+                  >
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+        <!-- Logout Button -->
+        <a href="/user/logout" class="relative group flex items-center gap-2">
+          <i class="fas fa-sign-out-alt text-xl text-white"></i>
+          <span
+            class="absolute left-1/2 transform -translate-x-1/2 bottom-[-30px] bg-green-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            Logout
+          </span>
+        </a>
       </div>
-      <!-- Logout Button -->
-      <a href="/user/logout" class="relative group flex items-center gap-2">
-        <i class="fas fa-sign-out-alt text-xl text-white"></i>
-        <span
-          class="absolute left-1/2 transform -translate-x-1/2 bottom-[-30px] bg-green-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-          Logout
-        </span>
-      </a>
-    </div>
-  </nav><script>
+    </nav>
+    <script>
       function toggleSlide() {
-      const slidePanel = document.getElementById("slidePanel");
-      slidePanel.classList.toggle("-translate-x-full");
-      document.body.classList.toggle("overflow-hidden");
+        const slidePanel = document.getElementById("slidePanel");
+        slidePanel.classList.toggle("-translate-x-full");
+        document.body.classList.toggle("overflow-hidden");
       }
     </script>
 
-  <!-- Main Content -->
-  <div class="max-w-6xl mx-auto p-6 mt-20 bg-white shadow-lg rounded-lg">
-    <h2 class="text-2xl font-bold text-green-600">
-      Welcome, <%= user.name %>!
-    </h2>
-    <div class="flex flex-col">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-        <!-- Card 1 -->
-        <div onclick="toggleApproved()" class="bg-green-200 p-4 rounded-lg shadow-md">
-          <h3 class="text-lg font-bold text-green-700">Total Proposals</h3>
-          <!-- <p class="text-2xl font-semibold text-green-800 mt-2">ey</p> -->
-        </div>
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto p-6 mt-20 bg-white shadow-lg rounded-lg">
+      <h2 class="text-2xl font-bold text-green-600">
+        Welcome, <%= user.name %>!
+      </h2>
 
-        <!-- Card 2 -->
-        <div onclick="togglePending()" class="bg-yellow-200 p-4 rounded-lg shadow-md">
-          <h3 class="text-lg font-bold text-yellow-700">Pending Proposals</h3>
-          <!-- <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p> -->
-        </div>
+      <!-- Post Creation Section -->
+      <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold text-green-700 mb-3">
+          Create a Faculty Post or Announcement
+        </h3>
+        <form
+          action="/posts/create"
+          method="POST"
+          enctype="multipart/form-data"
+          class="space-y-4"
+        >
+          <div>
+            <label class="block font-semibold text-gray-700">Title:</label>
+            <input
+              type="text"
+              name="title"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Enter a title for your post or announcement..."
+            />
+          </div>
 
-        <!-- Card 3 -->
-        <div onclick="toggleRejected()" class="bg-red-200 p-4 rounded-lg shadow-md">
-          <h3 class="text-lg font-bold text-red-700">Rejected Proposals</h3>
-          <!-- <p class="text-2xl font-semibold text-red-800 mt-2">hey</p> -->
+          <div>
+            <label class="block font-semibold text-gray-700">Category:</label>
+            <select
+              name="category"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="Announcements">Announcements</option>
+              <option value="Best Practices">Best Practices</option>
+              <option value="Technical">Technical</option>
+              <option value="Project Updates">Project Updates</option>
+              <option value="Events">Events</option>
+              <option value="General">General</option>
+              <option value="Questions">Questions</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700">Tags:</label>
+            <input
+              type="text"
+              name="tags"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Enter tags separated by commas (e.g., assignment, deadline, workshop)"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Tags help students find your posts
+            </p>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700">Visibility:</label>
+            <select
+              name="visibility"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="public">Public (Everyone)</option>
+              <option value="department">Department Only</option>
+              <option value="private">Private (Only You)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700">Department:</label>
+            <select
+              name="department"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="All">All Departments</option>
+              <option value="CSE">Computer Science & Engineering</option>
+              <option value="ECE">Electronics & Communication</option>
+              <option value="Mechanical">Mechanical Engineering</option>
+              <option value="Civil">Civil Engineering</option>
+              <option value="Biotech">Biotechnology</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Description:</label
+            >
+            <textarea
+              name="description"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              rows="4"
+              placeholder="Share important information, announcements, or updates with students..."
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700"
+              >Upload Image:</label
+            >
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Add an image to make your post more engaging
+            </p>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              name="isAnnouncement"
+              value="true"
+              id="isAnnouncement"
+              class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+            />
+            <label
+              for="isAnnouncement"
+              class="ml-2 block text-sm text-gray-700"
+            >
+              Mark as Announcement
+            </label>
+          </div>
+
+          <input type="hidden" name="authorName" value="<%= user.name %>" />
+          <input
+            type="hidden"
+            name="authorRole"
+            value="<%= user.role || 'Faculty' %>"
+          />
+          <input type="hidden" name="authorId" value="<%= user._id %>" />
+
+          <button
+            type="submit"
+            class="bg-gradient-to-r from-green-600 to-teal-600 text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
+          >
+            <i class="fas fa-paper-plane mr-2"></i> Publish Post
+          </button>
+        </form>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <!-- Card 1 -->
+          <div
+            onclick="toggleApproved()"
+            class="bg-green-200 p-4 rounded-lg shadow-md"
+          >
+            <h3 class="text-lg font-bold text-green-700">Total Proposals</h3>
+            <!-- <p class="text-2xl font-semibold text-green-800 mt-2">ey</p> -->
+          </div>
+
+          <!-- Card 2 -->
+          <div
+            onclick="togglePending()"
+            class="bg-yellow-200 p-4 rounded-lg shadow-md"
+          >
+            <h3 class="text-lg font-bold text-yellow-700">Pending Proposals</h3>
+            <!-- <p class="text-2xl font-semibold text-yellow-800 mt-2">hey</p> -->
+          </div>
+
+          <!-- Card 3 -->
+          <div
+            onclick="toggleRejected()"
+            class="bg-red-200 p-4 rounded-lg shadow-md"
+          >
+            <h3 class="text-lg font-bold text-red-700">Rejected Proposals</h3>
+            <!-- <p class="text-2xl font-semibold text-red-800 mt-2">hey</p> -->
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Pending Proposals -->
-    <h2 class="text-xl font-semibold mt-6 text-yellow-600">
-      Pending Proposals
-    </h2>
-    <table id="pendingProposals" class="w-full mt-4 border-collapse border border-gray-300">
-      <thead class="bg-yellow-300">
-        <tr>
-          <th class="border border-gray-300 p-2">Sr. No.</th>
-          <th class="border border-gray-300 p-2">Title</th>
-          <th class="border border-gray-300 p-2">Student Name</th>
-          <th class="border border-gray-300 p-2">Submission Date</th>
-          <th class="border border-gray-300 p-2">Action</th>
-          <th class="border border-gray-300 p-2">File</th>
-          <th class="border border-gray-300 p-2">Form</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (pendingProposals.length> 0) { %> <% pendingProposals.forEach((proposal, index)=> { %>
-            <tr class="even:bg-yellow-100 odd:bg-yellow-50 text-center">
-              <td class="border border-gray-300 p-2 ">
-                <%= index + 1 %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.title %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.studentName %>
-              </td>
-              
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.date ? proposal.date.toISOString().slice(0, 10) : "N/A" %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.Collaborators %>
-                  <form action="/faculty/approve-proposal" method="POST" class="inline">
-                    <input type="hidden" name="proposalId" value="<%= proposal._id %>" />
-                    <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition">
-                      Approve
-                    </button>
-                  </form>
-                  <!-- <form action="/faculty/reject-proposal" method="POST" class="inline" id="reject-proposal">
+      <!-- Pending Proposals -->
+      <h2 class="text-xl font-semibold mt-6 text-yellow-600">
+        Pending Proposals
+      </h2>
+      <table
+        id="pendingProposals"
+        class="w-full mt-4 border-collapse border border-gray-300"
+      >
+        <thead class="bg-yellow-300">
+          <tr>
+            <th class="border border-gray-300 p-2">Sr. No.</th>
+            <th class="border border-gray-300 p-2">Title</th>
+            <th class="border border-gray-300 p-2">Student Name</th>
+            <th class="border border-gray-300 p-2">Submission Date</th>
+            <th class="border border-gray-300 p-2">Action</th>
+            <th class="border border-gray-300 p-2">File</th>
+            <th class="border border-gray-300 p-2">Form</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (pendingProposals.length> 0) { %> <%
+          pendingProposals.forEach((proposal, index)=> { %>
+          <tr class="even:bg-yellow-100 odd:bg-yellow-50 text-center">
+            <td class="border border-gray-300 p-2"><%= index + 1 %></td>
+            <td class="border border-gray-300 p-2"><%= proposal.title %></td>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.studentName %>
+            </td>
+
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.date ? proposal.date.toISOString().slice(0, 10) :
+              "N/A" %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.Collaborators %>
+              <form
+                action="/faculty/approve-proposal"
+                method="POST"
+                class="inline"
+              >
+                <input
+                  type="hidden"
+                  name="proposalId"
+                  value="<%= proposal._id %>"
+                />
+                <button
+                  class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition"
+                >
+                  Approve
+                </button>
+              </form>
+              <!-- <form action="/faculty/reject-proposal" method="POST" class="inline" id="reject-proposal">
                     <input type="hidden" name="proposalId" value="<%= proposal._id %>" /> -->
-                    <button id="btn" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                      Reject
-                    </button>
-                  <!-- </form> -->
-                  <!-- //MOFIFED -->
-                  <form action="/faculty/reject-proposal" method="POST" id="reject-innovation">
-                    <input type="hidden" name="proposalId" value="<%= proposal._id %>" />
-                    <textarea name="rejectionReason" placeholder="Enter reason for rejection" required
-                      class="border border-gray-300 p-2 w-2/3 rounded mt-2"></textarea><br>
+              <button
+                id="btn"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+              >
+                Reject
+              </button>
+              <!-- </form> -->
+              <!-- //MOFIFED -->
+              <form
+                action="/faculty/reject-proposal"
+                method="POST"
+                id="reject-innovation"
+              >
+                <input
+                  type="hidden"
+                  name="proposalId"
+                  value="<%= proposal._id %>"
+                />
+                <textarea
+                  name="rejectionReason"
+                  placeholder="Enter reason for rejection"
+                  required
+                  class="border border-gray-300 p-2 w-2/3 rounded mt-2"
+                ></textarea
+                ><br />
 
-                    <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
-                      Notify
-                    </button>
-                  </form>
+                <button
+                  class="bg-green-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                >
+                  Notify
+                </button>
+              </form>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <a
+                href="/uploads/<%= proposal.proposalFile %>"
+                target="_blank"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+              >
+                View file
+              </a>
+            </td>
+            <td
+              class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center"
+            >
+              <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
+            </td>
+          </tr>
+          <% }); %> <% } else { %>
+          <tr>
+            <td
+              colspan="6"
+              class="border border-gray-300 p-4 text-center bg-yellow-50 text-gray-500"
+            >
+              No pending proposals.
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
 
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <a href="/uploads/<%= proposal.proposalFile %>" target="_blank"
-                  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
-                  View file
-                </a>
-              </td>
-              <td class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center">
-                <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
-              </td>
-            </tr>
-            <% }); %>
-              <% } else { %>
-                <tr>
-                  <td colspan="6" class="border border-gray-300 p-4 text-center bg-yellow-50 text-gray-500">
-                    No pending proposals.
-                  </td>
-                </tr>
-                <% } %>
-      </tbody>
-    </table>
+      <!-- Approved Proposals -->
+      <h2 class="text-xl font-semibold mt-6 text-green-600">
+        Approved Proposals
+      </h2>
+      <table
+        id="approvedProposals"
+        class="w-full mt-4 border-collapse border border-gray-300"
+      >
+        <thead class="bg-green-300">
+          <tr>
+            <th class="border border-gray-300 p-2 text-center">Sr. No.</th>
+            <th class="border border-gray-300 p-2 text-center">Title</th>
+            <th class="border border-gray-300 p-2 text-center">Student Name</th>
+            <th class="border border-gray-300 p-2 text-center">
+              Submission Date
+            </th>
+            <th class="border border-gray-300 p-2 text-center">File</th>
+            <th class="border border-gray-300 p-2 text-center">Form</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (approvedProposals.length> 0) { %> <%
+          approvedProposals.forEach((proposal, index)=> { %>
+          <tr class="even:bg-green-100 odd:bg-green-50">
+            <td class="border border-gray-300 p-2 text-center">
+              <%= index + 1 %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.title %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.studentName %>
+            </td>
 
-    <!-- Approved Proposals -->
-    <h2 class="text-xl font-semibold mt-6 text-green-600">
-      Approved Proposals
-    </h2>
-    <table id="approvedProposals" class="w-full mt-4 border-collapse border border-gray-300">
-      <thead class="bg-green-300">
-        <tr>
-          <th class="border border-gray-300 p-2 text-center">Sr. No.</th>
-          <th class="border border-gray-300 p-2 text-center">Title</th>
-          <th class="border border-gray-300 p-2 text-center">Student Name</th>
-          <th class="border border-gray-300 p-2 text-center">
-            Submission Date
-          </th>
-          <th class="border border-gray-300 p-2 text-center">File</th>
-          <th class="border border-gray-300 p-2 text-center">Form</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (approvedProposals.length> 0) { %> <% approvedProposals.forEach((proposal, index)=> { %>
-            <tr class="even:bg-green-100 odd:bg-green-50">
-              <td class="border border-gray-300 p-2 text-center">
-                <%= index + 1 %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.title %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.studentName %>
-              </td>
-              
-              <td class="border border-gray-300 p-2 text-center">
-                <%= proposal.date instanceof Date ? proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <a href="/uploads/<%= proposal.proposalFile %>" target="_blank"
-                  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
-                  View Report
-                </a>
-              </td>
-              <td class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center">
-                <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
-              </td>
-            </tr>
-            <% }); %>
-              <% } else { %>
-                <tr>
-                  <td colspan="5" class="border border-gray-300 p-4 text-center bg-green-50 text-gray-500">
-                    No approved proposals yet.
-                  </td>
-                </tr>
-                <% } %>
-      </tbody>
-    </table>
+            <td class="border border-gray-300 p-2 text-center">
+              <%= proposal.date instanceof Date ?
+              proposal.date.toISOString().slice(0, 10) : 'No Date Available' %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <a
+                href="/uploads/<%= proposal.proposalFile %>"
+                target="_blank"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+              >
+                View Report
+              </a>
+            </td>
+            <td
+              class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center"
+            >
+              <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
+            </td>
+          </tr>
+          <% }); %> <% } else { %>
+          <tr>
+            <td
+              colspan="5"
+              class="border border-gray-300 p-4 text-center bg-green-50 text-gray-500"
+            >
+              No approved proposals yet.
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
 
-    <!-- Rejected Proposals -->
-    <h2 class="text-xl font-semibold mt-6 text-red-600">
-      Rejected Proposals
-    </h2>
-    <table id="rejectedProposals" class="w-full mt-4 border-collapse border border-gray-300">
-      <thead class="bg-red-300">
-        <tr>
-          <th class="border border-gray-300 p-2">Sr. No.</th>
-          <th class="border border-gray-300 p-2">Title</th>
-          <th class="border border-gray-300 p-2">Student Name</th>
-          <th class="border border-gray-300 p-2">Submission Date</th>
-          <th class="border border-gray-300 p-2">File</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (rejectedProposals.length> 0) { %> <% rejectedProposals.forEach((proposal, index)=> { %>
-            <tr class="even:bg-red-50 odd:bg-red-50 text-center">
-              <td class="border border-gray-300 p-2 ">
-                <%= index + 1 %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.title %>
-              </td>
-              <td class="border border-gray-300 p-2">
-                <%= proposal.studentName %>
-              </td>
-             
-              <td class="border border-gray-300 p-2">
-                <%= proposal.date ? proposal.date.toISOString().slice(0, 10) : "N/A" %>
-              </td>
-              <td class="border border-gray-300 p-2 text-center">
-                <a href="/uploads/<%= proposal.proposalFile %>" target="_blank"
-                  class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
-                  View Report
-                </a>
-              </td>
-            </tr>
-            <% }); %>
-              <% } else { %>
-                <tr>
-                  <td colspan="5" class="border border-gray-300 p-4 text-center bg-red-50 text-gray-500">
-                    No rejected proposals.
-                  </td>
-                </tr>
-                <% } %>
-      </tbody>
-    </table>
-  </div>
-  <script>
-    function toggleApproved() {
-      const approvedTable = document.getElementById("approvedProposals");
-      const pendingTable = document.getElementById("pendingProposals");
-      const rejectedTable = document.getElementById("rejectedProposals");
+      <!-- Rejected Proposals -->
+      <h2 class="text-xl font-semibold mt-6 text-red-600">
+        Rejected Proposals
+      </h2>
+      <table
+        id="rejectedProposals"
+        class="w-full mt-4 border-collapse border border-gray-300"
+      >
+        <thead class="bg-red-300">
+          <tr>
+            <th class="border border-gray-300 p-2">Sr. No.</th>
+            <th class="border border-gray-300 p-2">Title</th>
+            <th class="border border-gray-300 p-2">Student Name</th>
+            <th class="border border-gray-300 p-2">Submission Date</th>
+            <th class="border border-gray-300 p-2">File</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (rejectedProposals.length> 0) { %> <%
+          rejectedProposals.forEach((proposal, index)=> { %>
+          <tr class="even:bg-red-50 odd:bg-red-50 text-center">
+            <td class="border border-gray-300 p-2"><%= index + 1 %></td>
+            <td class="border border-gray-300 p-2"><%= proposal.title %></td>
+            <td class="border border-gray-300 p-2">
+              <%= proposal.studentName %>
+            </td>
 
-      approvedTable.style.display =
-        approvedTable.style.display === "none" ? "table" : "none";
-      pendingTable.style.display = "none";
-      rejectedTable.style.display = "none";
-    }
+            <td class="border border-gray-300 p-2">
+              <%= proposal.date ? proposal.date.toISOString().slice(0, 10) :
+              "N/A" %>
+            </td>
+            <td class="border border-gray-300 p-2 text-center">
+              <a
+                href="/uploads/<%= proposal.proposalFile %>"
+                target="_blank"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+              >
+                View Report
+              </a>
+            </td>
+          </tr>
+          <% }); %> <% } else { %>
+          <tr>
+            <td
+              colspan="5"
+              class="border border-gray-300 p-4 text-center bg-red-50 text-gray-500"
+            >
+              No rejected proposals.
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      function toggleApproved() {
+        const approvedTable = document.getElementById("approvedProposals");
+        const pendingTable = document.getElementById("pendingProposals");
+        const rejectedTable = document.getElementById("rejectedProposals");
 
-    function togglePending() {
-      const pendingTable = document.getElementById("pendingProposals");
-      const approvedTable = document.getElementById("approvedProposals");
-      const rejectedTable = document.getElementById("rejectedProposals");
+        approvedTable.style.display =
+          approvedTable.style.display === "none" ? "table" : "none";
+        pendingTable.style.display = "none";
+        rejectedTable.style.display = "none";
+      }
 
-      pendingTable.style.display =
-        pendingTable.style.display === "none" ? "table" : "none";
-      approvedTable.style.display = "none";
-      rejectedTable.style.display = "none";
-    }
+      function togglePending() {
+        const pendingTable = document.getElementById("pendingProposals");
+        const approvedTable = document.getElementById("approvedProposals");
+        const rejectedTable = document.getElementById("rejectedProposals");
 
-    function toggleRejected() {
-      const rejectedTable = document.getElementById("rejectedProposals");
-      const approvedTable = document.getElementById("approvedProposals");
-      const pendingTable = document.getElementById("pendingProposals");
+        pendingTable.style.display =
+          pendingTable.style.display === "none" ? "table" : "none";
+        approvedTable.style.display = "none";
+        rejectedTable.style.display = "none";
+      }
 
-      rejectedTable.style.display =
-        rejectedTable.style.display === "none" ? "table" : "none";
-      approvedTable.style.display = "none";
-      pendingTable.style.display = "none";
-    }
-  </script>
-  <script>
-    let rejected = document.getElementById("reject-innovation");
-    let btn = document.getElementById("btn");
-    btn.addEventListener("click", (e) => {
-    console.log(rejected)
-       rejected.style.display = "inline"
-    });
+      function toggleRejected() {
+        const rejectedTable = document.getElementById("rejectedProposals");
+        const approvedTable = document.getElementById("approvedProposals");
+        const pendingTable = document.getElementById("pendingProposals");
 
-  </script>
-</body>
-
+        rejectedTable.style.display =
+          rejectedTable.style.display === "none" ? "table" : "none";
+        approvedTable.style.display = "none";
+        pendingTable.style.display = "none";
+      }
+    </script>
+    <script>
+      let rejected = document.getElementById("reject-innovation");
+      let btn = document.getElementById("btn");
+      btn.addEventListener("click", (e) => {
+        console.log(rejected);
+        rejected.style.display = "inline";
+      });
+    </script>
+  </body>
 </html>

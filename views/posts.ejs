@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Community Posts - Innovation Excellence Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      .post-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .tag {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        margin: 0.25rem;
+        background-color: #e2e8f0;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        color: #4a5568;
+      }
+      .pinned-post {
+        border-left: 4px solid #3b82f6;
+      }
+      .announcement-post {
+        border: 2px solid #f59e0b;
+      }
+      .linkedin-style {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      }
+      .linkedin-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .linkedin-button {
+        background-color: #0a66c2;
+        color: white;
+        border-radius: 16px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: background-color 0.2s;
+      }
+      .linkedin-button:hover {
+        background-color: #004182;
+      }
+      .linkedin-secondary-button {
+        background-color: transparent;
+        color: #0a66c2;
+        border: 1px solid #0a66c2;
+        border-radius: 16px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: background-color 0.2s;
+      }
+      .linkedin-secondary-button:hover {
+        background-color: rgba(10, 102, 194, 0.1);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <!-- Navbar -->
+    <nav class="linkedin-header text-gray-800 p-4 shadow-sm sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <a href="/user/dashboard" class="text-xl font-bold text-blue-700"
+            >Innovation Excellence Tracker</a
+          >
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="/user/dashboard" class="hover:text-blue-700 transition flex items-center">
+            <i class="fas fa-home mr-1"></i> Dashboard
+          </a>
+          <a href="/user/logout" class="hover:text-blue-700 transition flex items-center">
+            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Community Posts</h1>
+        <% if (user) { %>
+        <a 
+          href="/user/dashboard" 
+          class="linkedin-button flex items-center gap-2"
+        >
+          <i class="fas fa-plus"></i> Create Post
+        </a>
+        <% } %>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="linkedin-style p-4 mb-6">
+        <h2 class="text-lg font-semibold text-gray-700 mb-3">Filters</h2>
+        <form action="/posts" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">All Categories</option>
+              <% categories.forEach(category => { %>
+                <option value="<%= category %>" <%= filters.category === category ? 'selected' : '' %>><%= category %></option>
+              <% }); %>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+            <select name="department" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <% departments.forEach(dept => { %>
+                <option value="<%= dept %>" <%= filters.department === dept ? 'selected' : '' %>><%= dept %></option>
+              <% }); %>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+            <select name="sort" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest First</option>
+              <option value="oldest" <%= filters.sort === 'oldest' ? 'selected' : '' %>>Oldest First</option>
+              <option value="mostLiked" <%= filters.sort === 'mostLiked' ? 'selected' : '' %>>Most Liked</option>
+              <option value="mostCommented" <%= filters.sort === 'mostCommented' ? 'selected' : '' %>>Most Commented</option>
+            </select>
+          </div>
+          
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <div class="relative">
+              <input 
+                type="text" 
+                name="search" 
+                placeholder="Search by title, description, or tags..." 
+                value="<%= filters.search || '' %>"
+                class="w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+          </div>
+          
+          <div class="flex items-end">
+            <button type="submit" class="linkedin-button w-full">
+              Apply Filters
+            </button>
+          </div>
+        </form>
+        
+        <!-- Tags Filter -->
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+          <div class="flex flex-wrap gap-2">
+            <% allTags.forEach(tag => { %>
+              <a 
+                href="/posts?tag=<%= tag %>" 
+                class="tag <%= filters.tag === tag ? 'bg-blue-200 text-blue-800' : '' %>"
+              >
+                #<%= tag %>
+              </a>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <% if (posts && posts.length > 0) { %> 
+          <% posts.forEach(post => { %>
+            <div class="post-card linkedin-style overflow-hidden <%= post.isPinned ? 'pinned-post' : '' %> <%= post.isAnnouncement ? 'announcement-post' : '' %>">
+              <% if (post.isPinned) { %>
+                <div class="bg-blue-100 text-blue-800 text-center py-1 text-sm font-semibold">
+                  <i class="fas fa-thumbtack mr-1"></i> Pinned Post
+                </div>
+              <% } %>
+              <% if (post.isAnnouncement) { %>
+                <div class="bg-yellow-100 text-yellow-800 text-center py-1 text-sm font-semibold">
+                  <i class="fas fa-bullhorn mr-1"></i> Announcement
+                </div>
+              <% } %>
+              
+              <!-- Post Header -->
+              <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center">
+                  <div
+                    class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg"
+                  >
+                    <%= post.authorName.charAt(0) %>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="font-bold text-gray-800"><%= post.authorName %></h3>
+                    <p class="text-sm text-gray-500"><%= post.authorRole %></p>
+                    <p class="text-xs text-gray-400"><%= new Date(post.createdAt).toLocaleDateString() %></p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Post Image -->
+              <div class="h-64 overflow-hidden">
+                <img
+                  src="/public/uploads/posts/<%= post.image %>"
+                  alt="Post image"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+
+              <!-- Post Content -->
+              <div class="p-4">
+                <!-- Category Badge -->
+                <div class="mb-2">
+                  <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                    <%= post.category %>
+                  </span>
+                  <% if (post.department !== 'All') { %>
+                    <span class="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full ml-1">
+                      <%= post.department %>
+                    </span>
+                  <% } %>
+                </div>
+                
+                <!-- Post Title -->
+                <h2 class="text-xl font-bold text-gray-800 mb-2"><%= post.title %></h2>
+
+                <!-- Post Description -->
+                <p class="text-gray-700 mb-4"><%= post.description %></p>
+                
+                <!-- Tags -->
+                <% if (post.tags && post.tags.length > 0) { %>
+                  <div class="mb-4">
+                    <% post.tags.forEach(tag => { %>
+                      <span class="tag">#<%= tag %></span>
+                    <% }); %>
+                  </div>
+                <% } %>
+
+                <!-- Attachments -->
+                <% if (post.attachments && post.attachments.length > 0) { %>
+                  <div class="mt-4 border-t pt-4">
+                    <h4 class="font-semibold text-gray-700 mb-2">Attachments</h4>
+                    <div class="space-y-2">
+                      <% post.attachments.forEach(attachment => { %>
+                        <a 
+                          href="/public/uploads/attachments/<%= attachment.path %>" 
+                          target="_blank"
+                          class="flex items-center gap-2 text-blue-600 hover:text-blue-800"
+                        >
+                          <i class="fas fa-paperclip"></i>
+                          <span class="text-sm"><%= attachment.filename %></span>
+                        </a>
+                      <% }); %>
+                    </div>
+                  </div>
+                <% } %>
+
+                <!-- Post Actions -->
+                <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                  <div class="flex items-center gap-6">
+                    <% if (user) { %>
+                    <button
+                      onclick="likePost('<%= post._id %>')"
+                      class="like-btn hover:text-blue-500 transition flex items-center gap-1 text-gray-600"
+                      data-post-id="<%= post._id %>"
+                    >
+                      <i
+                        class="<%= post.likes.includes(user._id) ? 'fas text-blue-500' : 'far' %> fa-heart"
+                      ></i>
+                      <span class="likes-count"><%= post.likes.length %></span>
+                    </button>
+                    <button
+                      onclick="toggleComments('<%= post._id %>')"
+                      class="hover:text-blue-500 transition flex items-center gap-1 text-gray-600"
+                    >
+                      <i class="far fa-comment"></i>
+                      <span><%= post.comments.length %></span>
+                    </button>
+                    <% } else { %>
+                    <a
+                      href="/user/login"
+                      class="hover:text-blue-500 transition flex items-center gap-1 text-gray-600"
+                    >
+                      <i class="far fa-heart"></i>
+                      <span><%= post.likes.length %></span>
+                    </a>
+                    <a
+                      href="/user/login"
+                      class="hover:text-blue-500 transition flex items-center gap-1 text-gray-600"
+                    >
+                      <i class="far fa-comment"></i>
+                      <span><%= post.comments.length %></span>
+                    </a>
+                    <% } %>
+                  </div>
+                  
+                  <!-- Post Actions (Admin/Faculty only) -->
+                  <% if (user && (user.role === 'admin' || user.role === 'faculty' || user._id.toString() === post.authorId.toString())) { %>
+                    <div class="flex items-center gap-2">
+                      <form action="/posts/<%= post._id %>/pin" method="POST" class="inline">
+                        <button 
+                          type="submit" 
+                          class="text-gray-600 hover:text-blue-600 text-sm"
+                        >
+                          <i class="fas fa-thumbtack mr-1"></i> <%= post.isPinned ? 'Unpin' : 'Pin' %>
+                        </button>
+                      </form>
+                      <% if (user._id.toString() === post.authorId.toString()) { %>
+                        <form action="/posts/delete/<%= post._id %>" method="POST" class="inline">
+                          <button type="submit" class="text-red-500 hover:text-red-600 transition">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                  <% } %>
+                </div>
+
+                <!-- Comments Section (Hidden by default) -->
+                <div id="comments-<%= post._id %>" class="mt-4 hidden">
+                  <div class="border-t pt-4">
+                    <h4 class="font-semibold text-gray-700 mb-2">Comments</h4>
+                    <% if (post.comments && post.comments.length > 0) { %> 
+                      <% post.comments.forEach(comment => { %>
+                        <div class="bg-gray-50 p-3 rounded mb-3">
+                          <div class="flex items-center gap-2 mb-1">
+                            <div
+                              class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs"
+                            >
+                              <%= comment.user.name ? comment.user.name.charAt(0) : '?'
+                              %>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-700"
+                              ><%= comment.user.name || 'Anonymous' %></span
+                            >
+                            <span class="text-xs text-gray-500 ml-auto">
+                              <%= new Date(comment.createdAt).toLocaleDateString() %>
+                            </span>
+                          </div>
+                          <p class="text-sm text-gray-700 ml-8"><%= comment.text %></p>
+                          
+                          <!-- Comment Actions -->
+                          <div class="flex items-center gap-4 ml-8 mt-1">
+                            <% if (user) { %>
+                              <button 
+                                onclick="likeComment('<%= post._id %>', '<%= comment._id %>')"
+                                class="text-xs text-gray-500 hover:text-blue-500 flex items-center gap-1"
+                              >
+                                <i class="<%= comment.likes && comment.likes.includes(user._id) ? 'fas' : 'far' %> fa-heart"></i>
+                                <span class="comment-likes-count"><%= comment.likes ? comment.likes.length : 0 %></span>
+                              </button>
+                              <button 
+                                onclick="toggleReplyForm('<%= post._id %>', '<%= comment._id %>')"
+                                class="text-xs text-gray-500 hover:text-blue-500"
+                              >
+                                Reply
+                              </button>
+                            <% } %>
+                          </div>
+                          
+                          <!-- Reply Form (Hidden by default) -->
+                          <div id="reply-form-<%= post._id %>-<%= comment._id %>" class="hidden mt-2 ml-8">
+                            <form
+                              action="/posts/comment/<%= post._id %>/reply/<%= comment._id %>"
+                              method="POST"
+                              class="flex gap-2"
+                            >
+                              <input
+                                type="text"
+                                name="text"
+                                placeholder="Write a reply..."
+                                class="flex-1 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                required
+                              />
+                              <button
+                                type="submit"
+                                class="linkedin-button text-sm px-2 py-1"
+                              >
+                                Reply
+                              </button>
+                            </form>
+                          </div>
+                          
+                          <!-- Replies -->
+                          <% if (comment.replies && comment.replies.length > 0) { %>
+                            <div class="ml-8 mt-2 space-y-2">
+                              <% comment.replies.forEach(reply => { %>
+                                <div class="bg-gray-100 p-2 rounded">
+                                  <div class="flex items-center gap-2">
+                                    <div class="w-5 h-5 rounded-full bg-blue-400 flex items-center justify-center text-white text-xs">
+                                      <%= reply.user.name ? reply.user.name.charAt(0) : '?' %>
+                                    </div>
+                                    <span class="text-xs font-semibold text-gray-700">
+                                      <%= reply.user.name || 'Anonymous' %>
+                                    </span>
+                                    <span class="text-xs text-gray-500 ml-auto">
+                                      <%= new Date(reply.createdAt).toLocaleDateString() %>
+                                    </span>
+                                  </div>
+                                  <p class="text-xs text-gray-700 ml-7 mt-1"><%= reply.text %></p>
+                                </div>
+                              <% }); %>
+                            </div>
+                          <% } %>
+                        </div>
+                      <% }); %> 
+                    <% } else { %>
+                      <p class="text-sm text-gray-500">No comments yet</p>
+                    <% } %>
+
+                    <!-- Comment Form -->
+                    <% if (user) { %>
+                      <form
+                        action="/posts/comment/<%= post._id %>"
+                        method="POST"
+                        class="mt-3"
+                      >
+                        <div class="flex gap-2">
+                          <input
+                            type="text"
+                            name="text"
+                            placeholder="Add a comment..."
+                            class="flex-1 px-3 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          />
+                          <button
+                            type="submit"
+                            class="linkedin-button text-sm px-3 py-1"
+                          >
+                            Post
+                          </button>
+                        </div>
+                      </form>
+                      
+                      <!-- Attachment Form -->
+                      <form
+                        action="/posts/<%= post._id %>/attachment"
+                        method="POST"
+                        enctype="multipart/form-data"
+                        class="mt-2"
+                      >
+                        <div class="flex gap-2">
+                          <input
+                            type="file"
+                            name="file"
+                            class="flex-1 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <button
+                            type="submit"
+                            class="linkedin-secondary-button text-sm px-3 py-1"
+                          >
+                            Attach
+                          </button>
+                        </div>
+                      </form>
+                    <% } else { %>
+                      <div class="mt-3 text-center">
+                        <a href="/user/login" class="text-blue-600 hover:text-blue-800 text-sm">
+                          Login to comment
+                        </a>
+                      </div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }); %> 
+        <% } else { %>
+          <div class="col-span-full text-center py-12 linkedin-style">
+            <i class="fas fa-newspaper text-5xl text-gray-400 mb-4"></i>
+            <p class="text-xl text-gray-500">
+              No posts yet. Be the first to share!
+            </p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <script>
+      async function likePost(postId) {
+        try {
+          const response = await fetch(`/posts/like/${postId}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          // Update the likes count and heart icon
+          const likeBtn = document.querySelector(`[data-post-id="${postId}"]`);
+          const likesCount = likeBtn.querySelector(".likes-count");
+          const heartIcon = likeBtn.querySelector("i");
+
+          likesCount.textContent = data.likes;
+          heartIcon.classList.toggle("far");
+          heartIcon.classList.toggle("fas");
+          heartIcon.classList.toggle("text-blue-500");
+        } catch (error) {
+          console.error("Error liking post:", error);
+        }
+      }
+      
+      async function likeComment(postId, commentId) {
+        try {
+          const response = await fetch(`/posts/comment/${postId}/like/${commentId}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          // Update the likes count and heart icon
+          const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+          const likesCount = commentElement.querySelector(".comment-likes-count");
+          const heartIcon = commentElement.querySelector("i");
+
+          likesCount.textContent = data.likes;
+          heartIcon.classList.toggle("far");
+          heartIcon.classList.toggle("fas");
+        } catch (error) {
+          console.error("Error liking comment:", error);
+        }
+      }
+      
+      function toggleComments(postId) {
+        const commentsSection = document.getElementById(`comments-${postId}`);
+        commentsSection.classList.toggle("hidden");
+      }
+      
+      function toggleReplyForm(postId, commentId) {
+        const replyForm = document.getElementById(`reply-form-${postId}-${commentId}`);
+        replyForm.classList.toggle("hidden");
+      }
+      
+      async function deletePost(postId) {
+        if (!confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
+          return;
+        }
+        
+        try {
+          const response = await fetch(`/posts/${postId}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (response.ok) {
+            // Reload the page to show updated posts
+            window.location.reload();
+          } else {
+            const data = await response.json();
+            alert(data.message || "Error deleting post");
+          }
+        } catch (error) {
+          console.error("Error deleting post:", error);
+          alert("Error deleting post");
+        }
+      }
+    </script>
+  </body>
+</html>
