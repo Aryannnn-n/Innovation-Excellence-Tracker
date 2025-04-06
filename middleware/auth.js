@@ -1,6 +1,8 @@
 // Authentication middleware
 const isAuthenticated = (req, res, next) => {
   if (req.session && req.session.user) {
+    // Attach user object to request
+    req.user = req.session.user;
     return next();
   }
 

@@ -12,6 +12,7 @@ const path = require("path");
 const Innovation = require("./models/innovation");
 const User = require("./models/user");
 const Hackathon = require("./models/hackathon");
+const StudentPoints = require("./models/StudentPoints");
 
 const session = require("express-session");
 
@@ -72,16 +73,38 @@ const facultyRouter = require("./routes/faculty");
 const adminRouter = require("./routes/admin");
 const studentRouter = require("./routes/student");
 const postsRouter = require("./routes/posts");
+const leaderboardRoutes = require("./routes/leaderboard");
+const PointCategory = require("./models/PointCategory");
 
 app.use("/user", userRouter);
 app.use("/faculty", facultyRouter);
 app.use("/admin", adminRouter);
 app.use("/student", studentRouter);
 app.use("/posts", postsRouter);
+app.use("/leaderboard", leaderboardRoutes);
 
 app.get("/", async (req, res) => {
-  const hackathons = await Hackathon.find(); // Fetch from DB
-  res.render("utils/index", { user: req.session.user, hackathons });
+  try {
+    const topStudents = await StudentPoints.find()
+      .sort({ totalPoints: -1 })
+      .limit(3)
+      .populate("studentId", "name email");
+
+    const hackathons = await Hackathon.find().sort({ date: 1 }).limit(5);
+
+    res.render("index", {
+      user: req.user,
+      topStudents: topStudents || [],
+      hackathons: hackathons || [],
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.render("index", {
+      user: req.user,
+      topStudents: [],
+      hackathons: [],
+    });
+  }
 });
 
 // The student total proposals data
@@ -171,6 +194,9 @@ app.get("/admin/category-count", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch category counts" });
   }
 });
+
+// Initialize point categories
+PointCategory.initializeDefaults().catch(console.error);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

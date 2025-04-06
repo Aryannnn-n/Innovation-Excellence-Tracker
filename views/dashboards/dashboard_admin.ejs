@@ -286,6 +286,7 @@
             <th class="border border-gray-300 p-2">Title</th>
             <th class="border border-gray-300 p-2">Submitted By</th>
             <th class="border border-gray-300 p-2">Category</th>
+            <th class="border border-gray-300 p-2">Status</th>
             <th class="border border-gray-300 p-2">Proposal</th>
             <th class="border border-gray-300 p-2">Actions</th>
           </tr>
@@ -305,6 +306,18 @@
             </td>
             <td class="border border-gray-300 p-2">
               <%= innovation.category %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                <%= innovation.status === 'FacultyApproved' ? 'bg-green-100 text-green-800' : 
+                   innovation.status === 'AdminApproved' ? 'bg-blue-100 text-blue-800' : 
+                   innovation.status === 'Implemented' ? 'bg-purple-100 text-purple-800' : 
+                   innovation.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>">
+                <%= innovation.status === 'FacultyApproved' ? 'Faculty Approved' : 
+                    innovation.status === 'AdminApproved' ? 'Admin Approved' : 
+                    innovation.status === 'Implemented' ? 'Implemented' : 
+                    innovation.status === 'rejected' ? 'Rejected' : 'Pending' %>
+              </span>
             </td>
             <td class="border border-gray-300 p-2 text-center">
               <% if (innovation.proposalFile) { %>
@@ -513,6 +526,20 @@
           </div>
         </div>
       </div>
+
+      <!-- Add this section where appropriate in the admin dashboard -->
+      <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
+        <h2 class="text-2xl font-bold text-[#372e58] mb-4">Leaderboard Management</h2>
+        <p class="text-gray-600 mb-4">
+          Update all student points to ensure the leaderboard is accurate and up-to-date.
+        </p>
+        <button 
+          id="updatePointsBtn"
+          class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition font-medium shadow-md">
+          Update All Student Points
+        </button>
+        <div id="updateStatus" class="mt-2 text-sm"></div>
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/graphs/adminDashboard.js"></script>
@@ -564,6 +591,35 @@
         delay: 0.5,
         stagger: 0.15,
         ease: "power2.out",
+      });
+    </script>
+    <script>
+      document.getElementById('updatePointsBtn').addEventListener('click', async function() {
+        const statusDiv = document.getElementById('updateStatus');
+        statusDiv.textContent = 'Updating points...';
+        statusDiv.className = 'mt-2 text-sm text-blue-600';
+        
+        try {
+          const response = await fetch('/leaderboard/update-all-points', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok) {
+            statusDiv.textContent = '✅ ' + data.message;
+            statusDiv.className = 'mt-2 text-sm text-green-600';
+          } else {
+            statusDiv.textContent = '❌ ' + data.message;
+            statusDiv.className = 'mt-2 text-sm text-red-600';
+          }
+        } catch (error) {
+          statusDiv.textContent = '❌ Error updating points: ' + error.message;
+          statusDiv.className = 'mt-2 text-sm text-red-600';
+        }
       });
     </script>
   </body>

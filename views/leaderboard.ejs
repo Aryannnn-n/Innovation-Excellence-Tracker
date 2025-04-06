@@ -1,0 +1,237 @@
+<%- include('partials/header') %>
+
+<div class="container py-5">
+  <h1 class="text-center mb-4">Innovation Leaderboard</h1>
+
+  <!-- Search and Filter Section -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="input-group">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control"
+          placeholder="Search by name..."
+        />
+        <button class="btn btn-primary" onclick="searchLeaderboard()">
+          Search
+        </button>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <select
+        id="categoryFilter"
+        class="form-select"
+        onchange="filterLeaderboard()"
+      >
+        <option value="all">All Categories</option>
+        <option value="Hackathon">Hackathon</option>
+        <option value="Patent">Patent</option>
+        <option value="Research">Research</option>
+        <option value="Startup">Startup</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select
+        id="timeFrameFilter"
+        class="form-select"
+        onchange="filterLeaderboard()"
+      >
+        <option value="all">All Time</option>
+        <option value="month">This Month</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Leaderboard Table -->
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Rank</th>
+          <th>Student</th>
+          <th>Total Points</th>
+          <th>Monthly Points</th>
+          <th>Categories</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <% students.forEach((student, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td>
+            <div class="d-flex align-items-center">
+              <img
+                src="https://ui-avatars.com/api/?name=<%= student.studentId.name %>&background=random"
+                class="rounded-circle me-2"
+                style="width: 40px; height: 40px"
+                alt="<%= student.studentId.name %>"
+              />
+              <%= student.studentId.name %>
+            </div>
+          </td>
+          <td><%= student.totalPoints %></td>
+          <td><%= student.monthlyPoints %></td>
+          <td>
+            <% const categories = [...new Set(student.achievements.map(a =>
+            a.category))]; %> <% categories.forEach(category => { %>
+            <span class="badge bg-primary me-1"><%= category %></span>
+            <% }); %>
+          </td>
+          <td>
+            <button
+              class="btn btn-sm btn-info"
+              onclick="showStudentDetails('<%= student.studentId._id %>')"
+            >
+              View Details
+            </button>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Student Details Modal -->
+<div class="modal fade" id="studentDetailsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Student Achievements</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body" id="studentDetailsContent">
+        <!-- Content will be loaded dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function searchLeaderboard() {
+    const searchTerm = document.getElementById("searchInput").value;
+    const category = document.getElementById("categoryFilter").value;
+    const timeFrame = document.getElementById("timeFrameFilter").value;
+
+    try {
+      const response = await fetch(
+        `/leaderboard/complete?search=${searchTerm}&category=${category}&timeFrame=${timeFrame}`
+      );
+      const data = await response.json();
+      updateLeaderboardTable(data);
+    } catch (error) {
+      console.error("Error searching leaderboard:", error);
+    }
+  }
+
+  async function filterLeaderboard() {
+    await searchLeaderboard();
+  }
+
+  async function showStudentDetails(studentId) {
+    try {
+      const response = await fetch(`/leaderboard/student/${studentId}`);
+      const student = await response.json();
+
+      const modalContent = document.getElementById("studentDetailsContent");
+      modalContent.innerHTML = `
+            <div class="text-center mb-4">
+                <img src="https://ui-avatars.com/api/?name=${
+                  student.studentId.name
+                }&background=random" 
+                     class="rounded-circle mb-3" 
+                     style="width: 100px; height: 100px;" 
+                     alt="${student.studentId.name}">
+                <h4>${student.studentId.name}</h4>
+                <p>Total Points: ${student.totalPoints}</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Points</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${student.achievements
+                          .map(
+                            (achievement) => `
+                            <tr>
+                                <td>${achievement.category}</td>
+                                <td>${achievement.description}</td>
+                                <td>${achievement.points}</td>
+                                <td>${achievement.status}</td>
+                                <td>${new Date(
+                                  achievement.date
+                                ).toLocaleDateString()}</td>
+                            </tr>
+                        `
+                          )
+                          .join("")}
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+      new bootstrap.Modal(
+        document.getElementById("studentDetailsModal")
+      ).show();
+    } catch (error) {
+      console.error("Error loading student details:", error);
+    }
+  }
+
+  function updateLeaderboardTable(students) {
+    const tbody = document.getElementById("leaderboardBody");
+    tbody.innerHTML = students
+      .map(
+        (student, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <img src="https://ui-avatars.com/api/?name=${
+                      student.studentId.name
+                    }&background=random" 
+                         class="rounded-circle me-2" 
+                         style="width: 40px; height: 40px;" 
+                         alt="${student.studentId.name}">
+                    ${student.studentId.name}
+                </div>
+            </td>
+            <td>${student.totalPoints}</td>
+            <td>${student.monthlyPoints}</td>
+            <td>
+                ${[...new Set(student.achievements.map((a) => a.category))]
+                  .map(
+                    (category) =>
+                      `<span class="badge bg-primary me-1">${category}</span>`
+                  )
+                  .join("")}
+            </td>
+            <td>
+                <button class="btn btn-sm btn-info" 
+                        onclick="showStudentDetails('${
+                          student.studentId._id
+                        }')">
+                    View Details
+                </button>
+            </td>
+        </tr>
+    `
+      )
+      .join("");
+  }
+</script>
+
+<%- include('partials/footer') %>

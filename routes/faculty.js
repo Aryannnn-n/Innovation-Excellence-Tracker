@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Innovation = require("../models/innovation");
 const User = require("../models/user");
-
 const Notification = require("../models/notification");
+const { updateStudentPoints } = require("../services/points.service");
 
 // multer setup
 const multer = require("multer");
@@ -71,17 +71,30 @@ router.get("/viewform/:id", async (req, res) => {
 //   }
 // });
 
-router.post("/approve-proposal", async (req, res) => {
+// Faculty approve proposal
+router.post("/approve-proposal/:id", async (req, res) => {
   try {
-    const { proposalId } = req.body;
-    const proposal = await Innovation.findByIdAndUpdate(proposalId, {
-      status: "approved",
-    });
+    const proposalId = req.params.id;
 
-    // Create Notification for the Student
+    // Find the proposal first to check if it exists
+    const proposal = await Innovation.findById(proposalId);
+
+    if (!proposal) {
+      return res.status(404).send("Proposal not found");
+    }
+
+    // Update the proposal status
+    proposal.status = "FacultyApproved";
+    proposal.approvedDate = new Date();
+    await proposal.save();
+
+    // Update student points
+    await updateStudentPoints(proposal.user);
+
+    // Create notification for the student
     await Notification.create({
       userId: proposal.user,
-      message: `Your proposal "${proposal.title}" has been approved!`,
+      message: `Your proposal "${proposal.title}" has been approved by faculty!`,
       createdAt: new Date(),
       type: "approval",
     });
@@ -89,7 +102,7 @@ router.post("/approve-proposal", async (req, res) => {
     res.redirect("/user/dashboard");
   } catch (error) {
     console.error("Error approving proposal:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("Server Error");
   }
 });
 

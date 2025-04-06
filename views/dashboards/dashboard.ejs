@@ -197,9 +197,12 @@
           <p class="text-sm text-gray-300 mt-2">
             <strong>Status:</strong>
             <span
-              class="<%= innovation.status === 'approved' ? 'text-green-500' : 'text-yellow-500' %>"
+              class="<%= innovation.status === 'FacultyApproved' || innovation.status === 'AdminApproved' || innovation.status === 'Implemented' ? 'text-green-500' : innovation.status === 'rejected' ? 'text-red-500' : 'text-yellow-500' %>"
             >
-              <%= innovation.status==='approved' ? 'Approved' : 'Pending' %>
+              <%= innovation.status === 'FacultyApproved' ? 'Faculty Approved' :
+              innovation.status === 'AdminApproved' ? 'Admin Approved' :
+              innovation.status === 'Implemented' ? 'Implemented' :
+              innovation.status === 'rejected' ? 'Rejected' : 'Pending' %>
             </span>
           </p>
 
@@ -510,6 +513,118 @@
         >
           <canvas id="StudentChart"></canvas>
         </div>
+
+        <!-- Add this after the slide panel section -->
+        <div class="mt-20 max-w-6xl mx-auto px-4">
+          <!-- Leaderboard Section -->
+          <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-bold text-[#372e58]">
+                Your Innovation Points
+              </h2>
+              <a
+                href="/leaderboard/participants"
+                class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition font-medium shadow-md"
+              >
+                View Full Leaderboard
+              </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Total Points Card -->
+              <div
+                class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-md"
+              >
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-700">
+                      Total Points
+                    </h3>
+                    <p class="text-3xl font-bold text-[#372e58] mt-2">
+                      <%= user.points?.totalPoints || 0 %>
+                    </p>
+                  </div>
+                  <div class="text-4xl text-blue-500">
+                    <i class="fas fa-trophy"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Monthly Points Card -->
+              <div
+                class="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-6 shadow-md"
+              >
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-700">
+                      Monthly Points
+                    </h3>
+                    <p class="text-3xl font-bold text-[#372e58] mt-2">
+                      <%= user.points?.monthlyPoints || 0 %>
+                    </p>
+                  </div>
+                  <div class="text-4xl text-green-500">
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rank Card -->
+              <div
+                class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 shadow-md"
+              >
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-700">
+                      Current Rank
+                    </h3>
+                    <p class="text-3xl font-bold text-[#372e58] mt-2">
+                      #<%= user.points?.rank || 'N/A' %>
+                    </p>
+                  </div>
+                  <div class="text-4xl text-purple-500">
+                    <i class="fas fa-medal"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Achievements -->
+            <div class="mt-6">
+              <h3 class="text-xl font-semibold text-gray-700 mb-4">
+                Recent Achievements
+              </h3>
+              <div class="space-y-4">
+                <% if (user.points?.achievements &&
+                user.points.achievements.length > 0) { %> <%
+                user.points.achievements.slice(0, 3).forEach(achievement => { %>
+                <div
+                  class="bg-gray-50 rounded-lg p-4 flex items-center justify-between"
+                >
+                  <div>
+                    <h4 class="font-medium text-gray-800">
+                      <%= achievement.title %>
+                    </h4>
+                    <p class="text-sm text-gray-600">
+                      <%= achievement.category %>
+                    </p>
+                  </div>
+                  <div class="text-lg font-semibold text-purple-600">
+                    +<%= achievement.points %> pts
+                  </div>
+                </div>
+                <% }) %> <% } else { %>
+                <p class="text-gray-500 text-center py-4">
+                  No achievements yet. Start submitting innovations to earn
+                  points!
+                </p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rest of the dashboard content -->
+         
       </div>
     </div>
     <script></script>

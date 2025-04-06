@@ -105,6 +105,11 @@
         slidePanel.classList.toggle("-translate-x-full");
         document.body.classList.toggle("overflow-hidden");
       }
+
+      function toggleRejectForm(button) {
+        const form = button.nextElementSibling;
+        form.classList.toggle("hidden");
+      }
     </script>
 
     <!-- Main Content -->
@@ -322,15 +327,10 @@
             <td class="border border-gray-300 p-2 text-center">
               <%= proposal.Collaborators %>
               <form
-                action="/faculty/approve-proposal"
+                action="/faculty/approve-proposal/<%= proposal._id %>"
                 method="POST"
                 class="inline"
               >
-                <input
-                  type="hidden"
-                  name="proposalId"
-                  value="<%= proposal._id %>"
-                />
                 <button
                   class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition"
                 >
@@ -342,6 +342,7 @@
               <button
                 id="btn"
                 class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                onclick="toggleRejectForm(this)"
               >
                 Reject
               </button>
@@ -351,6 +352,7 @@
                 action="/faculty/reject-proposal"
                 method="POST"
                 id="reject-innovation"
+                class="hidden"
               >
                 <input
                   type="hidden"
@@ -418,6 +420,7 @@
             </th>
             <th class="border border-gray-300 p-2 text-center">File</th>
             <th class="border border-gray-300 p-2 text-center">Form</th>
+            <th class="border border-gray-300 p-2 text-center">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -451,6 +454,16 @@
               class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center"
             >
               <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span
+                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= proposal.status === 'FacultyApproved' ? 'bg-green-100 text-green-800' : proposal.status === 'AdminApproved' ? 'bg-blue-100 text-blue-800' : proposal.status === 'Implemented' ? 'bg-purple-100 text-purple-800' : proposal.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>"
+              >
+                <%= proposal.status === 'FacultyApproved' ? 'Faculty Approved' :
+                proposal.status === 'AdminApproved' ? 'Admin Approved' :
+                proposal.status === 'Implemented' ? 'Implemented' :
+                proposal.status === 'rejected' ? 'Rejected' : 'Pending' %>
+              </span>
             </td>
           </tr>
           <% }); %> <% } else { %>

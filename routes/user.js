@@ -1,19 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Innovation = require('../models/innovation');
-const User = require('../models/user');
-const Hackathon = require('../models/hackathon');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const Innovation = require("../models/innovation");
+const User = require("../models/user");
+const Hackathon = require("../models/hackathon");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
-const Notification = require('../models/notification');
+const Notification = require("../models/notification");
 
 // multer setup
-const multer = require('multer');
+const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     // Use the original name of the file
@@ -23,17 +23,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get('/register', (req, res) => {
-  res.render('auth/register', { error: null });
+router.get("/register", (req, res) => {
+  res.render("auth/register", { error: null });
 });
 
-router.post('/register', async (req, res) => {
+router.post("/register", async (req, res) => {
   const { name, email, password, role, department } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.render('auth/register', { error: 'User already exists' });
+      return res.render("auth/register", { error: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -46,42 +46,42 @@ router.post('/register', async (req, res) => {
     });
     await newUser.save();
 
-    res.redirect('/user/login');
+    res.redirect("/user/login");
   } catch (error) {
-    res.render('auth/register', { error: 'Error registering user' });
+    res.render("auth/register", { error: "Error registering user" });
   }
 });
 
-router.get('/login', (req, res) => {
-  res.render('auth/login', { error: null });
+router.get("/login", (req, res) => {
+  res.render("auth/login", { error: null });
 });
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.render('auth/login', { error: 'Invalid credentials' });
+    return res.render("auth/login", { error: "Invalid credentials" });
   }
 
   req.session.user = user;
-  res.redirect('/user/dashboard');
+  res.redirect("/user/dashboard");
 });
 
-router.get('/logout', (req, res) => {
+router.get("/logout", (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/');
+    res.redirect("/");
   });
 });
 
 // dashboard after login
-router.get('/dashboard', async (req, res) => {
-  if (!req.session.user) return res.redirect('/user/login');
+router.get("/dashboard", async (req, res) => {
+  if (!req.session.user) return res.redirect("/user/login");
 
   const user = req.session.user;
 
   try {
-    if (user.role === 'student') {
+    if (user.role === "student") {
       // Show all innovation submissions to students
       const notifications = await Notification.find({ userId: user._id }).sort({
         createdAt: -1,
@@ -92,27 +92,30 @@ router.get('/dashboard', async (req, res) => {
         $or: [{ user: user._id }, { collaborators: user._id }],
       });
 
-      return res.render('dashboards/dashboard', {
+      return res.render("dashboards/dashboard", {
         user,
         innovations,
         notifications,
       });
     }
 
-    if (user.role === 'faculty') {
+    if (user.role === "faculty") {
       // Fetch all proposals and categorize them
       const allProposals = await Innovation.find();
       const pendingProposals = allProposals.filter(
-        (p) => p.status === 'pending'
+        (p) => p.status === "pending"
       );
       const approvedProposals = allProposals.filter(
-        (p) => p.status === 'approved'
+        (p) =>
+          p.status === "FacultyApproved" ||
+          p.status === "AdminApproved" ||
+          p.status === "Implemented"
       );
       const rejectedProposals = allProposals.filter(
-        (p) => p.status === 'rejected'
+        (p) => p.status === "rejected"
       );
 
-      return res.render('dashboards/dashboard_faculty', {
+      return res.render("dashboards/dashboard_faculty", {
         user,
         pendingProposals,
         approvedProposals,
@@ -120,11 +123,13 @@ router.get('/dashboard', async (req, res) => {
       });
     }
 
-    if (user.role === 'admin') {
+    if (user.role === "admin") {
       // Admin sees all proposals and can manage them
-      const innovations = await Innovation.find({ status: 'approved' });
+      const innovations = await Innovation.find({
+        status: { $in: ["FacultyApproved", "AdminApproved", "Implemented"] },
+      });
       const hackathons = await Hackathon.find(); // Fetch all hackathons
-      return res.render('dashboards/dashboard_admin', {
+      return res.render("dashboards/dashboard_admin", {
         user,
         innovations,
         hackathons,
@@ -132,10 +137,10 @@ router.get('/dashboard', async (req, res) => {
     }
 
     // If user role is unknown, redirect to login
-    res.redirect('/user/login');
+    res.redirect("/user/login");
   } catch (error) {
-    console.error('Error loading dashboard:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error loading dashboard:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
