@@ -6,6 +6,8 @@ const User = require("../models/user");
 const Hackathon = require("../models/hackathon");
 const Notification = require("../models/notification");
 const { updateStudentPoints } = require("../services/points.service");
+const { isAuthenticated } = require("../middleware/auth");
+
 
 // multer setup
 const multer = require("multer");
@@ -144,6 +146,11 @@ router.post("/implement-innovation/:id", async (req, res) => {
     console.error("Error marking innovation as implemented:", error);
     res.status(500).send("Server Error");
   }
+});
+
+router.get("/register", isAuthenticated, (req, res) => {
+  req.user = req.session.user;
+  res.render("auth/facultyRegister", { error: null, user: req.user });
 });
 
 module.exports = router;

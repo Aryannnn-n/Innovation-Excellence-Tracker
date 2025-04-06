@@ -23,9 +23,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/register", (req, res) => {
-  res.render("auth/register", { error: null });
-});
+// router.get("/register", (req, res) => {
+//   res.render("auth/register", { error: null });
+// });
 
 router.post("/register", async (req, res) => {
   const { name, email, password, role, department } = req.body;
@@ -33,7 +33,7 @@ router.post("/register", async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.render("auth/register", { error: "User already exists" });
+      return res.render("auth/login", { error: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

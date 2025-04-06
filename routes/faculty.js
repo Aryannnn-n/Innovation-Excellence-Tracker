@@ -5,6 +5,10 @@ const User = require("../models/user");
 const Notification = require("../models/notification");
 const { updateStudentPoints } = require("../services/points.service");
 
+
+const { isAuthenticated } = require("../middleware/auth");
+
+
 // multer setup
 const multer = require("multer");
 
@@ -128,6 +132,12 @@ router.post("/reject-proposal", async (req, res) => {
     console.error("Error rejecting proposal:", error);
     res.status(500).send("Internal Server Error");
   }
+});
+
+router.get("/register", isAuthenticated, (req, res) => {
+  req.user = req.session.user;
+  // console.log(req.user.role)
+  res.render("auth/studentRegister", { error: null, useDepartment: req.user.department });
 });
 
 module.exports = router;

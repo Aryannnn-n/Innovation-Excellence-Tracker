@@ -85,6 +85,11 @@ app.use("/leaderboard", leaderboardRoutes);
 
 app.get("/", async (req, res) => {
   try {
+    const adminUser = await  User.findOne({role:"admin"});
+    // console.log(adminUser)
+    if(adminUser == null){
+      res.render("auth/adminRegister")
+    }
     const topStudents = await StudentPoints.find()
       .sort({ totalPoints: -1 })
       .limit(3)
