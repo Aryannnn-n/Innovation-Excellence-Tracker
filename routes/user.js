@@ -101,7 +101,7 @@ router.get("/dashboard", async (req, res) => {
 
     if (user.role === "faculty") {
       // Fetch all proposals and categorize them
-      const allProposals = await Innovation.find();
+      const allProposals = await Innovation.find({department: user.department});
       const pendingProposals = allProposals.filter(
         (p) => p.status === "pending"
       );
