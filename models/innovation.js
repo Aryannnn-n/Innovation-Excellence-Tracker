@@ -51,6 +51,7 @@ const InnovationSchema = new Schema({
   collaboration: { type: Boolean, default: false },
   approvedDate: { type: Date },
   points: { type: Number, default: 0 },
+  rejectionReason: { type: String, default: "No reason provided" },
 });
 
 // Update points when status changes
