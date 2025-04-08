@@ -721,8 +721,77 @@
         // Show the requested section
         document.getElementById(sectionId).classList.remove('hidden');
         
+        // If showing leaderboard section, refresh points data
+        if (sectionId === 'leaderboardSection') {
+          refreshPointsData();
+        }
+        
         // Close the slide panel
         toggleSlide();
+      }
+
+      // Function to refresh points data
+      async function refreshPointsData() {
+        try {
+          const response = await fetch('/leaderboard/student/<%= user._id %>');
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Update total points
+            const totalPointsElement = document.querySelector('.text-3xl.font-bold.text-\\[\\#372e58\\].mt-2');
+            if (totalPointsElement) {
+              totalPointsElement.textContent = data.totalPoints || 0;
+            }
+            
+            // Update monthly points
+            const monthlyPointsElement = document.querySelector('.bg-gradient-to-br.from-green-50.to-teal-50 .text-3xl.font-bold.text-\\[\\#372e58\\].mt-2');
+            if (monthlyPointsElement) {
+              monthlyPointsElement.textContent = data.monthlyPoints || 0;
+            }
+            
+            // Update rank
+            const rankElement = document.querySelector('.bg-gradient-to-br.from-purple-50.to-pink-50 .text-3xl.font-bold.text-\\[\\#372e58\\].mt-2');
+            if (rankElement) {
+              // Calculate rank based on total points
+              const rankResponse = await fetch('/leaderboard/complete');
+              if (rankResponse.ok) {
+                const leaderboardData = await rankResponse.json();
+                const studentRank = leaderboardData.findIndex(student => student.studentId._id === '<%= user._id %>') + 1;
+                rankElement.textContent = studentRank > 0 ? '#' + studentRank : 'N/A';
+              }
+            }
+            
+            // Update achievements section
+            const achievementsContainer = document.querySelector('.space-y-4');
+            if (achievementsContainer) {
+              if (data.achievements && data.achievements.length > 0) {
+                const achievementsHTML = data.achievements.slice(0, 3).map(achievement => `
+                  <div class="bg-gray-50 rounded-lg p-4 flex items-center justify-between">
+                    <div>
+                      <h4 class="font-medium text-gray-800">${achievement.description || achievement.title}</h4>
+                      <p class="text-sm text-gray-600">${achievement.category}</p>
+                    </div>
+                    <div class="text-lg font-semibold text-purple-600">+${achievement.points} pts</div>
+                  </div>
+                `).join('');
+                
+                achievementsContainer.innerHTML = achievementsHTML;
+              } else {
+                achievementsContainer.innerHTML = `
+                  <p class="text-gray-500 text-center py-4">
+                    No achievements yet. Start submitting innovations to earn points!
+                  </p>
+                `;
+              }
+            }
+            
+            console.log('Points data refreshed successfully');
+          } else {
+            console.error('Failed to fetch points data:', response.status);
+          }
+        } catch (error) {
+          console.error('Error refreshing points data:', error);
+        }
       }
     </script>
   </body>

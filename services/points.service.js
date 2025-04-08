@@ -174,21 +174,76 @@ async function updateStudentPoints(studentId) {
 
 /**
  * Update points for all students
- * @returns {Promise<void>}
+ * @returns {Promise<{success: boolean, updatedCount: number, errors: Array}>}
  */
 async function updateAllStudentPoints() {
+  const result = {
+    success: true,
+    updatedCount: 0,
+    errors: [],
+  };
+
   try {
     // Get all users with role 'student'
     const User = require("../models/user");
     const students = await User.find({ role: "student" });
 
-    for (const student of students) {
-      await updateStudentPoints(student._id);
+    console.log(`Starting to update points for ${students.length} students`);
+
+    // Process students in parallel for better performance
+    const updatePromises = students.map(async (student) => {
+      try {
+        await updateStudentPoints(student._id);
+        result.updatedCount++;
+        console.log(
+          `Updated points for student: ${student.name} (${student._id})`
+        );
+        return {
+          success: true,
+          studentId: student._id,
+          studentName: student.name,
+        };
+      } catch (error) {
+        console.error(
+          `Error updating points for student ${student._id}:`,
+          error
+        );
+        result.errors.push({
+          studentId: student._id,
+          studentName: student.name,
+          error: error.message,
+        });
+        return {
+          success: false,
+          studentId: student._id,
+          studentName: student.name,
+          error: error.message,
+        };
+      }
+    });
+
+    // Wait for all updates to complete
+    await Promise.all(updatePromises);
+
+    console.log(
+      `Completed updating points. Successfully updated ${result.updatedCount} out of ${students.length} students`
+    );
+
+    if (result.errors.length > 0) {
+      console.warn(
+        `There were ${result.errors.length} errors during the update process`
+      );
+      result.success = false;
     }
 
-    console.log(`Updated points for ${students.length} students`);
+    return result;
   } catch (error) {
-    console.error("Error updating all student points:", error);
+    console.error("Error in updateAllStudentPoints:", error);
+    result.success = false;
+    result.errors.push({
+      error: error.message,
+    });
+    return result;
   }
 }
 

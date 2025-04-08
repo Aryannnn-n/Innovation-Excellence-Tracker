@@ -106,9 +106,34 @@ router.post("/update-all-points", isAuthenticated, async (req, res) => {
     }
 
     const { updateAllStudentPoints } = require("../services/points.service");
-    await updateAllStudentPoints();
 
-    res.json({ message: "All student points updated successfully" });
+    // Get count of students before update
+    const User = require("../models/user");
+    const studentCount = await User.countDocuments({ role: "student" });
+
+    // Update all student points
+    const updateResult = await updateAllStudentPoints();
+
+    // Get updated leaderboard data
+    const updatedLeaderboard = await StudentPoints.find()
+      .sort({ totalPoints: -1 })
+      .populate("studentId", "name email")
+      .lean();
+
+    // Add rank to each student
+    const rankedLeaderboard = updatedLeaderboard.map((student, index) => ({
+      ...student,
+      rank: index + 1,
+    }));
+
+    res.json({
+      message: `Successfully updated points for ${updateResult.updatedCount} out of ${studentCount} students`,
+      success: updateResult.success,
+      updatedCount: updateResult.updatedCount,
+      totalStudents: studentCount,
+      errorCount: updateResult.errors.length,
+      topStudents: rankedLeaderboard.slice(0, 5), // Return top 5 students for reference
+    });
   } catch (error) {
     console.error("Error updating all student points:", error);
     res.status(500).json({ message: error.message });

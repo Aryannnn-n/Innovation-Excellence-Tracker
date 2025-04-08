@@ -73,12 +73,12 @@
             </div>
           </div>
         </div>
-          <!-- student registration -->
-          <a
+        <!-- student registration -->
+        <a
           href="/faculty/register"
-          class="px-5 py-2 text-white bg-purple-500 rounded-full hover:bg-purple-600 transition font-medium shadow-md"
+          class="px-5 py-2 text-white bg-green-400 rounded-full hover:bg-green-500 transition font-medium shadow-md"
         >
-          <i class="fas fa-user-plus"></i> Register
+          <i class="fas fa-user-plus"></i> Register Student
         </a>
 
         <!-- View Posts Button -->
@@ -511,6 +511,7 @@
               <th class="border border-gray-300 p-2">Student Name</th>
               <th class="border border-gray-300 p-2">Submission Date</th>
               <th class="border border-gray-300 p-2">File</th>
+              <th class="border border-gray-300 p-2">Form</th>
               <th class="border border-gray-300 p-2">Rejection Reason</th>
             </tr>
           </thead>
@@ -536,6 +537,11 @@
                 >
                   View Report
                 </a>
+              </td>
+              <td
+                class="border border-gray-300 text-blue-600 hover:underline hover:text-blue-700 p-2 text-center"
+              >
+                <a href="/faculty/viewform/<%= proposal._id %>">view form</a>
               </td>
               <td class="border border-gray-300 p-2 text-left">
                 <%= proposal.rejectionReason || "No reason provided" %>

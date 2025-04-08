@@ -69,7 +69,7 @@
                   </button>
                   <button onclick="showSection('hackathonSection')" class="flex items-center gap-2 w-full p-2 hover:bg-green-50 rounded-lg transition">
                     <i class="fas fa-calendar text-2xl text-green-500"></i>
-                    <span class="text-sm font-semibold text-gray-700">Hackathon Events</span>
+                    <span class="text-sm font-semibold text-gray-700">Events Announcement</span>
                   </button>
                   <button onclick="showSection('analysisSection')" class="flex items-center gap-2 w-full p-2 hover:bg-yellow-50 rounded-lg transition">
                     <i class="fas fa-chart-bar text-2xl text-yellow-500"></i>
@@ -79,18 +79,15 @@
                     <i class="fas fa-trophy text-2xl text-red-500"></i>
                     <span class="text-sm font-semibold text-gray-700">Leaderboard</span>
                   </button>
+                  <a href="/admin/register" class="flex items-center gap-2 w-full p-2 hover:bg-purple-50 rounded-lg transition">
+                    <i class="fas fa-user-plus text-2xl text-purple-500"></i>
+                    <span class="text-sm font-semibold text-gray-700">Register Faculty Member</span>
+                  </a>
                 </div>
                 </div>
             </div>
           </div>
         </div>
-            <!-- department registration -->
-        <a
-            href="/admin/register"
-            class="px-5 py-2 text-white bg-purple-500 rounded-full hover:bg-purple-600 transition font-medium shadow-md"
-          >
-            <i class="fas fa-user-plus"></i> Register
-          </a>
         <!-- Logout Button -->
         <a
           href="/user/logout"
@@ -451,7 +448,7 @@
         <!-- Hackathon Listings Section (Initially Hidden) -->
         <div
           id="viewHackathon"
-          class="bg-white p-6 rounded-lg shadow-lg hidden"
+          class="bg-white p-6 mt-5 rounded-lg shadow-lg hidden"
         >
           <h2 class="text-2xl font-bold text-blue-600">Uploaded Events News</h2>
 
@@ -641,7 +638,12 @@
     <script>
       document.getElementById('updatePointsBtn').addEventListener('click', async function() {
         const statusDiv = document.getElementById('updateStatus');
-        statusDiv.textContent = 'Updating points...';
+        const updateButton = document.getElementById('updatePointsBtn');
+        
+        // Disable button and show loading state
+        updateButton.disabled = true;
+        updateButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Updating...';
+        statusDiv.textContent = 'Updating points for all students...';
         statusDiv.className = 'mt-2 text-sm text-blue-600';
         
         try {
@@ -655,15 +657,56 @@
           const data = await response.json();
           
           if (response.ok) {
-            statusDiv.textContent = '✅ ' + data.message;
-            statusDiv.className = 'mt-2 text-sm text-green-600';
+            if (data.success) {
+              statusDiv.innerHTML = `<span class="text-green-600">✅ ${data.message}</span>`;
+              statusDiv.className = 'mt-2 text-sm';
+              
+              // Add a success message with more details
+              setTimeout(() => {
+                statusDiv.innerHTML += `
+                  <div class="mt-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                    <p class="text-green-700"><strong>Update Summary:</strong></p>
+                    <ul class="list-disc pl-5 mt-1 text-green-600">
+                      <li>Successfully updated: ${data.updatedCount} students</li>
+                      <li>Total students in system: ${data.totalStudents}</li>
+                      ${data.errorCount > 0 ? `<li class="text-yellow-600">Errors encountered: ${data.errorCount}</li>` : ''}
+                    </ul>
+                    <p class="mt-2 text-green-700"><strong>Top 5 Students:</strong></p>
+                    <ol class="list-decimal pl-5 mt-1 text-green-600">
+                      ${data.topStudents.slice(0, 5).map((student, index) => 
+                        `<li>${student.studentId.name}: ${student.totalPoints} points</li>`
+                      ).join('')}
+                    </ol>
+                  </div>`;
+              }, 1000);
+            } else {
+              statusDiv.innerHTML = `<span class="text-yellow-600">⚠️ ${data.message}</span>`;
+              statusDiv.className = 'mt-2 text-sm';
+              
+              // Add details about partial success
+              setTimeout(() => {
+                statusDiv.innerHTML += `
+                  <div class="mt-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <p class="text-yellow-700"><strong>Update Summary:</strong></p>
+                    <ul class="list-disc pl-5 mt-1 text-yellow-600">
+                      <li>Successfully updated: ${data.updatedCount} students</li>
+                      <li>Total students in system: ${data.totalStudents}</li>
+                      <li>Errors encountered: ${data.errorCount}</li>
+                    </ul>
+                  </div>`;
+              }, 1000);
+            }
           } else {
-            statusDiv.textContent = '❌ ' + data.message;
+            statusDiv.innerHTML = `<span class="text-red-600">❌ ${data.message}</span>`;
             statusDiv.className = 'mt-2 text-sm text-red-600';
           }
         } catch (error) {
-          statusDiv.textContent = '❌ Error updating points: ' + error.message;
+          statusDiv.innerHTML = `<span class="text-red-600">❌ Error updating points: ${error.message}</span>`;
           statusDiv.className = 'mt-2 text-sm text-red-600';
+        } finally {
+          // Re-enable button and restore original text
+          updateButton.disabled = false;
+          updateButton.innerHTML = 'Update All Student Points';
         }
       });
     </script>
