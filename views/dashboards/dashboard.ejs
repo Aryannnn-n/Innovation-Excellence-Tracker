@@ -52,7 +52,7 @@
                   </h2>
                   <p class="mt-1 text-gray-600">
                     <span class="text-zinc-500 text-sm font-semibold"
-                      >ID: <%= user._id %></span
+                      >ID: <%= user.PRN %></span
                     >
                   </p>
                 </div>
@@ -205,7 +205,7 @@
         >
           Your Proposals
         </h2>
-        <% if (innovations.length> 0) { %> <%
+        <% if (innovations.length > 0) { %> <%
         innovations.slice().reverse().forEach(innovation=> { %>
         <div
           class="bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-700"

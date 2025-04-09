@@ -27,7 +27,7 @@ const InnovationSchema = new Schema({
     enum: ["CSE", "ECE", "Mechanical", "Civil", "Biotech", "Others"],
     required: true,
   },
-  collaborators: [{ type: Schema.Types.ObjectId, ref: "User" }], // ✅ Store collaborators as ObjectId
+  collaborators: [{ type: String , ref:"User"}], // ✅ Store collaborators as PRN
   mentors: [String],
   keyFeatures: String,
   info: String,

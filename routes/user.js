@@ -28,7 +28,7 @@ const upload = multer({ storage: storage });
 // });
 
 router.post("/register", async (req, res) => {
-  const { name, email, password, role, department } = req.body;
+  const { name, email, password, role, department , PRN } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -43,6 +43,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role,
       department,
+      PRN
     });
     await newUser.save();
 
@@ -89,7 +90,7 @@ router.get("/dashboard", async (req, res) => {
 
       // Fetch innovations where the user is either the owner or a collaborator
       const innovations = await Innovation.find({
-        $or: [{ user: user._id }, { collaborators: user._id }],
+        $or: [{ user: user._id }, { collaborators: user.PRN }],
       });
 
       return res.render("dashboards/dashboard", {
@@ -101,7 +102,7 @@ router.get("/dashboard", async (req, res) => {
 
     if (user.role === "faculty") {
       // Fetch all proposals and categorize them
-      const allProposals = await Innovation.find();
+      const allProposals = await Innovation.find({department: user.department});
       const pendingProposals = allProposals.filter(
         (p) => p.status === "pending"
       );

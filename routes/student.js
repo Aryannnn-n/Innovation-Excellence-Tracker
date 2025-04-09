@@ -88,7 +88,8 @@ router.post(
 
         // Validate that each ID is a valid ObjectId
         for (const id of collaboratorIds) {
-          if (mongoose.Types.ObjectId.isValid(id)) {
+            let Prn = await User.find({PRN: id})
+          if (Prn) {
             collaborators.push(id);
           } else {
             console.warn(`Invalid collaborator ID: ${id}`);
@@ -121,7 +122,7 @@ router.post(
 
       // ✅ Also update all collaborators' innovations array
       await User.updateMany(
-        { _id: { $in: collaborators } },
+        { PRN: { $in: collaborators }},
         { $push: { innovations: savedInnovation._id } }
       );
 
