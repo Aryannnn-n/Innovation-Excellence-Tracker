@@ -45,11 +45,15 @@ router.post("/register", async (req, res) => {
       department,
       PRN 
     });
-    await newUser.save();
+    let registeredUSer = await newUser.save();
+    let curreUser = await User.findOne({_id: req.session.user})
+
+    curreUser.registrations.push(registeredUSer);
+    await curreUser.save();
 
     res.redirect("/user/login");
   } catch (error) {
-    res.render("auth/register", { error: "Error registering user" });
+    res.render("auth/studentRegister", { error: "Error registering user" });
   }
 });
 

@@ -18,9 +18,11 @@ const UserSchema = new mongoose.Schema({
   PRN:{
     type: String,
     required: true,
+    default: 'null',
   },
   // ✅ Store all innovations submitted by the user
   innovations: [{ type: Schema.Types.ObjectId, ref: 'Innovation' }],
+  registrations: [{type:Schema.Types.ObjectId , ref: 'User' }],
 });
 
 const User = mongoose.model('User', UserSchema);
