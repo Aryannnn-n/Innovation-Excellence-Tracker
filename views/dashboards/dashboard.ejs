@@ -58,13 +58,19 @@
                 </div>
               </div>
               <div class="flex flex-col gap-4 mt-4 items-start">
-                <div class="flex items-center gap-2">
+                <div
+                  onclick="showSection('profileSection')"
+                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+                >
                   <i class="fas fa-user-circle text-2xl text-blue-500"></i>
                   <span class="text-sm font-semibold text-gray-700"
                     >Profile</span
                   >
                 </div>
-                <div class="flex items-center gap-2">
+                <div
+                  onclick="showSection('settingsSection')"
+                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+                >
                   <i class="fas fa-cogs text-2xl text-green-500"></i>
                   <span class="text-sm font-semibold text-gray-700"
                     >Settings</span
@@ -85,7 +91,7 @@
                 >
                   <i class="fas fa-newspaper text-2xl text-orange-500"></i>
                   <span class="text-sm font-semibold text-gray-700"
-                    >Create Professional Post</span
+                    >Create a Post</span
                   >
                 </div>
                 <div
@@ -438,19 +444,16 @@
 
         <!-- Submission Form -->
         <div id="submissionSection" class="hidden">
-          <button
-            onclick="toggleForm()"
-            class="mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            Submit Your Proposal
-          </button>
+          <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent mt-6 mb-4">
+            Submit Your Innovation Proposal
+          </h2>
 
           <form
             id="submissionForm"
             action="/student/innovation/new"
             method="POST"
             enctype="multipart/form-data"
-            class="hidden mt-6 p-4 bg-blue-100 rounded-lg shadow"
+            class="mt-6 p-4 bg-blue-100 rounded-lg shadow"
           >
             <label class="block font-semibold">Title:</label>
             <input
@@ -550,19 +553,13 @@
         <!-- Participation Analysis -->
         <div id="analysisSection" class="hidden">
           <h2
-            class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent mt-6"
+            class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent mt-6 mb-4"
           >
             Your Participation Analysis
           </h2>
-          <button
-            onclick="toggleCanvas()"
-            class="mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            Show Analysis
-          </button>
           <div
             id="canvasContainer"
-            class="w-[90%] m-4 flex justify-center hidden"
+            class="w-[90%] m-4 flex justify-center"
           >
             <canvas id="StudentChart"></canvas>
           </div>
@@ -676,6 +673,131 @@
             </div>
           </div>
         </div>
+
+        <!-- Profile Section -->
+        <div id="profileSection" class="mt-6 bg-white p-6 rounded-lg shadow-md hidden">
+          <h3 class="text-xl font-bold text-blue-700 mb-4">Student Profile</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Profile Information -->
+            <div class="space-y-4">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Personal Information</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-user text-blue-500"></i>
+                    <span class="text-gray-600">Name: <%= user.name %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-envelope text-blue-500"></i>
+                    <span class="text-gray-600">Email: <%= user.email %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-id-card text-blue-500"></i>
+                    <span class="text-gray-600">PRN: <%= user.PRN %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-building text-blue-500"></i>
+                    <span class="text-gray-600">Department: <%= user.department %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-calendar-alt text-blue-500"></i>
+                    <span class="text-gray-600">Joined: <%= new Date(user.date).toLocaleDateString() %></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="space-y-4">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Innovation Statistics</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-file-alt text-blue-500"></i>
+                    <span class="text-gray-600">Total Submissions: <%= innovations.length %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-check-circle text-green-500"></i>
+                    <span class="text-gray-600">Approved: <%= innovations.filter(i => i.status === 'FacultyApproved' || i.status === 'AdminApproved' || i.status === 'Implemented').length %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-clock text-yellow-500"></i>
+                    <span class="text-gray-600">Pending: <%= innovations.filter(i => i.status === 'pending').length %></span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-times-circle text-red-500"></i>
+                    <span class="text-gray-600">Rejected: <%= innovations.filter(i => i.status === 'rejected').length %></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Profile Button -->
+          <div class="mt-6">
+            <button
+              onclick="toggleProfileEdit()"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition flex items-center gap-2"
+            >
+              <i class="fas fa-edit"></i>
+              Edit Profile
+            </button>
+          </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settingsSection" class="mt-6 bg-white p-6 rounded-lg shadow-md hidden">
+          <h3 class="text-xl font-bold text-blue-700 mb-4">Settings</h3>
+          
+          <div class="space-y-4">
+            <!-- Notification Settings -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">Notification Settings</h4>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-600">Email Notifications</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-600">Proposal Status Updates</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Privacy Settings -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">Privacy Settings</h4>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-600">Show Profile to Others</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save Settings Button -->
+          <div class="mt-6">
+            <button
+              onclick="saveSettings()"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition flex items-center gap-2"
+            >
+              <i class="fas fa-save"></i>
+              Save Settings
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <script></script>
@@ -683,11 +805,6 @@
     <script src="/graphs/studentDashboard.js"></script>
 
     <script>
-      // toggle canvas visibility
-      function toggleCanvas() {
-        document.getElementById("canvasContainer").classList.toggle("hidden");
-      }
-      
       // Toggle notification dropdown
       document
         .getElementById("notificationBtn")
@@ -713,7 +830,7 @@
       // Function to show a specific section
       function showSection(sectionId) {
         // Hide all sections first
-        const sections = ['welcomeSection', 'postCreationSection', 'submissionSection', 'analysisSection', 'leaderboardSection'];
+        const sections = ['welcomeSection', 'postCreationSection', 'submissionSection', 'analysisSection', 'leaderboardSection', 'profileSection', 'settingsSection'];
         sections.forEach(section => {
           document.getElementById(section).classList.add('hidden');
         });
@@ -724,6 +841,16 @@
         // If showing leaderboard section, refresh points data
         if (sectionId === 'leaderboardSection') {
           refreshPointsData();
+        }
+        
+        // If showing analysis section, initialize the chart
+        if (sectionId === 'analysisSection') {
+          // Make sure the chart is initialized when the section is shown
+          setTimeout(() => {
+            if (typeof initializeStudentChart === 'function') {
+              initializeStudentChart();
+            }
+          }, 100);
         }
         
         // Close the slide panel
@@ -792,6 +919,16 @@
         } catch (error) {
           console.error('Error refreshing points data:', error);
         }
+      }
+
+      function toggleProfileEdit() {
+        // Add profile edit functionality here
+        alert('Profile edit functionality coming soon!');
+      }
+
+      function saveSettings() {
+        // Add settings save functionality here
+        alert('Settings saved successfully!');
       }
     </script>
   </body>

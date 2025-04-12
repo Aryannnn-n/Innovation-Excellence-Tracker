@@ -28,7 +28,7 @@ const upload = multer({ storage: storage });
 // });
 
 router.post("/register", async (req, res) => {
-  const { name, email, password, role, department , PRN } = req.body;
+  const { name, email, password, role, department, PRN } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -43,17 +43,40 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role,
       department,
-      PRN 
+      PRN: role === "student" ? PRN : "null",
+      date: new Date(),
     });
-    let registeredUSer = await newUser.save();
-    let curreUser = await User.findOne({_id: req.session.user})
 
-    curreUser.registrations.push(registeredUSer);
-    await curreUser.save();
+    let registeredUser = await newUser.save();
+
+    // If the user is a faculty member, add them to the admin's registrations
+    if (role === "faculty") {
+      // Find the admin user
+      const adminUser = await User.findOne({ role: "admin" });
+      if (adminUser) {
+        // Check if the faculty is already registered
+        if (!adminUser.hasRegistered(registeredUser._id)) {
+          adminUser.registrations.push(registeredUser._id);
+          await adminUser.save();
+          console.log(`Faculty ${registeredUser.name} registered by admin`);
+        }
+      }
+    } else {
+      // For students, add them to the faculty's registrations
+      let currentUser = await User.findOne({ _id: req.session.user });
+      if (currentUser) {
+        currentUser.registrations.push(registeredUser._id);
+        await currentUser.save();
+        console.log(`Student ${registeredUser.name} registered by faculty`);
+      }
+    }
 
     res.redirect("/user/dashboard");
   } catch (error) {
-    res.render("auth/studentRegister", { error: "Error registering user" });
+    console.error("Registration error:", error);
+    res.render("auth/studentRegister", {
+      error: "Error registering user: " + error.message,
+    });
   }
 });
 
@@ -84,7 +107,9 @@ router.get("/dashboard", async (req, res) => {
   if (!req.session.user) return res.redirect("/user/login");
 
   // const user = req.session.user;
-  const user = await User.findOne({_id: req.session.user._id}).populate("registrations");
+  const user = await User.findOne({ _id: req.session.user._id }).populate(
+    "registrations"
+  );
   // console.log(user);
 
   try {
@@ -108,7 +133,9 @@ router.get("/dashboard", async (req, res) => {
 
     if (user.role === "faculty") {
       // Fetch all proposals and categorize them
-      const allProposals = await Innovation.find({department: user.department});
+      const allProposals = await Innovation.find({
+        department: user.department,
+      });
       const pendingProposals = allProposals.filter(
         (p) => p.status === "pending"
       );
@@ -121,15 +148,19 @@ router.get("/dashboard", async (req, res) => {
       const rejectedProposals = allProposals.filter(
         (p) => p.status === "rejected"
       );
-      // let User = await User.findOne({_id: user._id }).populate("registrations");
-      // user = user.populate("user");
-      // console.log(user.registrations);
+
+      // Fetch all students from the same department
+      const departmentStudents = await User.find({
+        role: "student",
+        department: user.department,
+      }).sort({ date: -1 });
 
       return res.render("dashboards/dashboard_faculty", {
         user,
         pendingProposals,
         approvedProposals,
         rejectedProposals,
+        departmentStudents,
       });
     }
 
@@ -153,7 +184,6 @@ router.get("/dashboard", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 // Cancel admission route
 // Cancel admission route
@@ -202,11 +232,8 @@ router.get("/dashboard", async (req, res) => {
 //   }
 // });
 
-
-
-
 // Cancel admission route
-router.post('/admission/cancel/:regId', async (req, res) => {
+router.post("/admission/cancel/:regId", async (req, res) => {
   const userId = req.session.user._id;
   const regId = req.params.regId;
 
@@ -233,13 +260,48 @@ router.post('/admission/cancel/:regId', async (req, res) => {
     // Step 3: Delete the registered user
     await User.deleteOne({ _id: registeredUserId });
 
-    res.redirect('/user/dashboard');
+    res.redirect("/user/dashboard");
   } catch (err) {
     console.error("Error cancelling registration:", err);
     res.status(500).send("Internal Server Error");
   }
 });
 
+// Update student information route
+router.post("/update-student/:studentId", async (req, res) => {
+  try {
+    const { email, PRN, department } = req.body;
+    const studentId = req.params.studentId;
 
+    // Update the student's information
+    const updatedStudent = await User.findByIdAndUpdate(
+      studentId,
+      {
+        email,
+        PRN,
+        department,
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedStudent) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Student information updated successfully",
+      student: updatedStudent,
+    });
+  } catch (error) {
+    console.error("Error updating student:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating student information",
+    });
+  }
+});
 
 module.exports = router;
