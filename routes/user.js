@@ -51,7 +51,7 @@ router.post("/register", async (req, res) => {
     curreUser.registrations.push(registeredUSer);
     await curreUser.save();
 
-    res.redirect("/user/login");
+    res.redirect("/user/dashboard");
   } catch (error) {
     res.render("auth/studentRegister", { error: "Error registering user" });
   }
