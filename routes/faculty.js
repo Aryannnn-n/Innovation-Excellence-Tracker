@@ -137,7 +137,7 @@ router.post("/reject-proposal", async (req, res) => {
 router.get("/register", isAuthenticated, (req, res) => {
   if (req.session.user) {
     req.user = req.session.user;
-    console.log("User department:", req.user.department); // For debugging
+    // console.log("User department:", req.user.department); // For debugging
     res.render("auth/studentRegister", {
       error: null,
       useDepartment: req.user.department
@@ -146,5 +146,7 @@ router.get("/register", isAuthenticated, (req, res) => {
     res.redirect("/user/login"); // Or show an appropriate error
   }
 });
+
+
 
 module.exports = router;

@@ -83,7 +83,9 @@ router.get("/logout", (req, res) => {
 router.get("/dashboard", async (req, res) => {
   if (!req.session.user) return res.redirect("/user/login");
 
-  const user = req.session.user;
+  // const user = req.session.user;
+  const user = await User.findOne({_id: req.session.user._id}).populate("registrations");
+  // console.log(user);
 
   try {
     if (user.role === "student") {
@@ -119,6 +121,9 @@ router.get("/dashboard", async (req, res) => {
       const rejectedProposals = allProposals.filter(
         (p) => p.status === "rejected"
       );
+      // let User = await User.findOne({_id: user._id }).populate("registrations");
+      // user = user.populate("user");
+      // console.log(user.registrations);
 
       return res.render("dashboards/dashboard_faculty", {
         user,
@@ -148,5 +153,93 @@ router.get("/dashboard", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+
+// Cancel admission route
+// Cancel admission route
+// router.post('/admission/cancel/:regId', async (req, res) => {
+//   const userId = req.session.user._id;
+//   const regId = req.params.regId;
+
+//   try {
+//     const mainUser = await User.findOne({ _id: userId });
+
+//     const registration = mainUser.registrations.find(
+//       (reg) => reg._id.toString() === regId
+//     );
+
+//     if (!registration) {
+//       return res.status(404).send('Registration not found.');
+//     }
+
+//     const registeredUserId = registration.user?._id || registration.user;
+
+//     console.log("🧾 User to delete:", registeredUserId);
+
+//     if (!registeredUserId) {
+//       return res.status(400).send('No user ID found in registration.');
+//     }
+
+//     // Remove registration
+//     mainUser.registrations = mainUser.registrations.filter(
+//       (reg) => reg._id.toString() !== regId
+//     );
+//     await mainUser.save();
+
+//     // Double-check user exists before deleting
+//     const userToDelete = await User.findById(registeredUserId);
+//     if (!userToDelete) {
+//       console.warn("⚠️ User not found with ID:", registeredUserId);
+//     } else {
+//       await User.deleteOne({ _id: registeredUserId });
+//       console.log("✅ User deleted:", registeredUserId);
+//     }
+
+//     res.redirect('/user/dashboard');
+//   } catch (err) {
+//     console.error("❌ Error cancelling registration and removing user:", err);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+
+
+
+// Cancel admission route
+router.post('/admission/cancel/:regId', async (req, res) => {
+  const userId = req.session.user._id;
+  const regId = req.params.regId;
+
+  try {
+    const mainUser = await User.findById(userId);
+
+    // Step 1: Find the registration with that regId
+    const registration = mainUser.registrations.find(
+      (r) => r._id.toString() === regId
+    );
+
+    if (!registration) {
+      return res.status(404).send("Registration not found.");
+    }
+
+    const registeredUserId = registration._id;
+    // console.log(registeredUserId)
+
+    // Step 2: Remove the registration
+    mainUser.registrations = mainUser.registrations.filter(
+      (reg) => reg._id.toString() !== regId
+    );
+    await mainUser.save();
+    // Step 3: Delete the registered user
+    await User.deleteOne({ _id: registeredUserId });
+
+    res.redirect('/user/dashboard');
+  } catch (err) {
+    console.error("Error cancelling registration:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
 
 module.exports = router;
