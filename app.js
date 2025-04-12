@@ -85,16 +85,16 @@ app.use("/leaderboard", leaderboardRoutes);
 
 app.get("/", async (req, res) => {
   try {
-    const adminUser = await  User.findOne({role:"admin"});
+    const adminUser = await User.findOne({ role: "admin" });
     // console.log(adminUser)
-    if(adminUser == null){
+    if (adminUser == null) {
       res.render("auth/adminRegister")
     }
     const topStudents = await StudentPoints.find()
       .sort({ totalPoints: -1 })
       .limit(3)
       .populate("studentId", "name email");
-
+    // console.log(topStudents)
     const hackathons = await Hackathon.find().sort({ date: 1 }).limit(5);
 
     res.render("index", {
