@@ -1,103 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Innovation Tracking</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <style>
-    html {
-      scroll-behavior: smooth;
-      /* Enables smooth scrolling */
-    }
-  </style>
 
-  <body class="bg-zinc-50 flex flex-col min-h-screen">
-    <!-- Navbar -->
-    <nav
-      class="fixed top-0 left-0 w-full rounded-b-3xl z-50 backdrop-blur-md bg-white/10 shadow-md border-b border-white/20"
-    >
-      <div
-        class="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center py-3"
-      >
-        <!-- Logo -->
-        <h1
-          class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent flex items-center gap-2"
-        >
-          🚀 Innovation Tracker
-        </h1>
+<head>
+  <title>Innovation Tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<style>
+  html {
+    scroll-behavior: smooth;
+    /* Enables smooth scrolling */
+  }
+</style>
 
-        <!-- Desktop Menu -->
-        <div class="hidden md:flex space-x-4">
-          <% if (user) { %>
-          <a
-            href="/user/dashboard"
-            class="px-5 py-2 text-white bg-green-500 rounded-full hover:bg-green-600 transition font-medium shadow-md"
-          >
+<body class="bg-zinc-50 flex flex-col min-h-screen">
+  <!-- Navbar -->
+  <nav
+    class="fixed top-0 left-0 w-full rounded-b-3xl z-50 backdrop-blur-md bg-white/10 shadow-md border-b border-white/20">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center py-3">
+      <!-- Logo -->
+      <h1
+        class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
+        🚀 Innovation Tracker
+      </h1>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex space-x-4">
+        <% if (user) { %>
+          <a href="/user/dashboard"
+            class="px-5 py-2 text-white bg-green-500 rounded-full hover:bg-green-600 transition font-medium shadow-md">
             <i class="fas fa-home"></i> Dashboard
           </a>
-          <a
-            href="/user/logout"
-            class="px-5 py-2 text-white bg-red-500 rounded-full hover:bg-red-600 transition font-medium shadow-md"
-          >
+          <a href="/user/logout"
+            class="px-5 py-2 text-white bg-red-500 rounded-full hover:bg-red-600 transition font-medium shadow-md">
             <i class="fas fa-sign-out-alt"></i> Logout
           </a>
           <% } else { %>
-          <a
-            href="/posts"
-            class="px-5 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition font-medium shadow-md"
-          >
-            <i class="fas fa-newspaper"></i> Community Posts
-          </a>
-          <a
-            href="/user/login"
-            class="px-5 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition font-medium shadow-md"
-          >
-            <i class="fas fa-sign-in-alt"></i> Login
-          </a>
-          <% } %>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button onclick="toggleMenu()" class="md:hidden text-white text-2xl">
-          <i class="fas fa-bars"></i>
-        </button>
+            <a href="/posts"
+              class="px-5 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition font-medium shadow-md">
+              <i class="fas fa-newspaper"></i> Community Posts
+            </a>
+            <a href="/user/login"
+              class="px-5 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition font-medium shadow-md">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <% } %>
       </div>
 
-      <!-- Mobile Dropdown Menu -->
-      <div
-        id="mobileMenu"
-        class="hidden flex flex-col items-center md:hidden bg-gray-900 text-white py-3"
-      >
-        <% if (user) { %>
-        <a
-          href="/user/dashboard"
-          class="py-2 w-full text-center hover:bg-gray-800"
-          >Dashboard</a
-        >
-        <a href="/user/logout" class="py-2 w-full text-center hover:bg-gray-800"
-          >Logout</a
-        >
+      <!-- Mobile Menu Button -->
+      <button onclick="toggleMenu()" class="md:hidden text-white text-2xl">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden flex flex-col items-center md:hidden bg-gray-900 text-white py-3">
+      <% if (user) { %>
+        <a href="/user/dashboard" class="py-2 w-full text-center hover:bg-gray-800">Dashboard</a>
+        <a href="/user/logout" class="py-2 w-full text-center hover:bg-gray-800">Logout</a>
         <% } else { %>
-        <a href="/posts" class="py-2 w-full text-center hover:bg-gray-800"
-          >Community Posts</a
-        >
-        <a href="/user/login" class="py-2 w-full text-center hover:bg-gray-800"
-          >Login</a
-        >
-        <a
-          href="/user/register"
-          class="py-2 w-full text-center hover:bg-gray-800"
-          >Register</a
-        >
-        <% } %>
-      </div>
-    </nav>
-    <!-- Main Section -->
-    <main class="flex flex-1 items-center justify-between px-10 mt-24">
-      <!-- Left: Icon + Text Content -->
-      <div class="w-full md:w-1/2 text-center md:text-left">
-        <!-- Icon Above the Text -->
-        <!-- <div
+          <a href="/posts" class="py-2 w-full text-center hover:bg-gray-800">Community Posts</a>
+          <a href="/user/login" class="py-2 w-full text-center hover:bg-gray-800">Login</a>
+          <a href="/user/register" class="py-2 w-full text-center hover:bg-gray-800">Register</a>
+          <% } %>
+    </div>
+  </nav>
+  <!-- Main Section -->
+  <main class="flex flex-1 items-center justify-between px-10 mt-24">
+    <!-- Left: Icon + Text Content -->
+    <div class="w-full md:w-1/2 text-center md:text-left">
+      <!-- Icon Above the Text -->
+      <!-- <div
           class="flex justify-center rounded-full bg-zinc-300 w-[150px] gap-3 p-2 items-center md:justify-start mb-4"
         >
           <img
@@ -111,314 +83,265 @@
           >
         </div> -->
 
-        <!-- Chatbot Icon & Trigger -->
-        <div
-          onclick="scrollToTarget()"
-          class="flex justify-center rounded-full bg-blue-100 w-[150px] gap-3 p-2 items-center md:justify-start mb-4"
-        >
-          <img
-            src="/images/technical-support.png"
-            alt="Innovation Icon"
-            class="w-12 h-12 cursor-pointer"
-          />
-          <span
-            class="text-2xl font-bold cursor-pointer bg-gradient-to-br from-blue-500 to-purple-600 bg-clip-text text-transparent"
-            >Ask AI</span
-          >
-        </div>
+      <!-- Chatbot Icon & Trigger -->
+      <div onclick="scrollToTarget()"
+        class="flex justify-center rounded-full bg-blue-100 w-[150px] gap-3 p-2 items-center md:justify-start mb-4">
+        <img src="/images/technical-support.png" alt="Innovation Icon" class="w-12 h-12 cursor-pointer" />
+        <span
+          class="text-2xl font-bold cursor-pointer bg-gradient-to-br from-blue-500 to-purple-600 bg-clip-text text-transparent">Ask
+          AI</span>
+      </div>
 
-        <h2 class="text-4xl font-bold text-[#372e58] leading-tight">
-          Welcome to
-          <span
-            class="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
-          >
-            Innovation Tracker
-          </span>
-        </h2>
-        <p class="text-lg text-gray-600 mt-2">
-          Empowering students to showcase their innovative ideas & <br />
-          in exciting hackathons.
-        </p>
+      <h2 class="text-4xl font-bold text-[#372e58] leading-tight">
+        Welcome to
+        <span class="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+          Innovation Tracker
+        </span>
+      </h2>
+      <p class="text-lg text-gray-600 mt-2">
+        Empowering students to showcase their innovative ideas & <br />
+        in exciting hackathons.
+      </p>
 
-        <% if (!user) { %>
+      <% if (!user) { %>
         <div class="mt-6">
-          <a
-            href="/user/register"
-            class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition shadow-md"
-          >
+          <a href="/user/register"
+            class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 transition shadow-md">
             Get Started 🚀
           </a>
         </div>
         <% } %>
-      </div>
+    </div>
 
-      <!-- Right: Image -->
-      <div class="hidden md:block w-1/2">
-        <img
-          src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
-          alt="Innovation Tracker"
-          class="w-full h-auto rounded-xl shadow-xl hover:scale-[101%] transition duration-300"
-        />
-      </div>
-    </main>
+    <!-- Right: Image -->
+    <div class="hidden md:block w-1/2">
+      <img
+        src="https://imgs.search.brave.com/d23vLLniYMiaLvGotF4qvoOYGyMEHJn7DLKsqBed1aM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvZmVhdHVy/ZWQvaW5mb3JtYXRp/b24tdGVjaG5vbG9n/eS1waWN0dXJlcy1u/dWNiNHo5N2IzcTc4/bWprLmpwZw"
+        alt="Innovation Tracker"
+        class="w-full h-auto rounded-xl shadow-xl hover:scale-[101%] transition duration-300" />
+    </div>
+  </main>
 
-    <!-- Cards Section -->
-    <section class="container mx-auto px-6 py-12">
-      <h2 class="text-3xl font-bold text-[#372e58] mb-8 text-center">
-        🔥 Upcomming Events
-      </h2>
+  <!-- Cards Section -->
+  <section class="container mx-auto px-6 py-12">
+    <h2 class="text-3xl font-bold text-[#372e58] mb-8 text-center">
+      🔥 Upcomming Events
+    </h2>
 
-      <div class="relative overflow-hidden">
-        <div
-          class="hackathon-slider flex gap-8"
-          style="animation: scrollLoop 20s linear infinite"
-        >
-          <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=> {
-          %>
-          <div
-            class="bg-[#f4f2ee] p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border border-purple-600 w-[300px] flex-shrink-0"
-          >
-            <h3
-              class="text-2xl font-semibold bg-gradient-to-br from-blue-700 to-purple-700 bg-clip-text text-transparent"
-            >
-              <%= hackathon.title %>
-            </h3>
-
-            <p class="text-gray-800 text-sm mt-1">
-              📅 Date: <%= hackathon.date ?
-              hackathon.date.toISOString().slice(0, 10) : "N/A" %>
-            </p>
-            <p class="text-gray-900 mt-2"><%= hackathon.description %></p>
-
-            <a href="<%= hackathon.registrationLink %>" target="_blank">
-              <button
-                class="mt-4 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white px-5 py-2 rounded-lg hover:opacity-90 transition font-medium shadow-md"
-              >
-                Apply Now 🚀
-              </button>
-            </a>
-          </div>
-          <% }) %> <% } else { %>
-          <p class="text-gray-500 text-center text-lg">
-            🚫 No hackathons available at the moment.
-          </p>
-          <% } %>
-        </div>
-      </div>
-
-      <style>
-        @keyframes scrollLoop {
-          0% {
-            transform: translateX(0);
-          }
-
-          50% {
-            transform: translateX(calc(-250px));
-          }
-
-          100% {
-            transform: translateX(0);
-          }
-        }
-
-        .hackathon-slider {
-          display: flex;
-          will-change: transform;
-        }
-      </style>
-    </section>
-
-    <!-- Leaderboard Section -->
-    <section class="container mx-auto px-6 py-12">
-      <h2 class="text-3xl font-bold text-[#372e58] mb-8 text-center">
-        🏆 Top Innovators
-      </h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <% if (topStudents && topStudents.length > 0) { %> <%
-        topStudents.forEach((student, index) => { %>
-        <div
-          class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border border-purple-600"
-        >
-          <div class="relative">
-            <% if (index === 0) { %>
+    <div class="relative overflow-hidden">
+      <div class="hackathon-slider flex gap-8" style="animation: scrollLoop 20s linear infinite">
+        <% if (hackathons.length> 0) { %> <% hackathons.forEach(hackathon=> {
+            %>
             <div
-              class="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl"
-            >
-              🥇
-            </div>
-            <% } else if (index === 1) { %>
-            <div
-              class="absolute -top-4 -right-4 w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center text-2xl"
-            >
-              🥈
-            </div>
-            <% } else if (index === 2) { %>
-            <div
-              class="absolute -top-4 -right-4 w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center text-2xl"
-            >
-              🥉
-            </div>
-            <% } %>
+              class="bg-[#f4f2ee] p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border border-purple-600 w-[300px] flex-shrink-0">
+              <h3
+                class="text-2xl font-semibold bg-gradient-to-br from-blue-700 to-purple-700 bg-clip-text text-transparent">
+                <%= hackathon.title %>
+              </h3>
 
-            <div class="text-center">
-              <img
-                src="https://imgs.search.brave.com/e4a7erp4zEwob-muBi0j41o8pNpMS6nB0Mo9ShTLMqw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAwLzk0LzIyLzEy/LzM2MF9GXzk0MjIx/MjUzX2ZBZ3YwSnlt/NTN5c3o3bndvcVhS/bWtiNkdBS3dOc2Zz/LmpwZw"
-                class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-purple-500"
-              />
-              <h3 class="text-xl font-bold text-[#372e58] mb-2">Name</h3>
-              <div class="space-y-2">
-                <p class="text-gray-600">
-                  <span class="font-semibold">Total Points:</span>
-                  <span class="text-purple-600 font-bold"
-                    ><%= student.totalPoints %></span
-                  >
-                </p>
-                <p class="text-gray-600">
-                  <span class="font-semibold">Monthly Points:</span>
-                  <span class="text-blue-600 font-bold"
-                    ><%= student.monthlyPoints %></span
-                  >
-                </p>
-              </div>
-              <a
-                href="/leaderboard/complete"
-                class="mt-4 inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition font-medium shadow-md"
-              >
-                View Full Leaderboard
+              <p class="text-gray-800 text-sm mt-1">
+                📅 Date: <%= hackathon.date ? hackathon.date.toISOString().slice(0, 10) : "N/A" %>
+              </p>
+              <p class="text-gray-900 mt-2">
+                <%= hackathon.description %>
+              </p>
+
+              <a href="<%= hackathon.registrationLink %>" target="_blank">
+                <button
+                  class="mt-4 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white px-5 py-2 rounded-lg hover:opacity-90 transition font-medium shadow-md">
+                  Apply Now 🚀
+                </button>
               </a>
             </div>
-          </div>
-        </div>
-        <% }); %> <% } else { %>
-        <div class="col-span-3 text-center">
-          <p class="text-gray-500 text-lg">
-            🚀 Be the first to join and top the leaderboard!
-          </p>
-        </div>
-        <% } %>
+            <% }) %>
+              <% } else { %>
+                <p class="text-gray-500 text-center text-lg">
+                  🚫 No hackathons available at the moment.
+                </p>
+                <% } %>
       </div>
-    </section>
+    </div>
 
-    <section
-      id="chatbot"
-      class="w-full h-[90vh] flex flex-col bg-zinc-100 items-center px-4 md:px-6 py-6"
-    >
-      <!-- Heading -->
-      <h1 class="text-3xl md:text-4xl font-bold text-[#372e58] mb-6">
-        Ask Reports, Formats to AI
-      </h1>
+    <style>
+      @keyframes scrollLoop {
+        0% {
+          transform: translateX(0);
+        }
 
-      <div
-        id="chatCard"
-        class="w-full max-w-6xl h-auto md:h-[80vh] bg-[#2b1d4f] p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-6"
-      >
-        <!-- Chat Response (Left Side) -->
-        <div
-          id="chatResponse"
-          class="w-full md:w-2/3 p-4 border rounded-md bg-gray-100 overflow-auto flex-1 max-h-[70vh]"
-        >
-          <strong>Response:</strong>
+        50% {
+          transform: translateX(calc(-250px));
+        }
+
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      .hackathon-slider {
+        display: flex;
+        will-change: transform;
+      }
+    </style>
+  </section>
+
+  <!-- Leaderboard Section -->
+  <section class="container mx-auto px-6 py-12">
+    <h2 class="text-3xl font-bold text-[#372e58] mb-8 text-center">
+      🏆 Top Innovators
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <% if (topStudents && topStudents.length> 0) { %> <% topStudents.forEach((student, index)=> { %>
           <div
-            id="chatResponseText"
-            class="block break-words whitespace-pre-wrap"
-          ></div>
-        </div>
+            class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border border-purple-600">
+            <div class="relative">
+              <% if (index===0) { %>
+                <div
+                  class="absolute -top-4 -right-4 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl">
+                  🥇
+                </div>
+                <% } else if (index===1) { %>
+                  <div
+                    class="absolute -top-4 -right-4 w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center text-2xl">
+                    🥈
+                  </div>
+                  <% } else if (index===2) { %>
+                    <div
+                      class="absolute -top-4 -right-4 w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center text-2xl">
+                      🥉
+                    </div>
+                    <% } %>
 
-        <!-- Chat Input & Controls (Right Side) -->
-        <div class="w-full md:w-1/3 flex flex-col gap-4 p-4">
-          <h2
-            class="text-2xl font-bold text-[#372e58] bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent flex items-center gap-3"
-          >
-            <img
-              src="/images/technical-support.png"
-              alt="Innovation Icon"
-              class="w-10 h-10 md:w-12 md:h-12"
-            />
-            Ask AI
-          </h2>
-
-          <label for="chatPrompt" class="block text-white text-lg font-semibold"
-            >Enter your query:</label
-          >
-          <div class="relative w-full">
-            <input
-              type="text"
-              id="chatPrompt"
-              class="w-full p-3 border rounded-md pr-16 text-base"
-              placeholder="Ask anything..."
-            />
-            <button
-              onclick="document.getElementById('chatPrompt').value = ''"
-              class="absolute right-2 top-1/2 transform -translate-y-1/2 text-zinc-400 px-3 py-1 font-semibold rounded-lg hover:text-zinc-600 transition"
-            >
-              Clear
-            </button>
+                      <div class="text-center">
+                        <img
+                          src="https://imgs.search.brave.com/e4a7erp4zEwob-muBi0j41o8pNpMS6nB0Mo9ShTLMqw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAwLzk0LzIyLzEy/LzM2MF9GXzk0MjIx/MjUzX2ZBZ3YwSnlt/NTN5c3o3bndvcVhS/bWtiNkdBS3dOc2Zz/LmpwZw"
+                          class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-purple-500" />
+                        <h3 class="text-xl font-bold text-[#372e58] mb-2">Name</h3>
+                        <div class="space-y-2">
+                          <p class="text-gray-600">
+                            <span class="font-semibold">Total Points:</span>
+                            <span class="text-purple-600 font-bold">
+                              <%= student.totalPoints %>
+                            </span>
+                          </p>
+                          <p class="text-gray-600">
+                            <span class="font-semibold">Monthly Points:</span>
+                            <span class="text-blue-600 font-bold">
+                              <%= student.monthlyPoints %>
+                            </span>
+                          </p>
+                        </div>
+                        <a href="/leaderboard/complete"
+                          class="mt-4 inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition font-medium shadow-md">
+                          View Full Leaderboard
+                        </a>
+                      </div>
+            </div>
           </div>
+          <% }); %>
+            <% } else { %>
+              <div class="col-span-3 text-center">
+                <p class="text-gray-500 text-lg">
+                  🚀 Be the first to join and top the leaderboard!
+                </p>
+              </div>
+              <% } %>
+    </div>
+  </section>
 
-          <button
-            onclick="sendChatPrompt()"
-            class="bg-gradient-to-r w-full md:w-[100px] from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full hover:opacity-80 transition"
-          >
-            Send
+  <section id="chatbot" class="w-full h-[90vh] flex flex-col bg-zinc-100 items-center px-4 md:px-6 py-6">
+    <!-- Heading -->
+    <h1 class="text-3xl md:text-4xl font-bold text-[#372e58] mb-6">
+      Ask Reports, Formats to AI
+    </h1>
+
+    <div id="chatCard"
+      class="w-full max-w-6xl h-auto md:h-[80vh] bg-[#2b1d4f] p-6 rounded-lg shadow-lg flex flex-col md:flex-row gap-6">
+      <!-- Chat Response (Left Side) -->
+      <div id="chatResponse"
+        class="w-full md:w-2/3 p-4 border rounded-md bg-gray-100 overflow-auto flex-1 max-h-[70vh]">
+        <strong>Response:</strong>
+        <div id="chatResponseText" class="block break-words whitespace-pre-wrap"></div>
+      </div>
+
+      <!-- Chat Input & Controls (Right Side) -->
+      <div class="w-full md:w-1/3 flex flex-col gap-4 p-4">
+        <h2
+          class="text-2xl font-bold text-[#372e58] bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent flex items-center gap-3">
+          <img src="/images/technical-support.png" alt="Innovation Icon" class="w-10 h-10 md:w-12 md:h-12" />
+          Ask AI
+        </h2>
+
+        <label for="chatPrompt" class="block text-white text-lg font-semibold">Enter your query:</label>
+        <div class="relative w-full">
+          <input type="text" id="chatPrompt" class="w-full p-3 border rounded-md pr-16 text-base"
+            placeholder="Ask anything..." />
+          <button onclick="document.getElementById('chatPrompt').value = ''"
+            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-zinc-400 px-3 py-1 font-semibold rounded-lg hover:text-zinc-600 transition">
+            Clear
           </button>
         </div>
+
+        <button onclick="sendChatPrompt()"
+          class="bg-gradient-to-r w-full md:w-[100px] from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full hover:opacity-80 transition">
+          Send
+        </button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer
-      class="w-full bg-zinc-200 backdrop-blur-sm text-black text-center py-4 mt-auto text-lg font-medium"
-    >
-      &copy; 2025 Innovation Tracker. All rights reserved.
-    </footer>
+  <!-- Footer -->
+  <footer class="w-full bg-zinc-200 backdrop-blur-sm text-black text-center py-4 mt-auto text-lg font-medium">
+    &copy; 2025 Innovation Tracker. All rights reserved.
+  </footer>
 
-    <script>
-      function scrollToTarget() {
-        document
-          .getElementById("chatbot")
-          .scrollIntoView({ behavior: "smooth" });
+  <script>
+    function scrollToTarget() {
+      document
+        .getElementById("chatbot")
+        .scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Format chatbot response with bullet points and bold text
+    function formatResponseText(response) {
+      response = response.replace(/\(.?)\*/g, "<strong>$1</strong>");
+      response = response.replace(
+        /(?:^|\n)[-]\s(.?)(?=\n|$)/g,
+        "<li>$1</li>"
+      );
+      if (response.includes("<li>")) {
+        response = "<ul class='list-disc pl-5'>" + response + "</ul>";
+      }
+      return response;
+    }
+
+    // Handle chatbot query and display formatted response
+    const sendChatPrompt = async () => {
+      const prompt = document.getElementById("chatPrompt").value;
+      const responseContainer = document.getElementById("chatResponseText");
+
+      if (!prompt) {
+        alert("Please enter a query!");
+        return;
       }
 
-      // Format chatbot response with bullet points and bold text
-      function formatResponseText(response) {
-        response = response.replace(/\(.?)\*/g, "<strong>$1</strong>");
-        response = response.replace(
-          /(?:^|\n)[-]\s(.?)(?=\n|$)/g,
-          "<li>$1</li>"
-        );
-        if (response.includes("<li>")) {
-          response = "<ul class='list-disc pl-5'>" + response + "</ul>";
-        }
-        return response;
+      responseContainer.textContent = "Loading...";
+
+      try {
+        const response = await fetch("/get-res-chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
+        });
+
+        const data = await response.json();
+        responseContainer.innerHTML = formatResponseText(data.message);
+      } catch (error) {
+        console.error("❌ Error:", error);
+        responseContainer.textContent = "Failed to get chatbot response.";
       }
+    };
+  </script>
+</body>
 
-      // Handle chatbot query and display formatted response
-      const sendChatPrompt = async () => {
-        const prompt = document.getElementById("chatPrompt").value;
-        const responseContainer = document.getElementById("chatResponseText");
-
-        if (!prompt) {
-          alert("Please enter a query!");
-          return;
-        }
-
-        responseContainer.textContent = "Loading...";
-
-        try {
-          const response = await fetch("/get-res-chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt }),
-          });
-
-          const data = await response.json();
-          responseContainer.innerHTML = formatResponseText(data.message);
-        } catch (error) {
-          console.error("❌ Error:", error);
-          responseContainer.textContent = "Failed to get chatbot response.";
-        }
-      };
-    </script>
-  </body>
 </html>
