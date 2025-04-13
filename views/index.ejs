@@ -216,7 +216,9 @@
                         <img
                           src="https://imgs.search.brave.com/e4a7erp4zEwob-muBi0j41o8pNpMS6nB0Mo9ShTLMqw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAwLzk0LzIyLzEy/LzM2MF9GXzk0MjIx/MjUzX2ZBZ3YwSnlt/NTN5c3o3bndvcVhS/bWtiNkdBS3dOc2Zz/LmpwZw"
                           class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-purple-500" />
-                        <h3 class="text-xl font-bold text-[#372e58] mb-2"><%= student.studentId.name %></h3>
+                        <h3 class="text-xl font-bold text-[#372e58] mb-2">
+                          <%= student.studentId.name %>
+                        </h3>
                         <div class="space-y-2">
                           <p class="text-gray-600">
                             <span class="font-semibold">Total Points:</span>
@@ -296,51 +298,96 @@
   </footer>
 
   <script>
-    function scrollToTarget() {
-      document
-        .getElementById("chatbot")
-        .scrollIntoView({ behavior: "smooth" });
-    }
-
-    // Format chatbot response with bullet points and bold text
-    function formatResponseText(response) {
-      response = response.replace(/\(.?)\*/g, "<strong>$1</strong>");
-      response = response.replace(
-        /(?:^|\n)[-]\s(.?)(?=\n|$)/g,
-        "<li>$1</li>"
-      );
-      if (response.includes("<li>")) {
-        response = "<ul class='list-disc pl-5'>" + response + "</ul>";
-      }
-      return response;
-    }
-
-    // Handle chatbot query and display formatted response
-    const sendChatPrompt = async () => {
+    async function sendChatPrompt() {
       const prompt = document.getElementById("chatPrompt").value;
       const responseContainer = document.getElementById("chatResponseText");
+      const sendButton = document.querySelector("#chatbot button");
 
-      if (!prompt) {
+      if (!prompt || prompt.trim() === "") {
         alert("Please enter a query!");
         return;
       }
 
-      responseContainer.textContent = "Loading...";
+      // Show loading state
+      responseContainer.innerHTML = `
+        <div class="text-center py-4">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+          <p class="mt-2">Generating response...</p>
+        </div>
+      `;
+      sendButton.disabled = true;
+      sendButton.innerHTML = "Sending...";
 
       try {
         const response = await fetch("/get-res-chat", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: prompt.trim() }),
         });
 
+        // console.log("Network response:", response); // Debug
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.message ||
+            `Server returned ${response.status}: ${response.statusText}`
+          );
+        }
+
         const data = await response.json();
+        // console.log("API data:", data); // Debug
+
+        if (!data?.message) {
+          throw new Error("Received empty response from server");
+        }
+
         responseContainer.innerHTML = formatResponseText(data.message);
+
       } catch (error) {
-        console.error("❌ Error:", error);
-        responseContainer.textContent = "Failed to get chatbot response.";
+        // console.error("Chat error:", error);
+        responseContainer.innerHTML = `
+          <div class="text-red-500 p-4 rounded bg-red-50">
+            <strong class="font-bold">Error:</strong>
+            <p>${error.message || "Failed to get response"}</p>
+            ${process.env.NODE_ENV === "development" ?
+            `<pre class="mt-2 text-xs">${error.stack}</pre>` : ""}
+          </div>
+        `;
+      } finally {
+        sendButton.disabled = false;
+        sendButton.innerHTML = "Send";
       }
-    };
+    }
+
+    function formatResponseText(response) {
+      try {
+        // Ensure we have a string
+        const text = typeof response === "string" ? response : JSON.stringify(response, null, 2);
+
+        // Basic Markdown formatting
+        return text
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // bold
+          .replace(/\*(.*?)\*/g, "<em>$1</em>") // italic
+          .replace(/`([^`]+)`/g, "<code class='bg-gray-100 p-1 rounded'>$1</code>") // code
+          .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blue-600 hover:underline" target="_blank">$1</a>') // links
+          .replace(/^-\s(.*$)/gm, "<li>$1</li>") // bullets
+          .replace(/^\d+\.\s(.*$)/gm, "<li>$1</li>") // numbers
+          .replace(/\n/g, "<br>"); // line breaks
+      } catch (e) {
+        console.error("Formatting error:", e);
+        return `<pre class="p-2 bg-gray-100 rounded">${response}</pre>`;
+      }
+    }
+
+    // Enter key support
+    document.getElementById("chatPrompt").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        sendChatPrompt();
+      }
+    });
   </script>
 </body>
 

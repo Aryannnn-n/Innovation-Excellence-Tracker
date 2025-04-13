@@ -50,19 +50,23 @@ const model = genAI.getGenerativeModel({
 
 // Improved chatbot function with error handling
 const chatBot = async (prompt) => {
+  // console.log('Received prompt:', prompt);
   try {
     const result = await model.generateContent(prompt);
 
-    // Handle Gemini API response properly
-    if (result && result.response && result.response.text) {
-      return result.response.text();
-    } else {
-      console.error('Unexpected Gemini response:', result);
-      return 'Failed to get AI response.';
-    }
+    // Debug raw response
+    // console.log('Raw AI response:', JSON.stringify(result, null, 2));
+
+    // Handle different response structures
+    const responseText =
+      result?.response?.text() || // Newer Gemini versions
+      result?.response?.text || // Older versions
+      'No understandable response from AI';
+
+    return responseText.toString();
   } catch (error) {
-    console.error('Chatbot error:', error);
-    return 'Error: Could not retrieve chatbot response.';
+    console.error('AI Service Error:', error);
+    return `AI Error: ${error.message}`;
   }
 };
 
