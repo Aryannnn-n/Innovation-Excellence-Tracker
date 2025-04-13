@@ -32,8 +32,11 @@ router.post("/register", async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.render("auth/login", { error: "User already exists" });
+    const PrnUser  = await User.findOne({ PRN });
+
+    if (existingUser || PrnUser) {
+      // return res.render("auth/login", { error: "User already exists" });
+      return res.redirect("/user/dashboard");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
