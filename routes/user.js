@@ -188,7 +188,7 @@ router.get("/dashboard", async (req, res) => {
   }
 });
 
-// Cancel admission route
+// Cancel admission route 
 // Cancel admission route
 // router.post('/admission/cancel/:regId', async (req, res) => {
 //   const userId = req.session.user._id;

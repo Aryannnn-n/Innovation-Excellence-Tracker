@@ -120,9 +120,11 @@ app.get('/user/category-count', async (req, res) => {
     }
 
     const userId = new mongoose.Types.ObjectId(req.session.user._id); // ✅ Convert session user ID to ObjectId
-
+    const userPRN =  await User.findOne({PRN: req.session.user.PRN});
+ 
+    console.log(userPRN)
     const categoryCount = await Innovation.aggregate([
-      { $match: { user: userId } }, // ✅ Filter innovations by logged-in user
+      { $match: {$or:[{ user: userId } ,{_id:{ $in: userPRN.innovations } }]}}, // ✅ Filter innovations by logged-in user
       {
         $group: {
           _id: '$category', // ✅ Group by category
