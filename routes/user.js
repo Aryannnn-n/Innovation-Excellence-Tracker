@@ -32,7 +32,9 @@ router.post("/register", async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email });
-    const PrnUser = await User.findOne({ PRN });
+    // const PrnUser = await User.findOne({ PRN });
+    const PrnUser = role === "student" ? await User.findOne({ PRN }) : null;
+    // console.log(PrnUser)
 
     if (existingUser || PrnUser ) {
       // return res.render("auth/login", { error: "User already exists" });
@@ -46,7 +48,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role,
       department,
-      PRN: role === "student" ? PRN : "null",
+      PRN: role === "student" ? PRN : null,
       date: new Date(),
     });
 
