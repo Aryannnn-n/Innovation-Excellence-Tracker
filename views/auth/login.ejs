@@ -8,9 +8,21 @@
 
 <body class="h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-100 to-blue-300">
   <% if (error_msg && error_msg.length > 0) { %>
-    <div class="w-full max-w-md px-6">
-      <div class="rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-red-800 shadow-md"><p><%= error_msg %></p></div>
+    <div id="flash-msg" class="w-full max-w-md px-6">
+      <div class="rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-red-800 shadow-md">
+        <p><%= error_msg %></p>
+      </div>
     </div>
+    <script>
+      setTimeout(() => {
+        const flashMsg = document.getElementById('flash-msg');
+        if (flashMsg) {
+          flashMsg.style.transition = 'opacity 1s ease';
+          flashMsg.style.opacity = '0';
+          setTimeout(() => flashMsg.remove(), 1000);
+        }
+      }, 3000);
+    </script>
   <% } %>
 
   <div class="w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl">
@@ -20,7 +32,7 @@
       <p class="text-red-500 text-center mb-4 bg-red-100 p-2 rounded-lg">
         <%= error %>
       </p>
-      <% } %>
+    <% } %>
 
         <form action="/user/login" method="POST" class="space-y-5">
           <div>

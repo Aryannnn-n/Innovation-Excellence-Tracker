@@ -148,7 +148,7 @@ router.post("/update-all-points", isAuthenticated, async (req, res) => {
 });
 
 // Get all participants with points
-router.get("/participants", isAuthenticated, async (req, res) => {
+router.get("/participants", async (req, res) => {
   try {
     const participants = await StudentPoints.find()
       .sort({ totalPoints: -1 })
