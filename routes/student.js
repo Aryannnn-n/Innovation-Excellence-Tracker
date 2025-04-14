@@ -75,7 +75,9 @@ router.post(
   async (req, res) => {
     try {
       if (!req.session || !req.session.user) {
-        return res.status(401).send('Unauthorized: User not logged in.');
+        req.flash('error_msg', 'Unauthorized: User not logged in.');
+        res.redirect("/user/login")
+        // return res.status(401).send('Unauthorized: User not logged in.');
       }
 
       const userId = req.session.user._id;
@@ -133,11 +135,14 @@ router.post(
         { $push: { innovations: savedInnovation._id } }
       );
 
-      console.log('✅ Innovation saved and rated with AI!');
+      // console.log('✅ Innovation saved and rated with AI!');
+      req.flash('success_msg', 'Unauthorized: User not logged in.');
       res.redirect('/user/dashboard');
     } catch (error) {
-      console.error('❌ Error saving innovation:', error);
-      res.status(500).send('Error saving innovation.');
+      // console.error('❌ Error saving innovation:', error);
+      // res.status(500).send('Error saving innovation.');
+    req.flash('error_msg', 'Error saving innovation.');
+    res.redirect('/user/dashboard');
     }
   }
 );
@@ -197,9 +202,9 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
       ...req.user.toObject(),
       points: studentPoints
         ? {
-            ...studentPoints,
-            rank,
-          }
+          ...studentPoints,
+          rank,
+        }
         : null,
     };
 

@@ -74,7 +74,9 @@ router.post(
       } = req.body;
 
       if (!req.file) {
-        return res.status(400).json({ message: "Please upload an image" });
+        // return res.status(400).json({ message: "Please upload an image" });
+        req.flash('error_msg', 'Please upload an image');
+        return res.redirect("/user/dashboard")
       }
 
       // Parse tags if they're provided as a comma-separated string
@@ -95,11 +97,13 @@ router.post(
       });
 
       await newPost.save();
-
+      req.flash('success_msg', 'Post created!');
       res.redirect("/posts");
     } catch (error) {
-      console.error("Error creating post:", error);
-      res.status(500).json({ message: "Server error" });
+      // console.error("Error creating post:", error);
+      req.flash('error_msg', 'Error creating post:');
+      res.redirect("/user/dashboard");
+      // res.status(500).json({ message: "Server error" });
     }
   }
 );
@@ -164,8 +168,10 @@ router.get("/", async (req, res) => {
       filters: { category, tag, department, author, search, sort },
     });
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error fetching posts:", error);
+    // res.status(500).json({ message: "Server error" });
+    req.flash('error_msg', 'Error fetching posts:');
+    res.redirect("/user/dashboard");
   }
 });
 
@@ -175,7 +181,9 @@ router.post("/like/:postId", isAuthenticated, async (req, res) => {
     const post = await Post.findById(req.params.postId);
 
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      // return res.status(404).json({ message: "Post not found" });
+      req.flash('error_msg', 'Post not found');
+      return res.redirect("/posts")
     }
 
     // Check if user already liked the post
@@ -205,7 +213,8 @@ router.post("/comment/:postId", isAuthenticated, async (req, res) => {
     const post = await Post.findById(req.params.postId);
 
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      req.flash('error_msg', 'Post not found');
+      return res.redirect("/posts")
     }
 
     post.comments.push({
@@ -217,8 +226,10 @@ router.post("/comment/:postId", isAuthenticated, async (req, res) => {
 
     res.redirect("/posts");
   } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error adding comment:", error);
+    // res.status(500).json({ message: "Server error" });
+    req.flash('error_msg', 'Error adding comment');
+    res.redirect("/posts")
   }
 });
 
@@ -231,13 +242,17 @@ router.post(
       const post = await Post.findById(req.params.postId);
 
       if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+        // return res.status(404).json({ message: "Post not found" });
+        req.flash('error_msg', 'Post not found');
+        return res.redirect("/posts")
       }
 
       const comment = post.comments.id(req.params.commentId);
 
       if (!comment) {
-        return res.status(404).json({ message: "Comment not found" });
+        // return res.status(404).json({ message: "Comment not found" });
+        req.flash('error_msg', 'comment not found');
+        return res.redirect("/posts")
       }
 
       // Initialize likes array if it doesn't exist
@@ -257,11 +272,12 @@ router.post(
       }
 
       await post.save();
-
       res.json({ likes: comment.likes.length });
     } catch (error) {
-      console.error("Error liking comment:", error);
-      res.status(500).json({ message: "Server error" });
+      // console.error("Error liking comment:", error);
+      // res.status(500).json({ message: "Server error" });
+      req.flash('error_msg', 'Error linking comment');
+      res.redirect("/posts")
     }
   }
 );
@@ -276,13 +292,17 @@ router.post(
       const post = await Post.findById(req.params.postId);
 
       if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+        // return res.status(404).json({ message: "Post not found" });
+        req.flash('error_msg', 'Post not found');
+        return res.redirect("/posts")
       }
 
       const comment = post.comments.id(req.params.commentId);
 
       if (!comment) {
-        return res.status(404).json({ message: "Comment not found" });
+        // return res.status(404).json({ message: "Comment not found" });
+        req.flash('error_msg', 'Comment not found');
+        return res.redirect("/posts")
       }
 
       // Initialize replies array if it doesn't exist
@@ -299,8 +319,10 @@ router.post(
 
       res.redirect("/posts");
     } catch (error) {
-      console.error("Error adding reply:", error);
-      res.status(500).json({ message: "Server error" });
+      // console.error("Error adding reply:", error);
+      // res.status(500).json({ message: "Server error" });
+      req.flash('error_msg', 'Error adding reply');
+      res.redirect("/posts")
     }
   }
 );
@@ -315,13 +337,16 @@ router.post(
       const post = await Post.findById(req.params.postId);
 
       if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+        // return res.status(404).json({ message: "Post not found" });
+        req.flash('error_msg', 'Post not found');
+        return res.redirect("/posts")
       }
 
       if (!req.file) {
-        return res.status(400).json({ message: "Please upload a file" });
+        // return res.status(400).json({ message: "Please upload a file" });
+        req.flash('error_msg', 'Please upload a file');
+        return res.redirect("/posts")
       }
-
       post.attachments.push({
         filename: req.file.originalname,
         path: req.file.filename,
@@ -331,8 +356,10 @@ router.post(
 
       res.redirect("/posts");
     } catch (error) {
-      console.error("Error adding attachment:", error);
-      res.status(500).json({ message: "Server error" });
+      // console.error("Error adding attachment:", error);
+      // res.status(500).json({ message: "Server error" });
+      req.flash('error_msg', 'Error adding attachment');
+      res.redirect("/posts")
     }
   }
 );
@@ -343,7 +370,9 @@ router.post("/:postId/pin", isAuthenticated, async (req, res) => {
     const post = await Post.findById(req.params.postId);
 
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      // return res.status(404).json({ message: "Post not found" });
+      req.flash('error_msg', 'Post not found');
+      return res.redirect("/posts")
     }
 
     // Check if user is admin or faculty
@@ -351,7 +380,9 @@ router.post("/:postId/pin", isAuthenticated, async (req, res) => {
       req.session.user.role !== "admin" &&
       req.session.user.role !== "faculty"
     ) {
-      return res.status(403).json({ message: "Unauthorized" });
+      // return res.status(403).json({ message: "Unauthorized" });
+      req.flash('error_msg', 'Unauthorized');
+      return res.redirect("/posts");
     }
 
     post.isPinned = !post.isPinned;
@@ -359,18 +390,22 @@ router.post("/:postId/pin", isAuthenticated, async (req, res) => {
 
     res.redirect("/posts");
   } catch (error) {
-    console.error("Error pinning post:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error pinning post:", error);
+    // res.status(500).json({ message: "Server error" });
+    req.flash('error_msg', 'Error pinning post:');
+    res.redirect("/posts")
   }
 });
 
 // Delete a post (admin/faculty or post author only)
-router.delete("/:postId", isAuthenticated, async (req, res) => {
+router.delete("/delete/:postId", isAuthenticated, async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
 
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      // return res.status(404).json({ message: "Post not found" });
+      req.flash('error_msg', 'Post not found');
+      return res.redirect("/posts")
     }
 
     // Check if user is admin, faculty, or the post author
@@ -379,15 +414,19 @@ router.delete("/:postId", isAuthenticated, async (req, res) => {
       req.session.user.role !== "faculty" &&
       post.authorId.toString() !== req.session.user._id.toString()
     ) {
-      return res.status(403).json({ message: "Unauthorized" });
+      // return res.status(403).json({ message: "Unauthorized" });
+      req.flash('error_msg', 'Unauthorized');
+      return res.redirect("/posts")
     }
 
     await Post.findByIdAndDelete(req.params.postId);
 
     res.json({ message: "Post deleted successfully" });
   } catch (error) {
-    console.error("Error deleting post:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error deleting post:", error);
+    // res.status(500).json({ message: "Server error" });
+    req.flash('error_msg', 'Error deleting post:');
+    res.redirect("/posts")
   }
 });
 

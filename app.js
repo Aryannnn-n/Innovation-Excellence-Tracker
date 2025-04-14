@@ -15,11 +15,33 @@ const Hackathon = require('./models/hackathon');
 const StudentPoints = require('./models/StudentPoints');
 
 const session = require('express-session');
+const flash = require('connect-flash');
+
 
 const app = express();
+
+
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  // res.locals.error = req.flash('error'); // used by passport sometimes
+  next();
+});
+
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,13 +75,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.use(
-  session({
-    secret: process.env.JWT_SECRET,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+
 
 app.use('/uploads', express.static('uploads'));
 
@@ -112,6 +128,14 @@ app.get('/', async (req, res) => {
   }
 });
 
+
+// app.get("/getflash",(req,res)=>{
+//   let mess = req.flash("succes","welcome")
+//   res.redirect("/show");
+// })
+// app.get("/show",(req,res)=>{
+//   res.status(300).send(req.flash("succes"))
+// })
 // The student total proposals data
 app.get('/user/category-count', async (req, res) => {
   try {
@@ -121,8 +145,6 @@ app.get('/user/category-count', async (req, res) => {
 
     const userId = new mongoose.Types.ObjectId(req.session.user._id); // ✅ Convert session user ID to ObjectId
     const userPRN =  await User.findOne({PRN: req.session.user.PRN});
- 
-    console.log(userPRN)
     const categoryCount = await Innovation.aggregate([
       { $match: {$or:[{ user: userId } ,{_id:{ $in: userPRN.innovations } }]}}, // ✅ Filter innovations by logged-in user
       {

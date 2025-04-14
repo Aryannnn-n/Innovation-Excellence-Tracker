@@ -84,7 +84,9 @@ router.post("/approve-proposal/:id", async (req, res) => {
     const proposal = await Innovation.findById(proposalId);
 
     if (!proposal) {
-      return res.status(404).send("Proposal not found");
+      // return res.status(404).send("Proposal not found");
+      req.flash('error_msg', 'proposal not found');
+      return res.redirect("/user/dashboard")
     }
 
     // Update the proposal status
@@ -105,8 +107,10 @@ router.post("/approve-proposal/:id", async (req, res) => {
 
     res.redirect("/user/dashboard");
   } catch (error) {
-    console.error("Error approving proposal:", error);
-    res.status(500).send("Server Error");
+    // console.error("Error approving proposal:", error);
+    // res.status(500).send("Server Error");
+    req.flash('error_msg', 'Error approving proposal');
+    res.redirect("/user/dashboard")
   }
 });
 
@@ -129,8 +133,11 @@ router.post("/reject-proposal", async (req, res) => {
 
     res.redirect("/user/dashboard");
   } catch (error) {
-    console.error("Error rejecting proposal:", error);
-    res.status(500).send("Internal Server Error");
+    // console.error("Error rejecting proposal:", error);
+    // res.status(500).send("Internal Server Error");
+
+    req.flash('error_msg', 'Error rejecting proposal');
+     res.redirect("/user/dashboard")
   }
 });
 

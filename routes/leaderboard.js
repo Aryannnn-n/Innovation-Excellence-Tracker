@@ -66,12 +66,15 @@ router.get("/student/:studentId", isAuthenticated, async (req, res) => {
     }).populate("studentId", "name email");
 
     if (!studentPoints) {
-      return res.status(404).json({ message: "Student points not found" });
+      // return res.status(404).json({ message: "Student points not found" });
+      req.flash('error_msg', 'Student points not found');
+      res.redirect("/student/:studentId")
     }
-
     res.json(studentPoints);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    req.flash('error_msg', 'Student points not found');
+    // res.status(500).json({ message: error.message });
+    res.redirect("/student/:studentId")
   }
 });
 
@@ -91,7 +94,9 @@ router.post("/points/add", isAuthenticated, async (req, res) => {
 
     res.json(studentPoints);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });     
+    req.flash('error_msg', 'Student points not found');
+    res.redirect("/student/:studentId")
   }
 });
 
@@ -100,9 +105,11 @@ router.post("/update-all-points", isAuthenticated, async (req, res) => {
   try {
     // Check if user is admin
     if (!req.user || req.user.role !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized: Admin access required" });
+      req.flash('error_msg', 'Student points not found');
+       res.redirect("/user/dashboard")
+      // return res
+      //   .status(403)
+      //   .json({ message: "Unauthorized: Admin access required" });
     }
 
     const { updateAllStudentPoints } = require("../services/points.service");

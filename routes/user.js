@@ -32,13 +32,13 @@ router.post("/register", async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email });
-    const PrnUser  = await User.findOne({ PRN });
+    const PrnUser = await User.findOne({ PRN });
 
-    if (existingUser || PrnUser) {
+    if (existingUser || PrnUser ) {
       // return res.render("auth/login", { error: "User already exists" });
+      req.flash('error_msg', 'User already exists');
       return res.redirect("/user/dashboard");
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       name,
@@ -61,7 +61,9 @@ router.post("/register", async (req, res) => {
         if (!adminUser.hasRegistered(registeredUser._id)) {
           adminUser.registrations.push(registeredUser._id);
           await adminUser.save();
-          console.log(`Faculty ${registeredUser.name} registered by admin`);
+          // console.log(`Faculty ${registeredUser.name} registered by admin`);
+          req.flash('success', `Faculty ${registeredUser.name} registered by admin`);
+
         }
       }
     } else {
@@ -70,7 +72,9 @@ router.post("/register", async (req, res) => {
       if (currentUser) {
         currentUser.registrations.push(registeredUser._id);
         await currentUser.save();
-        console.log(`Student ${registeredUser.name} registered by faculty`);
+        // console.log(`Student ${registeredUser.name} registered by faculty`);
+        req.flash('success_msg', `Faculty ${registeredUser.name} registered by faculty`);
+
       }
     }
 
@@ -92,7 +96,9 @@ router.post("/login", async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.render("auth/login", { error: "Invalid credentials" });
+    // return res.render("auth/login", { error: "Invalid credentials" });
+    req.flash('error_msg', 'invalid user and password');
+    return res.redirect('/user/login');
   }
 
   req.session.user = user;
@@ -107,14 +113,15 @@ router.get("/logout", (req, res) => {
 
 // dashboard after login
 router.get("/dashboard", async (req, res) => {
-  if (!req.session.user) return res.redirect("/user/login");
-
+  if (!req.session.user) {
+    req.flash('error_msg', 'please login first');
+    return res.redirect("/user/login");
+  }
   // const user = req.session.user;
   const user = await User.findOne({ _id: req.session.user._id }).populate(
     "registrations"
   );
   // console.log(user);
-
   try {
     if (user.role === "student") {
       // Show all innovation submissions to students
@@ -183,8 +190,10 @@ router.get("/dashboard", async (req, res) => {
     // If user role is unknown, redirect to login
     res.redirect("/user/login");
   } catch (error) {
-    console.error("Error loading dashboard:", error);
-    res.status(500).send("Internal Server Error");
+    // console.error("Error loading dashboard:", error);
+    req.flash('error_msg', 'please login first');
+    res.redirect("/");
+    // res.status(500).send("Internal Server Error");
   }
 });
 

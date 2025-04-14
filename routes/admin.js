@@ -42,8 +42,10 @@ router.post("/post-hackathon", async (req, res) => {
     // Redirect to admin dashboard with success message
     res.redirect("/user/dashboard");
   } catch (error) {
-    console.error("Error posting hackathon:", error);
-    res.status(500).send("Server Error");
+    // console.error("Error posting hackathon:", error);
+    // res.status(500).send("Server Error");
+    req.flash('error_msg', 'Error posting hackathon');
+    return res.redirect("/user/dashboard")
   }
 });
 
@@ -54,8 +56,10 @@ router.post("/delete-hackathon/:id", async (req, res) => {
     await Hackathon.findByIdAndDelete(hackathonId);
     res.redirect("/user/dashboard"); // Adjust the redirect path if necessary
   } catch (error) {
-    console.error("Error deleting hackathon:", error);
-    res.status(500).send("Internal Server Error");
+    // console.error("Error deleting hackathon:", error);
+    // res.status(500).send("Internal Server Error");
+    req.flash('error_msg', 'Error deleting hackathon:');
+    return res.redirect("/user/dashboard")
   }
 });
 
@@ -68,13 +72,17 @@ router.post("/delete-innovation/:id", async (req, res) => {
     const deletedInnovation = await Innovation.findByIdAndDelete(innovationId);
 
     if (!deletedInnovation) {
-      return res.status(404).send("Innovation not found");
+      // return res.status(404).send("Innovation not found");
+      req.flash('error_msg', 'Innovation not found');
+      return res.redirect("/user/dashboard")
     }
 
     res.redirect("/user/dashboard"); // Redirect back to the admin panel
   } catch (error) {
-    console.error("Error deleting innovation:", error);
-    res.status(500).send("Server Error");
+    // console.error("Error deleting innovation:", error);
+    // res.status(500).send("Server Error");
+    req.flash('error_msg', 'Error deleting innovation:');
+    return res.redirect("/user/dashboard")
   }
 });
 
@@ -87,7 +95,9 @@ router.post("/approve-innovation/:id", async (req, res) => {
     const innovation = await Innovation.findById(innovationId);
 
     if (!innovation) {
-      return res.status(404).send("Innovation not found");
+      // return res.status(404).send("Innovation not found");
+      req.flash('error_msg', 'Innovation not found');
+      return res.redirect("/user/dashboard")
     }
 
     // Update the innovation status
@@ -108,8 +118,10 @@ router.post("/approve-innovation/:id", async (req, res) => {
 
     res.redirect("/user/dashboard");
   } catch (error) {
-    console.error("Error approving innovation:", error);
-    res.status(500).send("Server Error");
+    // console.error("Error approving innovation:", error);
+    // res.status(500).send("Server Error");
+    req.flash('error_msg', 'Error approving innovation:');
+    res.redirect("/user/dashboard")
   }
 });
 
@@ -122,7 +134,9 @@ router.post("/implement-innovation/:id", async (req, res) => {
     const innovation = await Innovation.findById(innovationId);
 
     if (!innovation) {
-      return res.status(404).send("Innovation not found");
+      // return res.status(404).send("Innovation not found");
+      req.flash('error_msg', 'Innovation not found');
+      return res.redirect("/user/dashboard")
     }
 
     // Update the innovation status
@@ -143,8 +157,10 @@ router.post("/implement-innovation/:id", async (req, res) => {
 
     res.redirect("/user/dashboard");
   } catch (error) {
-    console.error("Error marking innovation as implemented:", error);
-    res.status(500).send("Server Error");
+    // console.error("Error marking innovation as implemented:", error);
+    // res.status(500).send("Server Error");
+    req.flash('error_msg', 'Error marking innovation as implemented:');
+    res.redirect("/user/dashboard")
   }
 });
 

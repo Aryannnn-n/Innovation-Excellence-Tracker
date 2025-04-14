@@ -15,6 +15,22 @@
   </head>
 
   <body class="bg-gradient-to-r from-green-100 to-green-300 min-h-screen">
+
+    <% if (success_msg &&  success_msg.length > 0) { %>
+      <div class="w-full max-w-md px-6">
+        <div class="rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800 shadow-md">
+          <p><%= success_msg %></p>
+        </div>
+      </div>
+    <% } %>
+    
+     <% if (error_msg && error_msg.length > 0) { %>
+      <div class="w-full max-w-md px-6">
+        <div class="rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-red-800 shadow-md"><p><%= error_msg %></p></div>
+      </div>
+    <% } %>
+    
+  
     <!-- Floating Navbar -->
     <nav
       class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white w-[100%] max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
