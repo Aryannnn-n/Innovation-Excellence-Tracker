@@ -1,6 +1,7 @@
 const StudentPoints = require("../models/StudentPoints");
 const PointCategory = require("../models/PointCategory");
 const Innovation = require("../models/innovation");
+const User  = require("../models/user")
 
 /**
  * Calculate points for a student based on their approved innovations
@@ -81,7 +82,7 @@ async function calculateStudentPoints(studentId) {
  * @param {string} studentId - The ID of the student
  * @returns {Promise<Object>} - The updated student points record
  */
-async function updateStudentPoints(studentId) {
+async function updateStudentPoints(studentId,collaboratorPRN) {
   try {
     // Calculate points
     const { totalPoints, monthlyPoints } = await calculateStudentPoints(
@@ -97,9 +98,11 @@ async function updateStudentPoints(studentId) {
 
     // Get all approved innovations for the student
     const approvedInnovations = await Innovation.find({
-      user: studentId,
+      $or:[{user: studentId},{collaborators: {$in: collaboratorPRN }}],
       status: { $in: ["FacultyApproved", "AdminApproved", "Implemented"] },
     });
+
+    // console.log(approvedInnovations)
 
     // Get point categories
     const pointCategories = await PointCategory.find();
@@ -107,6 +110,7 @@ async function updateStudentPoints(studentId) {
     pointCategories.forEach((category) => {
       categoryMap[category.category] = category;
     });
+
 
     // Clear existing achievements
     studentPoints.achievements = [];
@@ -153,7 +157,7 @@ async function updateStudentPoints(studentId) {
         date: innovation.approvedDate || new Date(),
         recognition: innovation.recognition || false,
         collaboration:
-          innovation.collaborators && innovation.collaborators.length > 0,
+          (innovation.collaborators && innovation.collaborators.length > 0),
       });
     }
 
@@ -165,12 +169,26 @@ async function updateStudentPoints(studentId) {
     // Save the record
     await studentPoints.save();
 
+    // Update points for collaborators if any
+    for (const innovation of approvedInnovations) {
+      if (innovation.collaborators && innovation.collaborators.length >= 0) {
+        for (const collaboratorPRN of innovation.collaborators) {
+          const collaborator = await User.findOne({ PRN: collaboratorPRN });
+          // console.log(collaborator);
+          if (collaborator && collaborator._id.toString() !== studentId.toString()) {
+            await updateStudentPoints(collaborator._id,collaborator.PRN); // Recursively update collaborator
+          }
+        }
+      }
+    }
+
     return studentPoints;
   } catch (error) {
     console.error("Error updating student points:", error);
     throw error;
   }
 }
+
 
 /**
  * Update points for all students
