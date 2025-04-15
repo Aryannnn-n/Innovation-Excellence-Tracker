@@ -1,71 +1,53 @@
 const StudentPoints = require("../models/StudentPoints");
 const PointCategory = require("../models/PointCategory");
 const Innovation = require("../models/innovation");
-const User  = require("../models/user")
+const User = require("../models/user");
 
 /**
  * Calculate points for a student based on their approved innovations
- * @param {string} studentId - The ID of the student
- * @returns {Promise<number>} - The total points calculated
+ * @param {string} studentId
+ * @returns {Promise<{totalPoints: number, monthlyPoints: number}>}
  */
 async function calculateStudentPoints(studentId) {
   try {
-    // Get all approved innovations for the student
     const approvedInnovations = await Innovation.find({
       user: studentId,
       status: { $in: ["FacultyApproved", "AdminApproved", "Implemented"] },
     });
 
-    // Get point categories
     const pointCategories = await PointCategory.find();
-    const categoryMap = {};
-    pointCategories.forEach((category) => {
-      categoryMap[category.category] = category;
-    });
+    const categoryMap = Object.fromEntries(
+      pointCategories.map((c) => [c.category, c])
+    );
 
     let totalPoints = 0;
     let monthlyPoints = 0;
-    const currentDate = new Date();
-    const startOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    );
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
-    // Calculate points for each innovation
     for (const innovation of approvedInnovations) {
       const category = categoryMap[innovation.category];
       if (!category) continue;
 
-      // Find the appropriate subcategory
       const subCategory = category.subCategories.find(
-        (sub) => sub.name.toLowerCase() === innovation.subCategory.toLowerCase()
+        (sub) => sub.name.toLowerCase() === (innovation.subCategory || "").toLowerCase()
       );
-
       if (!subCategory) continue;
 
-      // Calculate base points
       let points = subCategory.basePoints;
-
-      // Apply status multiplier
-      const statusMultiplier =
-        subCategory.statusMultipliers[innovation.status] || 1;
+      const statusMultiplier = subCategory.statusMultipliers[innovation.status] || 1;
       points *= statusMultiplier;
 
-      // Add bonus points for recognition
       if (innovation.recognition) {
-        points += subCategory.bonusPoints.recognition || 0;
+        points += subCategory.bonusPoints?.recognition || 0;
       }
 
-      // Add bonus points for collaboration
-      if (innovation.collaborators && innovation.collaborators.length > 0) {
-        points += subCategory.bonusPoints.collaboration || 0;
+      if (innovation.collaborators?.length > 0) {
+        points += subCategory.bonusPoints?.collaboration || 0;
       }
 
       totalPoints += points;
 
-      // Check if innovation is from current month for monthly points
-      if (innovation.approvedDate && innovation.approvedDate >= startOfMonth) {
+      if (innovation.approvedDate >= startOfMonth) {
         monthlyPoints += points;
       }
     }
@@ -79,104 +61,87 @@ async function calculateStudentPoints(studentId) {
 
 /**
  * Update or create student points record
- * @param {string} studentId - The ID of the student
- * @returns {Promise<Object>} - The updated student points record
+ * @param {string} studentId
+ * @param {string[]} collaboratorPRNs
+ * @param {Set<string>} visited - prevent circular updates
+ * @returns {Promise<Object>}
  */
-async function updateStudentPoints(studentId,collaboratorPRN) {
+async function updateStudentPoints(studentId, collaboratorPRNs , visited = new Set()) {
+  if (visited.has(studentId.toString())) return;
+  visited.add(studentId.toString());
+
   try {
-    // Calculate points
-    const { totalPoints, monthlyPoints } = await calculateStudentPoints(
-      studentId
-    );
+    const { totalPoints, monthlyPoints } = await calculateStudentPoints(studentId);
 
-    // Find or create student points record
     let studentPoints = await StudentPoints.findOne({ studentId });
+    if (!studentPoints) studentPoints = new StudentPoints({ studentId });
 
-    if (!studentPoints) {
-      studentPoints = new StudentPoints({ studentId });
-    }
-
-    // Get all approved innovations for the student
     const approvedInnovations = await Innovation.find({
-      $or:[{user: studentId},{collaborators: {$in: collaboratorPRN }}],
+      $or: [
+        { user: studentId },
+        { collaborators: { $in: collaboratorPRNs } },
+      ],
       status: { $in: ["FacultyApproved", "AdminApproved", "Implemented"] },
     });
 
-    // console.log(approvedInnovations)
-
-    // Get point categories
     const pointCategories = await PointCategory.find();
-    const categoryMap = {};
-    pointCategories.forEach((category) => {
-      categoryMap[category.category] = category;
-    });
+    const categoryMap = Object.fromEntries(
+      pointCategories.map((c) => [c.category, c])
+    );
 
-
-    // Clear existing achievements
     studentPoints.achievements = [];
 
-    // Add achievements for each approved innovation
     for (const innovation of approvedInnovations) {
       const category = categoryMap[innovation.category];
       if (!category) continue;
 
-      // Find the appropriate subcategory
       const subCategory = category.subCategories.find(
         (sub) =>
           sub.name.toLowerCase() ===
           (innovation.subCategory || "Participation").toLowerCase()
       );
-
       if (!subCategory) continue;
 
-      // Calculate base points
       let points = subCategory.basePoints;
-
-      // Apply status multiplier
-      const statusMultiplier =
-        subCategory.statusMultipliers[innovation.status] || 1;
+      const statusMultiplier = subCategory.statusMultipliers[innovation.status] || 1;
       points *= statusMultiplier;
 
-      // Add bonus points for recognition
       if (innovation.recognition) {
-        points += subCategory.bonusPoints.recognition || 0;
+        points += subCategory.bonusPoints?.recognition || 0;
       }
 
-      // Add bonus points for collaboration
-      if (innovation.collaborators && innovation.collaborators.length > 0) {
-        points += subCategory.bonusPoints.collaboration || 0;
+      if (innovation.collaborators?.length > 0) {
+        points += subCategory.bonusPoints?.collaboration || 0;
       }
 
-      // Add achievement
       studentPoints.achievements.push({
         category: innovation.category,
         subCategory: innovation.subCategory || "Participation",
-        points: points,
+        points,
         status: innovation.status,
         description: innovation.title,
         date: innovation.approvedDate || new Date(),
-        recognition: innovation.recognition || false,
-        collaboration:
-          (innovation.collaborators && innovation.collaborators.length > 0),
+        recognition: !!innovation.recognition,
+        collaboration: innovation.collaborators?.length > 0,
       });
     }
 
-    // Update points
     studentPoints.totalPoints = totalPoints;
     studentPoints.monthlyPoints = monthlyPoints;
     studentPoints.lastUpdated = new Date();
 
-    // Save the record
     await studentPoints.save();
 
-    // Update points for collaborators if any
+    // Recursively update collaborators
     for (const innovation of approvedInnovations) {
-      if (innovation.collaborators && innovation.collaborators.length >= 0) {
+      if (innovation.collaborators?.length > 0) {
         for (const collaboratorPRN of innovation.collaborators) {
           const collaborator = await User.findOne({ PRN: collaboratorPRN });
-          // console.log(collaborator);
-          if (collaborator && collaborator._id.toString() !== studentId.toString()) {
-            await updateStudentPoints(collaborator._id,collaborator.PRN); // Recursively update collaborator
+          if (
+            collaborator &&
+            collaborator._id.toString() !== studentId.toString()
+          ) {
+            await updateStudentPoints(collaborator._id, collaboratorPRN, visited);
           }
         }
       }
@@ -188,7 +153,6 @@ async function updateStudentPoints(studentId,collaboratorPRN) {
     throw error;
   }
 }
-
 
 /**
  * Update points for all students
@@ -202,65 +166,39 @@ async function updateAllStudentPoints() {
   };
 
   try {
-    // Get all users with role 'student'
-    const User = require("../models/user");
     const students = await User.find({ role: "student" });
 
     console.log(`Starting to update points for ${students.length} students`);
 
-    // Process students in parallel for better performance
+    const visited = new Set();
+
     const updatePromises = students.map(async (student) => {
       try {
-        await updateStudentPoints(student._id);
+        await updateStudentPoints(student._id,student.PRN, visited);
         result.updatedCount++;
-        console.log(
-          `Updated points for student: ${student.name} (${student._id})`
-        );
-        return {
-          success: true,
-          studentId: student._id,
-          studentName: student.name,
-        };
+        console.log(`Updated points for student: ${student.name} (${student._id})`);
       } catch (error) {
-        console.error(
-          `Error updating points for student ${student._id}:`,
-          error
-        );
+        console.error(`Error updating points for student ${student._id}:`, error);
         result.errors.push({
           studentId: student._id,
           studentName: student.name,
           error: error.message,
         });
-        return {
-          success: false,
-          studentId: student._id,
-          studentName: student.name,
-          error: error.message,
-        };
+        result.success = false;
       }
     });
 
-    // Wait for all updates to complete
     await Promise.all(updatePromises);
 
     console.log(
       `Completed updating points. Successfully updated ${result.updatedCount} out of ${students.length} students`
     );
 
-    if (result.errors.length > 0) {
-      console.warn(
-        `There were ${result.errors.length} errors during the update process`
-      );
-      result.success = false;
-    }
-
     return result;
   } catch (error) {
     console.error("Error in updateAllStudentPoints:", error);
     result.success = false;
-    result.errors.push({
-      error: error.message,
-    });
+    result.errors.push({ error: error.message });
     return result;
   }
 }
