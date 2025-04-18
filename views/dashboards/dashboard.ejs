@@ -17,170 +17,172 @@
 
   <body class="bg-blue-100 min-h-screen">
 
-    <% if (success_msg&&  success_msg.length > 0) { %>
-      <div class="w-full max-w-md px-6">
-        <div class="rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800 shadow-md">
-          <p><%= success_msg %></p>
-        </div>
+    <% if (success_msg && success_msg.length > 0) { %>
+      <div class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-6">
+      <div class="rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-800 shadow-md">
+        <p><%= success_msg %></p>
+      </div>
       </div>
     <% } %>
     
-     <% if (error_msg && error_msg.length > 0) { %>
-      <div class="w-full max-w-md px-6">
-        <div class="rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-red-800 shadow-md"><p><%= error_msg %></p></div>
+    <% if (error_msg && error_msg.length > 0) { %>
+      <div class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-6">
+      <div class="rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-red-800 shadow-md">
+        <p><%= error_msg %></p>
+      </div>
       </div>
     <% } %>
     
     <!-- Floating Navbar -->
     <nav
-      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-full max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center"
+      class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-full max-w-6xl py-3 px-6 shadow-lg rounded-xl flex justify-between items-center z-40"
     >
       <div class="flex items-center gap-4">
-        <div class="relative">
+      <div class="relative">
+        <img
+        src="https://imgs.search.brave.com/6LieTuy4xL-pS5odG_gdyJwHAbRcDcvZ_4gJcAuXYlc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvNS9Qcm9m/aWxlLVRyYW5zcGFy/ZW50LnBuZw"
+        alt="User Image"
+        class="w-10 h-10 rounded-full cursor-pointer"
+        onclick="toggleSlide()"
+        />
+        <!-- Slide-in Panel -->
+        <div
+        id="slidePanel"
+        class="fixed top-0 left-[-55px] h-screen w-1/3 max-w-md bg-white rounded-xl shadow-lg transform -translate-x-full transition-transform duration-300 z-50"
+        >
+        <div class="p-6 relative">
+          <button
+          onclick="toggleSlide()"
+          class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+          >
+          <i class="fas fa-times text-xl"></i>
+          </button>
+          <div class="flex items-center gap-4">
           <img
             src="https://imgs.search.brave.com/6LieTuy4xL-pS5odG_gdyJwHAbRcDcvZ_4gJcAuXYlc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvNS9Qcm9m/aWxlLVRyYW5zcGFy/ZW50LnBuZw"
             alt="User Image"
             class="w-10 h-10 rounded-full cursor-pointer"
-            onclick="toggleSlide()"
           />
-          <!-- Slide-in Panel -->
+          <div>
+            <h2 class="text-lg font-bold text-blue-700">
+            Welcome, <%= user.name %>!
+            </h2>
+            <p class="mt-1 text-gray-600">
+            <span class="text-zinc-500 text-sm font-semibold"
+              >ID: <%= user.PRN %></span
+            >
+            </p>
+          </div>
+          </div>
+          <div class="flex flex-col gap-4 mt-4 items-start">
           <div
-            id="slidePanel"
-            class="fixed top-0 left-[-55px] h-screen w-1/3 max-w-md bg-white rounded-xl shadow-lg transform -translate-x-full transition-transform duration-300 z-50"
+            onclick="showSection('profileSection')"
+            class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
           >
-            <div class="p-6 relative">
-              <button
-                onclick="toggleSlide()"
-                class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
-              >
-                <i class="fas fa-times text-xl"></i>
-              </button>
-              <div class="flex items-center gap-4">
-                <img
-                  src="https://imgs.search.brave.com/6LieTuy4xL-pS5odG_gdyJwHAbRcDcvZ_4gJcAuXYlc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvNS9Qcm9m/aWxlLVRyYW5zcGFy/ZW50LnBuZw"
-                  alt="User Image"
-                  class="w-10 h-10 rounded-full cursor-pointer"
-                />
-                <div>
-                  <h2 class="text-lg font-bold text-blue-700">
-                    Welcome, <%= user.name %>!
-                  </h2>
-                  <p class="mt-1 text-gray-600">
-                    <span class="text-zinc-500 text-sm font-semibold"
-                      >ID: <%= user.PRN %></span
-                    >
-                  </p>
-                </div>
-              </div>
-              <div class="flex flex-col gap-4 mt-4 items-start">
-                <div
-                  onclick="showSection('profileSection')"
-                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
-                >
-                  <i class="fas fa-user-circle text-2xl text-blue-500"></i>
-                  <span class="text-sm font-semibold text-gray-700"
-                    >Profile</span
-                  >
-                </div>
-                <div
-                  onclick="showSection('settingsSection')"
-                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
-                >
-                  <i class="fas fa-cogs text-2xl text-green-500"></i>
-                  <span class="text-sm font-semibold text-gray-700"
-                    >Settings</span
-                  >
-                </div>
-                <div
-                  onclick="showSection('analysisSection')"
-                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
-                >
-                  <i class="fas fa-chart-line text-2xl text-purple-500"></i>
-                  <span class="text-sm font-semibold text-gray-700"
-                    >See Participation Analytics</span
-                  >
-                </div>
-                <div
-                  onclick="showSection('postCreationSection')"
-                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
-                >
-                  <i class="fas fa-newspaper text-2xl text-orange-500"></i>
-                  <span class="text-sm font-semibold text-gray-700"
-                    >Create a Post</span
-                  >
-                </div>
-                <div
-                  onclick="showSection('submissionSection')"
-                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
-                >
-                  <i class="fas fa-file-upload text-2xl text-blue-500"></i>
-                  <span class="text-sm font-semibold text-gray-700"
-                    >Submit Innovation Proposal</span
-                  >
-                </div>
-                <div
-                  onclick="showSection('leaderboardSection')"
-                  class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
-                >
-                  <i class="fas fa-trophy text-2xl text-yellow-500"></i>
-                  <span class="text-sm font-semibold text-gray-700"
-                    >View Leaderboard</span
-                  >
-                </div>
-                
-              </div>
-            </div>
+            <i class="fas fa-user-circle text-2xl text-blue-500"></i>
+            <span class="text-sm font-semibold text-gray-700"
+            >Profile</span
+            >
+          </div>
+          <div
+            onclick="showSection('settingsSection')"
+            class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+          >
+            <i class="fas fa-cogs text-2xl text-green-500"></i>
+            <span class="text-sm font-semibold text-gray-700"
+            >Settings</span
+            >
+          </div>
+          <div
+            onclick="showSection('analysisSection')"
+            class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+          >
+            <i class="fas fa-chart-line text-2xl text-purple-500"></i>
+            <span class="text-sm font-semibold text-gray-700"
+            >See Participation Analytics</span
+            >
+          </div>
+          <div
+            onclick="showSection('postCreationSection')"
+            class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+          >
+            <i class="fas fa-newspaper text-2xl text-orange-500"></i>
+            <span class="text-sm font-semibold text-gray-700"
+            >Create a Post</span
+            >
+          </div>
+          <div
+            onclick="showSection('submissionSection')"
+            class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+          >
+            <i class="fas fa-file-upload text-2xl text-blue-500"></i>
+            <span class="text-sm font-semibold text-gray-700"
+            >Submit Innovation Proposal</span
+            >
+          </div>
+          <div
+            onclick="showSection('leaderboardSection')"
+            class="flex items-center gap-2 w-full p-2 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+          >
+            <i class="fas fa-trophy text-2xl text-yellow-500"></i>
+            <span class="text-sm font-semibold text-gray-700"
+            >View Leaderboard</span
+            >
+          </div>
+          
           </div>
         </div>
+        </div>
+      </div>
 
-        <script>
-          function toggleSlide() {
-            const slidePanel = document.getElementById("slidePanel");
-            slidePanel.classList.toggle("-translate-x-full");
-            document.body.classList.toggle("overflow-hidden");
-          }
-        </script>
-        <style>
-          body.overflow-hidden {
-            overflow: hidden;
-          }
-        </style>
-        <h1 class="text-xl font-bold">Student Dashboard</h1>
+      <script>
+        function toggleSlide() {
+        const slidePanel = document.getElementById("slidePanel");
+        slidePanel.classList.toggle("-translate-x-full");
+        document.body.classList.toggle("overflow-hidden");
+        }
+      </script>
+      <style>
+        body.overflow-hidden {
+        overflow: hidden;
+        }
+      </style>
+      <h1 class="text-xl font-bold">Student Dashboard</h1>
       </div>
       <div class="flex items-center gap-6">
-        <!-- Notification Button -->
-        <div class="relative">
-          <button
-            id="notificationBtn"
-            class="relative group flex items-center gap-2"
-          >
-            <i class="fas fa-bell text-xl text-white"></i>
-            <span
-              id="notificationDot"
-              class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full hidden"
-            ></span>
-          </button>
-        </div>
+      <!-- Notification Button -->
+      <div class="relative">
+        <button
+        id="notificationBtn"
+        class="relative group flex items-center gap-2"
+        >
+        <i class="fas fa-bell text-xl text-white"></i>
+        <span
+          id="notificationDot"
+          class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full hidden"
+        ></span>
+        </button>
+      </div>
 
-        <!-- Posts Link -->
-        <a href="/posts" class="relative group flex items-center gap-2">
-          <i class="fas fa-newspaper text-xl text-white"></i>
-          <span
-            class="absolute left-1/2 transform -translate-x-1/2 bottom-[-35px] bg-blue-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-          >
-            View Posts
-          </span>
-        </a>
+      <!-- Posts Link -->
+      <a href="/posts" class="relative group flex items-center gap-2">
+        <i class="fas fa-newspaper text-xl text-white"></i>
+        <span
+        class="absolute left-1/2 transform -translate-x-1/2 bottom-[-35px] bg-blue-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+        >
+        View Posts
+        </span>
+      </a>
 
-        <!-- Logout Button -->
-        <a href="/user/logout" class="relative group flex items-center gap-2">
-          <i class="fas fa-sign-out-alt text-xl text-white"></i>
-          <span
-            class="absolute left-1/2 transform -translate-x-1/2 bottom-[-35px] bg-blue-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-          >
-            Logout
-          </span>
-        </a>
+      <!-- Logout Button -->
+      <a href="/user/logout" class="relative group flex items-center gap-2">
+        <i class="fas fa-sign-out-alt text-xl text-white"></i>
+        <span
+        class="absolute left-1/2 transform -translate-x-1/2 bottom-[-35px] bg-blue-200 text-black font-bold text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+        >
+        Logout
+        </span>
+      </a>
       </div>
     </nav>
 
@@ -479,12 +481,8 @@
               class="w-full px-2 py-1 border rounded"
             >
               <option value="" disabled>Select your department</option>
-              <option value="CSE" <%= user.department === 'CSE' ? 'selected' : '' %>>Computer Science & Engineering</option>
-              <option value="ECE" <%= user.department === 'ECE' ? 'selected' : '' %>>Electronics & Communication</option>
-              <option value="Mechanical" <%= user.department === 'Mechanical' ? 'selected' : '' %>>Mechanical Engineering</option>
-              <option value="Civil" <%= user.department === 'Civil' ? 'selected' : '' %>>Civil Engineering</option>
-              <option value="Biotech" <%= user.department === 'Biotech' ? 'selected' : '' %>>Biotechnology</option>
-              <option value="Others" <%= user.department === 'Others' ? 'selected' : '' %>>Others</option>
+              <option value="<%= user.department%>" <%= user.department === 'CSE' ? 'selected' : '' %>><%= user.department%></option>
+             
             </select>
 
             <label class="block font-semibold mt-2">Description:</label>

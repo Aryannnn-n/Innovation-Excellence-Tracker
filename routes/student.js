@@ -136,7 +136,7 @@ router.post(
       );
 
       // console.log('✅ Innovation saved and rated with AI!');
-      req.flash('success_msg', 'Unauthorized: User not logged in.');
+      req.flash('success_msg', 'Proposal submitted successfully.');
       res.redirect('/user/dashboard');
     } catch (error) {
       // console.error('❌ Error saving innovation:', error);

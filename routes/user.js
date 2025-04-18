@@ -64,7 +64,7 @@ router.post("/register", async (req, res) => {
           adminUser.registrations.push(registeredUser._id);
           await adminUser.save();
           // console.log(`Faculty ${registeredUser.name} registered by admin`);
-          req.flash('success', `Faculty ${registeredUser.name} registered by admin`);
+          req.flash('success', `${registeredUser.name} registered`);
 
         }
       }
@@ -75,7 +75,7 @@ router.post("/register", async (req, res) => {
         currentUser.registrations.push(registeredUser._id);
         await currentUser.save();
         // console.log(`Student ${registeredUser.name} registered by faculty`);
-        req.flash('success_msg', `Faculty ${registeredUser.name} registered by faculty`);
+        req.flash('success_msg', ` ${registeredUser.name} registered`);
 
       }
     }
@@ -190,11 +190,12 @@ router.get("/dashboard", async (req, res) => {
     }
 
     // If user role is unknown, redirect to login
+    req.flash('error_msg', 'please login first');
     res.redirect("/user/login");
   } catch (error) {
     // console.error("Error loading dashboard:", error);
     req.flash('error_msg', 'please login first');
-    res.redirect("/");
+    res.redirect("/user/login");
     // res.status(500).send("Internal Server Error");
   }
 });

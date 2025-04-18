@@ -214,7 +214,7 @@ app.get('/get-rating', async (req, res) => {
 app.get('/admin/category-count', async (req, res) => {
   try {
     const categoryCount = await Innovation.aggregate([
-      { $match: { status: 'approved' } }, // ✅ Filter innovations by logged-in user
+      { $match: { status: 'FacultyApproved' } }, // ✅ Filter innovations by logged-in user
       {
         $group: {
           _id: '$category', // ✅ Group by category
