@@ -32,8 +32,8 @@ Hackathon Project for **HackFusion 2025**
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/Aryannnn-n/Hack.git
-   cd Hack
+   git clone https://github.com/Aryannnn-n/Innovation-Tracker.git
+   cd Innovation-Tracker
    ```
 
 2. **Install Dependencies:**
@@ -50,8 +50,10 @@ Hackathon Project for **HackFusion 2025**
    MONGO_URI=<your-mongodb-uri>
    JWT_SECRET=<your-secret-key>
    SESSION_SECRET=<your-session-secret>
+   GOOGLE_GEMINI_KEY=<key>
    ```
 
+ 
 4. **Start the Server:**
 
    ```bash
