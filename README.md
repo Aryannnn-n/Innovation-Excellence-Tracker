@@ -1,3 +1,4 @@
+
 # 🚀 **Innovation Excellence Tracking Portal**
 
 Hackathon Project for **HackFusion 2025**
@@ -53,7 +54,6 @@ Hackathon Project for **HackFusion 2025**
    GOOGLE_GEMINI_KEY=<key>
    ```
 
- 
 4. **Start the Server:**
 
    ```bash
@@ -74,10 +74,24 @@ Hackathon Project for **HackFusion 2025**
 /app.js         → Main server file
 ```
 
+## 🖼️ **Project Screenshots**
+
+- 📌 **Landing Page**  
+  ![Landing UI](https://github.com/Aryannnn-n/Innovation-Tracker/blob/main/public/images/Main%20Page.png?raw=true)
+
+- 🎓 **Student Dashboard**  
+  ![Student UI](https://github.com/Aryannnn-n/Innovation-Tracker/blob/main/public/images/Student_Dashboard.png?raw=true)
+
+- 🛠️ **Admin Dashboard**  
+  ![Admin UI](https://github.com/Aryannnn-n/Innovation-Tracker/blob/main/public/images/Admin_Dashboard.png?raw=true)
+
+- 👨‍🏫 **Faculty Dashboard**  
+  ![Faculty UI](https://github.com/Aryannnn-n/Innovation-Tracker/blob/main/public/images/Faculty_Dashboard.png?raw=true)
+
 ## 🚀 **Contributors**
 
-- **[Aryan Chavan](https://github.com/Aryannnn-n)** → Backend Developer
-- **[Keshav Potewar](https://github.com/keshavpotewar)** → Backend Developer
+- **[Aryan Chavan](https://github.com/Aryannnn-n)** → Backend Developer  
+- **[Keshav Potewar](https://github.com/keshavpotewar)** → Backend Developer  
 - **[Amol Sonawane](https://github.com/AmolRS333)** → Frontend Developer
 
 ---
